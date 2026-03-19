@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { SessionContextProvider } from "./components/SessionContextProvider";
 import Index from "./pages/Index";
 import Editais from "./pages/Editais";
+import EditalPnab from "./pages/EditalPnab";
 import Inscricoes from "./pages/Inscricoes";
 import Biblioteca from "./pages/Biblioteca";
 import Login from "./pages/Login";
@@ -27,7 +28,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/editais" element={<Editais />} />
-            <Route path="/editais/pnab" element={<Editais />} />
+            <Route path="/editais/pnab" element={<EditalPnab />} />
             <Route path="/editais/lpg" element={<Editais />} />
             <Route path="/editais/fm" element={<Editais />} />
             <Route path="/inscricoes" element={<Inscricoes />} />
