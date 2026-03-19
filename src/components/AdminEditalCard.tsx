@@ -56,7 +56,7 @@ const AdminEditalCard = ({ id, number, title, status, inscriptionsCount, date }:
           <FileText size={14} /> Ver detalhes
         </Button>
         <Button variant="secondary" className="bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold text-[11px] h-11 rounded-xl flex gap-2">
-          <Cloud size={14} /> por
+          <Cloud size={14} /> Resultados
         </Button>
         <Button variant="secondary" className="bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold text-[11px] h-11 rounded-xl flex gap-2">
           <Paperclip size={14} /> Anexos
