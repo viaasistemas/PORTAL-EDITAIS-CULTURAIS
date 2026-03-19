@@ -2,52 +2,28 @@
 
 import React, { useState, useEffect } from 'react';
 import { 
-  LayoutDashboard, 
-  FileText, 
-  Users, 
+  BarChart3, 
+  Calendar, 
+  Book, 
   Settings, 
   Plus, 
-  Search,
-  MoreHorizontal,
-  CheckCircle2,
-  XCircle,
-  Clock,
+  Users, 
+  FileText, 
+  BarChart2, 
+  TrendingUp,
+  Menu,
   LogOut
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useSession } from '@/components/SessionContextProvider';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { toast } from 'sonner';
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 const Admin = () => {
   const { session, loading } = useSession();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('dashboard');
-  const [inscricoes, setInscricoes] = useState<any[]>([]);
-  const [stats, setStats] = useState({
-    total: 0,
-    pendentes: 0,
-    aprovados: 0,
-    editais: 3
-  });
 
   useEffect(() => {
     if (!loading && !session) {
@@ -55,249 +31,157 @@ const Admin = () => {
     }
   }, [session, loading, navigate]);
 
-  useEffect(() => {
-    const fetchInscricoes = async () => {
-      const { data, error } = await supabase
-        .from('inscricoes')
-        .select(`
-          *,
-          editais (title)
-        `)
-        .order('created_at', { ascending: false });
-
-      if (error) {
-        console.error("Erro ao buscar inscrições:", error);
-      } else {
-        setInscricoes(data || []);
-        const pendentes = data?.filter(i => i.status === 'pendente').length || 0;
-        const aprovados = data?.filter(i => i.status === 'aprovado').length || 0;
-        setStats(prev => ({ ...prev, total: data?.length || 0, pendentes, aprovados }));
-      }
-    };
-
-    if (session) fetchInscricoes();
-  }, [session]);
-
-  const updateStatus = async (id: string, newStatus: string) => {
-    const { error } = await supabase
-      .from('inscricoes')
-      .update({ status: newStatus })
-      .eq('id', id);
-
-    if (error) {
-      toast.error("Erro ao atualizar status.");
-    } else {
-      toast.success(`Inscrição ${newStatus} com sucesso!`);
-      setInscricoes(prev => prev.map(i => i.id === id ? { ...i, status: newStatus } : i));
-    }
-  };
-
   if (loading) return <div className="h-screen flex items-center justify-center">Carregando...</div>;
   if (!session) return null;
 
-  return (
-    <div className="min-h-screen bg-slate-50 flex">
-      {/* Sidebar */}
-      <aside className="w-64 bg-white border-r border-slate-200 flex flex-col">
-        <div className="p-8">
-          <div className="flex flex-col">
-            <span className="text-xl font-bold tracking-tight text-blue-600 leading-none">CULTURA</span>
-            <span className="text-[8px] font-bold text-gray-400 uppercase tracking-[0.2em]">Painel Administrativo</span>
-          </div>
-        </div>
+  const stats = [
+    { label: "Inscrições Totais", value: "1.234", icon: Users, color: "bg-blue-50 text-blue-600" },
+    { label: "Editais Ativos", value: "12", icon: FileText, color: "bg-green-50 text-green-600" },
+    { label: "Em Análise", value: "8", icon: BarChart2, color: "bg-orange-50 text-orange-600" },
+    { label: "Finalizados", value: "24", icon: TrendingUp, color: "bg-purple-50 text-purple-600" },
+  ];
 
-        <nav className="flex-grow px-4 space-y-2">
+  const recentInscriptions = [
+    { name: "João Silva", time: "há 5 minutos" },
+    { name: "Maria Santos", time: "há 2 horas" },
+    { name: "Ricardo Pereira", time: "há 5 horas" },
+    { name: "Ana Oliveira", time: "há 1 dia" },
+  ];
+
+  return (
+    <div className="min-h-screen bg-[#f8fafc] flex">
+      {/* Sidebar */}
+      <aside className="w-16 bg-white border-r border-slate-200 flex flex-col items-center py-8 gap-8">
+        <button className="p-2 text-slate-400 hover:text-blue-600 transition-colors">
+          <Menu size={20} />
+        </button>
+        
+        <nav className="flex flex-col gap-4">
           <button 
             onClick={() => setActiveTab('dashboard')}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all ${activeTab === 'dashboard' ? 'bg-blue-50 text-blue-600' : 'text-slate-500 hover:bg-slate-50'}`}
+            className={`p-3 rounded-xl transition-all ${activeTab === 'dashboard' ? 'bg-blue-600 text-white shadow-lg shadow-blue-200' : 'text-slate-400 hover:bg-slate-50'}`}
           >
-            <LayoutDashboard size={20} />
-            Dashboard
+            <BarChart3 size={20} />
           </button>
-          <button 
-            onClick={() => setActiveTab('inscricoes')}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all ${activeTab === 'inscricoes' ? 'bg-blue-50 text-blue-600' : 'text-slate-500 hover:bg-slate-50'}`}
-          >
-            <FileText size={20} />
-            Inscrições
+          <button className="p-3 rounded-xl text-slate-400 hover:bg-slate-50 transition-all">
+            <Calendar size={20} />
           </button>
-          <button 
-            onClick={() => setActiveTab('editais')}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all ${activeTab === 'editais' ? 'bg-blue-50 text-blue-600' : 'text-slate-500 hover:bg-slate-50'}`}
-          >
-            <Plus size={20} />
-            Gerenciar Editais
+          <button className="p-3 rounded-xl text-slate-400 hover:bg-slate-50 transition-all">
+            <Book size={20} />
+          </button>
+          <button className="p-3 rounded-xl text-slate-400 hover:bg-slate-50 transition-all">
+            <Settings size={20} />
           </button>
         </nav>
 
-        <div className="p-4 border-t border-slate-100">
-          <Button 
-            variant="ghost" 
-            className="w-full justify-start gap-3 text-red-500 hover:text-red-600 hover:bg-red-50 rounded-xl font-bold"
+        <div className="mt-auto">
+          <button 
             onClick={() => supabase.auth.signOut()}
+            className="p-3 rounded-xl text-slate-400 hover:text-red-500 hover:bg-red-50 transition-all"
           >
             <LogOut size={20} />
-            Sair
-          </Button>
+          </button>
         </div>
       </aside>
 
       {/* Main Content */}
-      <main className="flex-grow p-8 overflow-auto">
-        <header className="flex justify-between items-center mb-10">
-          <div>
-            <h1 className="text-2xl font-bold text-slate-900">
-              {activeTab === 'dashboard' ? 'Visão Geral' : activeTab === 'inscricoes' ? 'Gerenciar Inscrições' : 'Editais'}
-            </h1>
-            <p className="text-slate-500 text-sm font-medium">Bem-vindo de volta, administrador.</p>
-          </div>
-          <div className="flex items-center gap-4">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-              <Input placeholder="Buscar..." className="pl-10 w-64 bg-white border-slate-200 rounded-xl" />
+      <main className="flex-grow flex flex-col">
+        {/* Header */}
+        <header className="h-20 bg-white border-b border-slate-100 px-8 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-xs">
+              LB
             </div>
+            <div>
+              <h2 className="text-sm font-bold text-slate-900 leading-none">Lei Aldir Blanc</h2>
+              <p className="text-[10px] font-medium text-slate-400 uppercase tracking-wider mt-1">Sistema de Gestão Cultural</p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-4">
+            <p className="text-xs font-medium text-slate-500">
+              Bem-vindo, <span className="font-bold text-slate-900">Almirante Geral</span>
+            </p>
+            <Avatar className="h-10 w-10 border-2 border-blue-600 p-0.5">
+              <AvatarFallback className="bg-blue-600 text-white text-xs font-bold">AG</AvatarFallback>
+            </Avatar>
           </div>
         </header>
 
-        {activeTab === 'dashboard' && (
-          <div className="space-y-8">
-            {/* Stats Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-              <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
-                <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mb-2">Total Inscrições</p>
-                <p className="text-3xl font-bold text-slate-900">{stats.total}</p>
-              </div>
-              <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
-                <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mb-2">Pendentes</p>
-                <p className="text-3xl font-bold text-yellow-600">{stats.pendentes}</p>
-              </div>
-              <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
-                <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mb-2">Aprovados</p>
-                <p className="text-3xl font-bold text-green-600">{stats.aprovados}</p>
-              </div>
-              <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
-                <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mb-2">Editais Ativos</p>
-                <p className="text-3xl font-bold text-blue-600">{stats.editais}</p>
-              </div>
+        <div className="p-10 max-w-7xl mx-auto w-full space-y-10">
+          {/* Welcome & Action */}
+          <div className="flex justify-between items-end">
+            <div>
+              <h1 className="text-3xl font-bold text-slate-900">Olá, Almirante Geral</h1>
+              <p className="text-slate-500 font-medium mt-1">Bem-vindo ao painel de gestão do Portal Cultural.</p>
             </div>
-
-            {/* Recent Activity */}
-            <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
-              <div className="p-6 border-b border-slate-50 flex justify-between items-center">
-                <h3 className="font-bold text-slate-900">Inscrições Recentes</h3>
-                <Button variant="ghost" className="text-blue-600 font-bold text-xs" onClick={() => setActiveTab('inscricoes')}>Ver todas</Button>
-              </div>
-              <Table>
-                <TableHeader>
-                  <TableRow className="bg-slate-50/50">
-                    <TableHead className="font-bold text-slate-500">Protocolo</TableHead>
-                    <TableHead className="font-bold text-slate-500">Edital</TableHead>
-                    <TableHead className="font-bold text-slate-500">Data</TableHead>
-                    <TableHead className="font-bold text-slate-500">Status</TableHead>
-                    <TableHead className="text-right"></TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {inscricoes.slice(0, 5).map((item) => (
-                    <TableRow key={item.id}>
-                      <TableCell className="font-mono font-bold text-blue-600">{item.protocol}</TableCell>
-                      <TableCell className="font-medium">{item.editais?.title}</TableCell>
-                      <TableCell className="text-slate-500">{new Date(item.created_at).toLocaleDateString()}</TableCell>
-                      <TableCell>
-                        <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase ${
-                          item.status === 'aprovado' ? 'bg-green-100 text-green-700' : 
-                          item.status === 'reprovado' ? 'bg-red-100 text-red-700' : 
-                          'bg-yellow-100 text-yellow-700'
-                        }`}>
-                          {item.status}
-                        </span>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="h-8 w-8 p-0"><MoreHorizontal size={16} /></Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end" className="rounded-xl">
-                            <DropdownMenuLabel>Ações</DropdownMenuLabel>
-                            <DropdownMenuItem onClick={() => updateStatus(item.id, 'aprovado')} className="text-green-600 font-medium">Aprovar</DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => updateStatus(item.id, 'reprovado')} className="text-red-600 font-medium">Reprovar</DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem>Ver Detalhes</DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
+            <Button className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl px-6 py-6 font-bold flex items-center gap-2 shadow-lg shadow-blue-100">
+              <Plus size={18} />
+              Gerenciar Inscrições
+            </Button>
           </div>
-        )}
 
-        {activeTab === 'inscricoes' && (
-          <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
-            <Table>
-              <TableHeader>
-                <TableRow className="bg-slate-50/50">
-                  <TableHead className="font-bold text-slate-500">Protocolo</TableHead>
-                  <TableHead className="font-bold text-slate-500">Edital</TableHead>
-                  <TableHead className="font-bold text-slate-500">Data</TableHead>
-                  <TableHead className="font-bold text-slate-500">Status</TableHead>
-                  <TableHead className="text-right">Ações</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {inscricoes.map((item) => (
-                  <TableRow key={item.id}>
-                    <TableCell className="font-mono font-bold text-blue-600">{item.protocol}</TableCell>
-                    <TableCell className="font-medium">{item.editais?.title}</TableCell>
-                    <TableCell className="text-slate-500">{new Date(item.created_at).toLocaleDateString()}</TableCell>
-                    <TableCell>
-                      <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase ${
-                        item.status === 'aprovado' ? 'bg-green-100 text-green-700' : 
-                        item.status === 'reprovado' ? 'bg-red-100 text-red-700' : 
-                        'bg-yellow-100 text-yellow-700'
-                      }`}>
-                        {item.status}
-                      </span>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex justify-end gap-2">
-                        <Button 
-                          size="sm" 
-                          variant="outline" 
-                          className="h-8 rounded-lg border-green-200 text-green-600 hover:bg-green-50"
-                          onClick={() => updateStatus(item.id, 'aprovado')}
-                        >
-                          <CheckCircle2 size={14} />
-                        </Button>
-                        <Button 
-                          size="sm" 
-                          variant="outline" 
-                          className="h-8 rounded-lg border-red-200 text-red-600 hover:bg-red-50"
-                          onClick={() => updateStatus(item.id, 'reprovado')}
-                        >
-                          <XCircle size={14} />
-                        </Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
+          {/* Stats Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            {stats.map((stat, i) => (
+              <div key={i} className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm flex justify-between items-start">
+                <div>
+                  <p className="text-slate-400 text-xs font-bold mb-2">{stat.label}</p>
+                  <p className="text-3xl font-bold text-slate-900">{stat.value}</p>
+                </div>
+                <div className={`p-3 rounded-2xl ${stat.color}`}>
+                  <stat.icon size={24} />
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Bottom Sections */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Quick Access */}
+            <div className="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm">
+              <h3 className="text-xl font-bold text-slate-900 mb-1">Acesso Q</h3>
+              <p className="text-slate-400 text-xs font-medium mb-8">Atalhos para os detalhes principais</p>
+              
+              <div className="space-y-3">
+                <button className="w-full flex items-center gap-4 p-4 rounded-2xl border border-slate-50 hover:bg-slate-50 transition-all text-slate-700 font-bold text-sm">
+                  <Calendar size={18} className="text-blue-600" />
+                  Inscrições
+                </button>
+                <button className="w-full flex items-center gap-4 p-4 rounded-2xl border border-slate-50 hover:bg-slate-50 transition-all text-slate-700 font-bold text-sm">
+                  <Book size={18} className="text-purple-600" />
+                  Conteúdo
+                </button>
+                <button className="w-full flex items-center gap-4 p-4 rounded-2xl border border-slate-50 hover:bg-slate-50 transition-all text-slate-700 font-bold text-sm">
+                  <Settings size={18} className="text-slate-400" />
+                  configurações
+                </button>
+              </div>
+            </div>
+
+            {/* Recent Inscriptions */}
+            <div className="lg:col-span-2 bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col">
+              <h3 className="text-xl font-bold text-slate-900 mb-1">Inscrições Recentes</h3>
+              <p className="text-slate-400 text-xs font-medium mb-8">Últimos proponentes que enviaram projetos</p>
+              
+              <div className="space-y-6 flex-grow">
+                {recentInscriptions.map((item, i) => (
+                  <div key={i} className="flex items-center gap-4">
+                    <div className="w-2 h-2 rounded-full bg-blue-600" />
+                    <div>
+                      <p className="text-sm font-bold text-slate-900">{item.name}</p>
+                      <p className="text-[10px] font-medium text-slate-400">{item.time}</p>
+                    </div>
+                  </div>
                 ))}
-              </TableBody>
-            </Table>
-          </div>
-        )}
+              </div>
 
-        {activeTab === 'editais' && (
-          <div className="flex flex-col items-center justify-center py-20 text-center">
-            <div className="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mb-6">
-              <Plus className="text-blue-600" size={32} />
+              <button className="mt-8 text-blue-600 font-bold text-sm hover:underline self-center">
+                Ver todas as indicações
+              </button>
             </div>
-            <h3 className="text-xl font-bold text-slate-900 mb-2">Gerenciamento de Editais</h3>
-            <p className="text-slate-500 max-w-xs mb-8">Em breve você poderá criar e editar novos editais diretamente por aqui.</p>
-            <Button className="bg-blue-600 hover:bg-blue-700 rounded-xl px-8 font-bold">Novo Edital</Button>
           </div>
-        )}
+        </div>
       </main>
     </div>
   );
