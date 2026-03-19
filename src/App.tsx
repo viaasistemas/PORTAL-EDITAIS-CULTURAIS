@@ -7,6 +7,8 @@ import { SessionContextProvider } from "./components/SessionContextProvider";
 import Index from "./pages/Index";
 import Editais from "./pages/Editais";
 import EditaisPNAB from "./pages/EditaisPNAB";
+import EditaisLPG from "./pages/EditaisLPG";
+import EditaisFM from "./pages/EditaisFM";
 import Inscricoes from "./pages/Inscricoes";
 import Biblioteca from "./pages/Biblioteca";
 import Login from "./pages/Login";
@@ -29,8 +31,8 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/editais" element={<Editais />} />
             <Route path="/editais/pnab" element={<EditaisPNAB />} />
-            <Route path="/editais/lpg" element={<Editais />} />
-            <Route path="/editais/fm" element={<Editais />} />
+            <Route path="/editais/lpg" element={<EditaisLPG />} />
+            <Route path="/editais/fm" element={<EditaisFM />} />
             <Route path="/inscricoes" element={<Inscricoes />} />
             <Route path="/biblioteca" element={<Biblioteca />} />
             <Route path="/login" element={<Login />} />
