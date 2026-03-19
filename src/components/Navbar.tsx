@@ -1,15 +1,17 @@
 "use client";
 
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useSession } from './SessionContextProvider';
 
 const Navbar = () => {
   const { session } = useSession();
+  const location = useLocation();
+  const isHome = location.pathname === "/";
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-lg border-b border-gray-100">
+    <nav className={`fixed top-0 left-0 right-0 z-50 border-b border-gray-100 ${isHome ? 'bg-white' : 'bg-white/80 backdrop-blur-lg'}`}>
       <div className="container mx-auto px-4 h-20 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2 group">
           <div className="flex flex-col">
@@ -27,7 +29,9 @@ const Navbar = () => {
 
         {session ? (
           <div className="flex items-center gap-4">
-            <span className="text-xs font-medium text-gray-500 hidden lg:block">{session.user.email}</span>
+            <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white text-[10px] font-bold">
+              {session.user.email?.substring(0, 2).toUpperCase()}
+            </div>
             <Button 
               variant="ghost" 
               className="text-xs font-bold uppercase tracking-wider text-gray-500"
