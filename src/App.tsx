@@ -10,6 +10,8 @@ import Inscricoes from "./pages/Inscricoes";
 import Biblioteca from "./pages/Biblioteca";
 import Login from "./pages/Login";
 import Admin from "./pages/Admin";
+import AdminInscricoes from "./pages/AdminInscricoes";
+import AdminConteudo from "./pages/AdminConteudo";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -28,6 +30,8 @@ const App = () => (
             <Route path="/biblioteca" element={<Biblioteca />} />
             <Route path="/login" element={<Login />} />
             <Route path="/admin" element={<Admin />} />
+            <Route path="/admin/inscricoes" element={<AdminInscricoes />} />
+            <Route path="/admin/conteudo" element={<AdminConteudo />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
