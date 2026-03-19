@@ -9,7 +9,7 @@ const Navbar = () => {
   const { session } = useSession();
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-100 shadow-sm">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-lg border-b border-gray-100">
       <div className="container mx-auto px-4 h-20 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2 group">
           <div className="flex flex-col">
