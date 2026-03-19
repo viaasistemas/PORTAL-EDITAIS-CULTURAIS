@@ -30,18 +30,24 @@ const AdminInscricoes = () => {
 
   const editais = [
     {
+      id: "1",
+      number: "3",
       title: "PNAB - Fomento Cultura Popular 2026",
       status: "Aberto" as const,
       inscriptionsCount: 0,
       date: "05/04/2026"
     },
     {
-      title: "PNAB - Fomento às Artes Cênicas 2024",
+      id: "2",
+      number: "2",
+      title: "PNAB - Fomento às Artes Cênicas 2026",
       status: "Aberto" as const,
       inscriptionsCount: 156,
       date: "Até 15/05/2024"
     },
     {
+      id: "3",
+      number: "1",
       title: "PNAB - Música Popular Brasileira 2024",
       status: "Encerrado" as const,
       inscriptionsCount: 203,
@@ -54,7 +60,6 @@ const AdminInscricoes = () => {
       <AdminSidebar />
       
       <main className="flex-grow flex flex-col">
-        {/* Header */}
         <header className="h-20 bg-white border-b border-slate-100 px-8 flex items-center justify-between sticky top-0 z-10">
           <div className="flex items-center gap-4">
             <div className="flex flex-col">
@@ -76,7 +81,6 @@ const AdminInscricoes = () => {
         </header>
 
         <div className="p-8 max-w-7xl mx-auto w-full space-y-8">
-          {/* Title and Filter */}
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
               <h2 className="text-2xl font-bold text-slate-900">Gestão de Inscrições</h2>
@@ -95,7 +99,6 @@ const AdminInscricoes = () => {
             </Select>
           </div>
 
-          {/* Tabs */}
           <div className="flex gap-2 overflow-x-auto pb-2">
             {tabs.map((tab) => (
               <Button
@@ -112,7 +115,6 @@ const AdminInscricoes = () => {
             ))}
           </div>
 
-          {/* Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {editais.map((edital, index) => (
               <AdminEditalCard key={index} {...edital} />

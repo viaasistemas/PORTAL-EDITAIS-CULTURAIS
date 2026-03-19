@@ -11,6 +11,7 @@ import Biblioteca from "./pages/Biblioteca";
 import Login from "./pages/Login";
 import Admin from "./pages/Admin";
 import AdminInscricoes from "./pages/AdminInscricoes";
+import AdminEditalDetalhes from "./pages/AdminEditalDetalhes";
 import AdminConteudo from "./pages/AdminConteudo";
 import NotFound from "./pages/NotFound";
 
@@ -26,11 +27,15 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/editais" element={<Editais />} />
+            <Route path="/editais/pnab" element={<Editais />} />
+            <Route path="/editais/lpg" element={<Editais />} />
+            <Route path="/editais/fm" element={<Editais />} />
             <Route path="/inscricoes" element={<Inscricoes />} />
             <Route path="/biblioteca" element={<Biblioteca />} />
             <Route path="/login" element={<Login />} />
             <Route path="/admin" element={<Admin />} />
             <Route path="/admin/inscricoes" element={<AdminInscricoes />} />
+            <Route path="/admin/inscricoes/:id" element={<AdminEditalDetalhes />} />
             <Route path="/admin/conteudo" element={<AdminConteudo />} />
             <Route path="*" element={<NotFound />} />
           </Routes>

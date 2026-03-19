@@ -1,20 +1,29 @@
 "use client";
 
 import React from 'react';
-import { Eye, FileText, Cloud, Paperclip, AlertTriangle, Folder, Users, Calendar } from 'lucide-react';
+import { Eye, FileText, Cloud, Paperclip, Users, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
 
 interface AdminEditalCardProps {
+  id: string;
+  number: string;
   title: string;
   status: 'Aberto' | 'Encerrado';
   inscriptionsCount: number;
   date: string;
 }
 
-const AdminEditalCard = ({ title, status, inscriptionsCount, date }: AdminEditalCardProps) => {
+const AdminEditalCard = ({ id, number, title, status, inscriptionsCount, date }: AdminEditalCardProps) => {
+  const navigate = useNavigate();
+
   return (
-    <div className="bg-white rounded-2xl border border-slate-100 p-8 shadow-sm hover:shadow-md transition-all flex flex-col h-full">
-      <div className="flex justify-between items-start mb-4 gap-4">
+    <div className="bg-white rounded-2xl border border-slate-100 p-8 shadow-sm hover:shadow-md transition-all flex flex-col h-full relative">
+      <div className="absolute top-4 right-4 w-8 h-8 bg-slate-50 rounded-full flex items-center justify-center text-slate-400 font-bold text-xs border border-slate-100">
+        {number}
+      </div>
+      
+      <div className="flex justify-between items-start mb-4 gap-4 pr-8">
         <h3 className="text-lg font-bold text-slate-900 leading-tight">{title}</h3>
         <span className={`shrink-0 px-3 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider ${
           status === 'Aberto' 
@@ -37,7 +46,10 @@ const AdminEditalCard = ({ title, status, inscriptionsCount, date }: AdminEdital
       </div>
 
       <div className="grid grid-cols-2 gap-3 mt-auto">
-        <Button className="bg-blue-600 hover:bg-blue-700 text-white font-bold text-[11px] h-11 rounded-xl flex gap-2 shadow-lg shadow-blue-100">
+        <Button 
+          onClick={() => navigate(`/admin/inscricoes/${id}`)}
+          className="bg-blue-600 hover:bg-blue-700 text-white font-bold text-[11px] h-11 rounded-xl flex gap-2 shadow-lg shadow-blue-100"
+        >
           <Eye size={14} /> Ver Inscrições
         </Button>
         <Button variant="outline" className="border-slate-100 text-slate-600 font-bold text-[11px] h-11 rounded-xl flex gap-2 hover:bg-slate-50">
@@ -48,12 +60,6 @@ const AdminEditalCard = ({ title, status, inscriptionsCount, date }: AdminEdital
         </Button>
         <Button variant="secondary" className="bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold text-[11px] h-11 rounded-xl flex gap-2">
           <Paperclip size={14} /> Anexos
-        </Button>
-        <Button variant="outline" className="border-rose-100 text-rose-600 hover:bg-rose-50 font-bold text-[11px] h-11 rounded-xl flex gap-2">
-          <AlertTriangle size={14} /> Recursos
-        </Button>
-        <Button variant="outline" className="border-blue-100 text-blue-600 hover:bg-blue-50 font-bold text-[11px] h-11 rounded-xl flex gap-2">
-          <Folder size={14} /> Documentação
         </Button>
       </div>
     </div>

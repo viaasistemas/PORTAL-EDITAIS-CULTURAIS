@@ -10,17 +10,20 @@ const Editais = () => {
     {
       title: "Fomento Municipal",
       description: "Editais de Extremoz-RN",
-      image: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?q=80&w=800&auto=format&fit=crop"
+      image: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?q=80&w=800&auto=format&fit=crop",
+      link: "/editais/fm"
     },
     {
       title: "Lei Paulo Gustavo",
       description: "Recursos federais para o setor cultural",
-      image: "https://images.unsplash.com/photo-1460666819451-7410f5ef139a?q=80&w=800&auto=format&fit=crop"
+      image: "https://images.unsplash.com/photo-1460666819451-7410f5ef139a?q=80&w=800&auto=format&fit=crop",
+      link: "/editais/lpg"
     },
     {
       title: "PNAB",
       description: "Política Nacional Aldir Blanc",
-      image: "https://images.unsplash.com/photo-1499781350541-7783f6c6a0c8?q=80&w=800&auto=format&fit=crop"
+      image: "https://images.unsplash.com/photo-1499781350541-7783f6c6a0c8?q=80&w=800&auto=format&fit=crop",
+      link: "/editais/pnab"
     }
   ];
 
@@ -29,9 +32,7 @@ const Editais = () => {
       <Navbar />
       
       <main className="flex-grow">
-        {/* Hero Section */}
         <section className="relative pt-48 pb-40 bg-blue-600 overflow-hidden">
-          {/* Background Pattern/Overlay */}
           <div className="absolute inset-0 opacity-20">
             <img 
               src="/src/assets/editais-hero.png" 
@@ -51,7 +52,6 @@ const Editais = () => {
           </div>
         </section>
 
-        {/* Cards Grid - Overlapping the hero */}
         <section className="relative z-20 -mt-20 pb-24 container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {editais.map((edital, index) => (
