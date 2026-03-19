@@ -7,7 +7,6 @@ import {
   Calendar, 
   Users, 
   Paperclip, 
-  FileText, 
   AlertTriangle, 
   CheckCircle2,
   Info
@@ -15,39 +14,15 @@ import {
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
+import { editaisData, EditalDetail } from '@/data/editais';
+import EditalDetailsDialog from '@/components/EditalDetailsDialog';
 
 const EditaisPNAB = () => {
   const navigate = useNavigate();
   const [filter, setFilter] = useState('Todos');
+  const [selectedEdital, setSelectedEdital] = useState<EditalDetail | null>(null);
 
-  const editais = [
-    {
-      id: "3",
-      title: "PNAB - Fomento Cultura Popular 2026",
-      status: "Aberto",
-      prazoAtual: "PERÍODO DE INSCRIÇÃO",
-      prazoFinal: "05/04/2026",
-      vagas: "10"
-    },
-    {
-      id: "2",
-      title: "PNAB - Fomento às Artes Cênicas 2026",
-      status: "Aberto",
-      prazoAtual: "EM ANÁLISE",
-      prazoFinal: "15/05/2024",
-      vagas: "N/A"
-    },
-    {
-      id: "1",
-      title: "PNAB - Música Popular Brasileira 2024",
-      status: "Encerrado",
-      prazoAtual: "ENCERRADO",
-      prazoFinal: "30/05/2024",
-      vagas: "N/A"
-    }
-  ];
-
-  const filteredEditais = editais.filter(e => {
+  const filteredEditais = editaisData.filter(e => {
     if (filter === 'Todos') return true;
     return e.status === filter;
   });
@@ -57,7 +32,6 @@ const EditaisPNAB = () => {
       <Navbar />
       
       <main className="flex-grow">
-        {/* Header Section */}
         <section className="pt-32 pb-20 bg-[#2b59c3] text-center text-white relative overflow-hidden">
           <div className="container mx-auto px-4 relative z-10">
             <h1 className="text-4xl md:text-6xl font-extrabold mb-4 tracking-tight">
@@ -69,7 +43,6 @@ const EditaisPNAB = () => {
           </div>
         </section>
 
-        {/* Controls Section */}
         <section className="py-8 container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-center gap-6">
             <Button 
@@ -100,7 +73,6 @@ const EditaisPNAB = () => {
           </div>
         </section>
 
-        {/* Grid Section */}
         <section className="pb-24 container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-7xl mx-auto">
             {filteredEditais.map((edital) => (
@@ -133,7 +105,7 @@ const EditaisPNAB = () => {
                       <Calendar size={16} />
                       <p className="text-[10px] font-bold uppercase tracking-wider">Prazo Final</p>
                     </div>
-                    <p className="text-sm font-bold text-slate-500">{edital.prazoFinal}</p>
+                    <p className="text-sm font-bold text-slate-700">{edital.terminoInscricao}</p>
                   </div>
 
                   <div className="space-y-1">
@@ -147,7 +119,11 @@ const EditaisPNAB = () => {
 
                 <div className="space-y-3 mt-auto">
                   <div className="grid grid-cols-2 gap-3">
-                    <Button variant="outline" className="h-12 rounded-xl border-slate-100 text-slate-600 font-bold text-xs hover:bg-slate-50">
+                    <Button 
+                      variant="outline" 
+                      onClick={() => setSelectedEdital(edital)}
+                      className="h-12 rounded-xl border-slate-100 text-slate-600 font-bold text-xs hover:bg-slate-50"
+                    >
                       Ver Detalhes
                     </Button>
                     <Button variant="outline" className="h-12 rounded-xl border-slate-100 text-slate-600 font-bold text-xs flex gap-2 hover:bg-slate-50">
@@ -180,6 +156,14 @@ const EditaisPNAB = () => {
           </div>
         </section>
       </main>
+
+      {selectedEdital && (
+        <EditalDetailsDialog 
+          edital={selectedEdital} 
+          open={!!selectedEdital} 
+          onOpenChange={(open) => !open && setSelectedEdital(null)} 
+        />
+      )}
 
       <Footer />
     </div>

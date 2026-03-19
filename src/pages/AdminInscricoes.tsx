@@ -14,11 +14,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { editaisData } from '@/data/editais';
 
 const AdminInscricoes = () => {
   const { session, loading } = useSession();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('Todos');
+  const [statusFilter, setStatusFilter] = useState('todos');
 
   useEffect(() => {
     if (!loading && !session) navigate('/login');
@@ -26,34 +28,20 @@ const AdminInscricoes = () => {
 
   if (loading || !session) return null;
 
-  const tabs = ["Todos", "Fomento Municipal", "GLP", "PNAB"];
+  const tabs = ["Todos", "Fomento Municipal", "LPG", "PNAB"];
 
-  const editais = [
-    {
-      id: "1",
-      number: "3",
-      title: "PNAB - Fomento Cultura Popular 2026",
-      status: "Aberto" as const,
-      inscriptionsCount: 0,
-      date: "05/04/2026"
-    },
-    {
-      id: "2",
-      number: "2",
-      title: "PNAB - Fomento às Artes Cênicas 2026",
-      status: "Aberto" as const,
-      inscriptionsCount: 156,
-      date: "Até 15/05/2024"
-    },
-    {
-      id: "3",
-      number: "1",
-      title: "PNAB - Música Popular Brasileira 2024",
-      status: "Encerrado" as const,
-      inscriptionsCount: 203,
-      date: "30/05/2024"
-    }
-  ];
+  const filteredEditais = editaisData.filter(edital => {
+    const matchesTab = activeTab === 'Todos' || 
+                      (activeTab === 'Fomento Municipal' && edital.tipo === 'FM') ||
+                      (activeTab === 'LPG' && edital.tipo === 'LPG') ||
+                      (activeTab === 'PNAB' && edital.tipo === 'PNAB');
+    
+    const matchesStatus = statusFilter === 'todos' || 
+                         (statusFilter === 'aberto' && edital.status === 'Aberto') ||
+                         (statusFilter === 'encerrado' && edital.status === 'Encerrado');
+
+    return matchesTab && matchesStatus;
+  });
 
   return (
     <div className="min-h-screen bg-[#f8fafc] flex">
@@ -63,7 +51,7 @@ const AdminInscricoes = () => {
         <header className="h-20 bg-white border-b border-slate-100 px-8 flex items-center justify-between sticky top-0 z-10">
           <div className="flex items-center gap-4">
             <div className="flex flex-col">
-              <h1 className="text-lg font-bold text-slate-900 leading-none">Lei Aldir Blanc</h1>
+              <h1 className="text-lg font-bold text-slate-900 leading-none">Gestão de Editais</h1>
               <p className="text-[10px] font-medium text-slate-400 uppercase tracking-widest mt-1">Sistema de Gestão Cultural</p>
             </div>
           </div>
@@ -71,11 +59,11 @@ const AdminInscricoes = () => {
           <div className="flex items-center gap-4">
             <div className="text-right hidden sm:block">
               <p className="text-xs font-medium text-slate-500">
-                Bem-vindo, <span className="font-bold text-slate-900">Almirante Geral</span>
+                Bem-vindo, <span className="font-bold text-slate-900">Administrador</span>
               </p>
             </div>
             <Avatar className="h-10 w-10 border-2 border-blue-600 p-0.5">
-              <AvatarFallback className="bg-blue-600 text-white text-xs font-bold">AG</AvatarFallback>
+              <AvatarFallback className="bg-blue-600 text-white text-xs font-bold">AD</AvatarFallback>
             </Avatar>
           </div>
         </header>
@@ -87,7 +75,7 @@ const AdminInscricoes = () => {
               <p className="text-slate-500 text-sm font-medium">Visualizar e gerenciar as inscrições recebidas por edital</p>
             </div>
             
-            <Select defaultValue="todos">
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
               <SelectTrigger className="w-[200px] bg-white border-slate-200 rounded-xl h-11">
                 <SelectValue placeholder="Todos os Status" />
               </SelectTrigger>
@@ -116,8 +104,8 @@ const AdminInscricoes = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {editais.map((edital, index) => (
-              <AdminEditalCard key={index} {...edital} />
+            {filteredEditais.map((edital) => (
+              <AdminEditalCard key={edital.id} edital={edital} />
             ))}
           </div>
         </div>
