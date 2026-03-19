@@ -85,7 +85,6 @@ const AdminInscricoes = () => {
       <AdminSidebar />
       
       <main className="flex-grow flex flex-col">
-        {/* Header */}
         <header className="h-20 bg-white border-b border-slate-100 px-8 flex items-center justify-between sticky top-0 z-10">
           <div className="flex items-center gap-4">
             <div className="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600">
@@ -106,7 +105,6 @@ const AdminInscricoes = () => {
         </header>
 
         <div className="p-8 max-w-7xl mx-auto w-full space-y-8">
-          {/* Stats Summary */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
               <p className="text-slate-400 text-xs font-bold uppercase tracking-widest mb-2">Total de Inscrições</p>
@@ -122,7 +120,6 @@ const AdminInscricoes = () => {
             </div>
           </div>
 
-          {/* Filters and Search */}
           <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-6">
             <div className="flex flex-col md:flex-row gap-4 justify-between items-center">
               <div className="relative w-full md:w-96">
@@ -144,15 +141,14 @@ const AdminInscricoes = () => {
               </div>
             </div>
 
-            {/* Table */}
             <div className="rounded-2xl border border-slate-100 overflow-hidden">
               <Table>
                 <TableHeader className="bg-slate-50/50">
                   <TableRow className="hover:bg-transparent border-slate-100">
-                    <TableHead className="font-bold text-slate-900 h-14 px-6"><div className="flex items-center gap-2"><Hash size={14} /> Protocolo</div></TableHead>
-                    <TableHead className="font-bold text-slate-900 h-14 px-6"><div className="flex items-center gap-2"><User size={14} /> Proponente</div></TableHead>
+                    <TableHead className="font-bold text-slate-900 h-14 px-6">Protocolo</TableHead>
+                    <TableHead className="font-bold text-slate-900 h-14 px-6">Proponente</TableHead>
                     <TableHead className="font-bold text-slate-900 h-14 px-6">Edital</TableHead>
-                    <TableHead className="font-bold text-slate-900 h-14 px-6"><div className="flex items-center gap-2"><CalendarIcon size={14} /> Data</div></TableHead>
+                    <TableHead className="font-bold text-slate-900 h-14 px-6">Data</TableHead>
                     <TableHead className="font-bold text-slate-900 h-14 px-6">Status</TableHead>
                     <TableHead className="text-right font-bold text-slate-900 h-14 px-6">Ações</TableHead>
                   </TableRow>
@@ -191,10 +187,10 @@ const AdminInscricoes = () => {
                             <DropdownMenuLabel className="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-3 py-2">Ações</DropdownMenuLabel>
                             <DropdownMenuItem className="rounded-xl flex gap-3 font-medium text-slate-700 focus:bg-blue-50 focus:text-blue-600 cursor-pointer">
                               <Eye size={16} /> Visualizar Detalhes
-                            </MenuItem>
+                            </DropdownMenuItem>
                             <DropdownMenuItem className="rounded-xl flex gap-3 font-medium text-slate-700 focus:bg-blue-50 focus:text-blue-600 cursor-pointer">
                               <FileDown size={16} /> Baixar Documentos
-                            </MenuItem>
+                            </DropdownMenuItem>
                             <DropdownMenuSeparator className="bg-slate-100 my-1" />
                             <DropdownMenuItem className="rounded-xl flex gap-3 font-bold text-emerald-600 focus:bg-emerald-50 focus:text-emerald-700 cursor-pointer">
                               <CheckCircle2 size={16} /> Aprovar
@@ -211,7 +207,6 @@ const AdminInscricoes = () => {
               </Table>
             </div>
 
-            {/* Pagination Placeholder */}
             <div className="flex items-center justify-between pt-4">
               <p className="text-xs font-medium text-slate-400">Mostrando 5 de 1.234 inscrições</p>
               <div className="flex gap-2">
