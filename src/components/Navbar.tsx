@@ -3,8 +3,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { useSession } from './SessionContextProvider';
 
 const Navbar = () => {
+  const { session } = useSession();
+
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-lg border-b border-gray-100">
       <div className="container mx-auto px-4 h-20 flex items-center justify-between">
@@ -22,9 +25,24 @@ const Navbar = () => {
           <Link to="/biblioteca" className="text-sm font-medium text-gray-500 hover:text-blue-600 transition-colors">Biblioteca</Link>
         </div>
 
-        <Button className="bg-blue-600 hover:bg-blue-700 text-white px-6 rounded-full font-semibold uppercase text-[11px] tracking-wider shadow-sm">
-          Entrar
-        </Button>
+        {session ? (
+          <div className="flex items-center gap-4">
+            <span className="text-xs font-medium text-gray-500 hidden lg:block">{session.user.email}</span>
+            <Button 
+              variant="ghost" 
+              className="text-xs font-bold uppercase tracking-wider text-gray-500"
+              onClick={() => import('@/integrations/supabase/client').then(m => m.supabase.auth.signOut())}
+            >
+              Sair
+            </Button>
+          </div>
+        ) : (
+          <Link to="/login">
+            <Button className="bg-blue-600 hover:bg-blue-700 text-white px-6 rounded-full font-semibold uppercase text-[11px] tracking-wider shadow-sm">
+              Entrar
+            </Button>
+          </Link>
+        )}
       </div>
     </nav>
   );
