@@ -1,13 +1,24 @@
 "use client";
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Auth } from '@supabase/auth-ui-react';
 import { ThemeSupa } from '@supabase/auth-ui-shared';
 import { supabase } from '@/integrations/supabase/client';
+import { useNavigate } from 'react-router-dom';
+import { useSession } from '@/components/SessionContextProvider';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 
 const Login = () => {
+  const { session } = useSession();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (session) {
+      navigate('/admin');
+    }
+  }, [session, navigate]);
+
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
       <Navbar />
@@ -41,11 +52,19 @@ const Login = () => {
                   email_label: 'E-mail',
                   password_label: 'Senha',
                   button_label: 'Entrar',
+                  loading_button_label: 'Entrando...',
+                  email_input_placeholder: 'Seu e-mail',
+                  password_input_placeholder: 'Sua senha',
+                  link_text: 'Já tem uma conta? Entre',
                 },
                 sign_up: {
                   email_label: 'E-mail',
                   password_label: 'Senha',
                   button_label: 'Cadastrar',
+                  loading_button_label: 'Cadastrando...',
+                  email_input_placeholder: 'Seu e-mail',
+                  password_input_placeholder: 'Sua senha',
+                  link_text: 'Não tem uma conta? Cadastre-se',
                 }
               }
             }}
