@@ -21,30 +21,37 @@ const AdminEditalDetalhes = () => {
   const { id } = useParams();
   const { session, loading } = useSession();
   const navigate = useNavigate();
-  const [activeView, setActiveView] = useState<'overview' | 'inscricoes'>('overview');
-  const [inscricoes, setInscricoes] = useState<any[]>([]);
+  const [activeView, setActiveView] = useState<'overview' | 'inscricoes' | 'recursos' | 'documentacao'>('overview');
+  const [data, setData] = useState<any[]>([]);
   const [fetching, setFetching] = useState(false);
 
   useEffect(() => {
     if (!loading && !session) navigate('/login');
   }, [session, loading, navigate]);
 
-  const fetchInscricoes = async () => {
+  const fetchData = async (view: string) => {
     setFetching(true);
-    const { data, error } = await supabase
-      .from('inscricoes')
-      .select('*')
-      .eq('edital_id', id);
-    
-    if (!error && data) {
-      setInscricoes(data);
+    let table = '';
+    if (view === 'inscricoes') table = 'inscricoes';
+    else if (view === 'recursos') table = 'recursos';
+    else if (view === 'documentacao') table = 'documentacao';
+
+    if (table) {
+      const { data, error } = await supabase
+        .from(table)
+        .select('*')
+        .eq('edital_id', id);
+      
+      if (!error && data) {
+        setData(data);
+      }
     }
     setFetching(false);
   };
 
   useEffect(() => {
-    if (activeView === 'inscricoes') {
-      fetchInscricoes();
+    if (activeView !== 'overview') {
+      fetchData(activeView);
     }
   }, [activeView, id]);
 
@@ -90,12 +97,26 @@ const AdminEditalDetalhes = () => {
                 Inscrições
               </Button>
               
-              <Button variant="outline" className="h-24 border-rose-100 text-rose-600 hover:bg-rose-50 rounded-3xl flex flex-col gap-2 font-bold">
+              <Button 
+                onClick={() => setActiveView('recursos')}
+                className={`h-24 rounded-3xl flex flex-col gap-2 font-bold transition-all ${
+                  activeView === 'recursos' 
+                    ? 'bg-red-600 text-white shadow-xl shadow-red-100' 
+                    : 'bg-white border border-rose-100 text-rose-600 hover:bg-rose-50'
+                }`}
+              >
                 <AlertTriangle size={24} />
                 Recursos
               </Button>
               
-              <Button variant="outline" className="h-24 border-blue-100 text-blue-600 hover:bg-blue-50 rounded-3xl flex flex-col gap-2 font-bold">
+              <Button 
+                onClick={() => setActiveView('documentacao')}
+                className={`h-24 rounded-3xl flex flex-col gap-2 font-bold transition-all ${
+                  activeView === 'documentacao' 
+                    ? 'bg-emerald-600 text-white shadow-xl shadow-emerald-100' 
+                    : 'bg-white border border-emerald-100 text-emerald-600 hover:bg-emerald-50'
+                }`}
+              >
                 <Folder size={24} />
                 Documentação
               </Button>
@@ -109,8 +130,11 @@ const AdminEditalDetalhes = () => {
           ) : (
             <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden">
               <div className="p-8 border-b border-slate-50 flex justify-between items-center">
-                <h3 className="text-xl font-bold text-slate-900">Lista de Inscrições</h3>
-                <Button variant="outline" size="sm" onClick={fetchInscricoes} disabled={fetching} className="rounded-xl">
+                <h3 className="text-xl font-bold text-slate-900">
+                  {activeView === 'inscricoes' ? 'Lista de Inscrições' : 
+                   activeView === 'recursos' ? 'Lista de Recursos' : 'Lista de Documentações'}
+                </h3>
+                <Button variant="outline" size="sm" onClick={() => fetchData(activeView)} disabled={fetching} className="rounded-xl">
                   {fetching ? <Loader2 className="animate-spin" /> : "Atualizar"}
                 </Button>
               </div>
@@ -122,45 +146,37 @@ const AdminEditalDetalhes = () => {
                       <TableHead className="font-bold text-slate-900">Proponente</TableHead>
                       <TableHead className="font-bold text-slate-900">CPF</TableHead>
                       <TableHead className="font-bold text-slate-900">Nascimento</TableHead>
-                      <TableHead className="font-bold text-slate-900">Arquivos</TableHead>
+                      <TableHead className="font-bold text-slate-900">Protocolo</TableHead>
+                      <TableHead className="font-bold text-slate-900">Arquivo</TableHead>
                       <TableHead className="font-bold text-slate-900">Status</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {inscricoes.length === 0 ? (
+                    {data.length === 0 ? (
                       <TableRow>
-                        <TableCell colSpan={5} className="text-center py-20 text-slate-400 font-medium">
-                          Nenhuma inscrição encontrada para este edital.
+                        <TableCell colSpan={6} className="text-center py-20 text-slate-400 font-medium">
+                          Nenhum registro encontrado.
                         </TableCell>
                       </TableRow>
                     ) : (
-                      inscricoes.map((inscricao) => (
-                        <TableRow key={inscricao.id} className="hover:bg-slate-50/50 transition-colors">
-                          <TableCell>
-                            <div className="flex flex-col">
-                              <span className="font-bold text-slate-900">{inscricao.full_name}</span>
-                              <span className="text-[10px] font-mono text-blue-600">{inscricao.protocol}</span>
-                            </div>
-                          </TableCell>
-                          <TableCell className="text-sm text-slate-600">{inscricao.cpf}</TableCell>
+                      data.map((item) => (
+                        <TableRow key={item.id} className="hover:bg-slate-50/50 transition-colors">
+                          <TableCell className="font-bold text-slate-900">{item.full_name}</TableCell>
+                          <TableCell className="text-sm text-slate-600">{item.cpf}</TableCell>
                           <TableCell className="text-sm text-slate-600">
-                            {new Date(inscricao.birth_date).toLocaleDateString('pt-BR')}
+                            {new Date(item.birth_date).toLocaleDateString('pt-BR')}
+                          </TableCell>
+                          <TableCell className="text-sm font-mono text-blue-600">{item.protocol}</TableCell>
+                          <TableCell>
+                            <Button variant="ghost" size="sm" className="rounded-lg bg-slate-100 text-slate-500 hover:bg-blue-50 hover:text-blue-600 flex gap-2">
+                              <FileText size={14} /> {item.file_name || 'Ver Arquivo'}
+                            </Button>
                           </TableCell>
                           <TableCell>
-                            <div className="flex flex-wrap gap-1.5">
-                              {[1, 2, 3, 4, 5].map(i => (
-                                <Button key={i} variant="ghost" size="icon" className="h-8 w-8 rounded-lg bg-slate-100 text-slate-500 hover:bg-blue-50 hover:text-blue-600" title={`Anexo ${i}`}>
-                                  <FileText size={14} />
-                                </Button>
-                              ))}
-                              <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg bg-slate-100 text-slate-500 hover:bg-purple-50 hover:text-purple-600" title="Portfolio">
-                                <ExternalLink size={14} />
-                              </Button>
-                            </div>
-                          </TableCell>
-                          <TableCell>
-                            <span className="px-3 py-1 rounded-full bg-yellow-50 text-yellow-600 text-[10px] font-bold uppercase">
-                              {inscricao.status}
+                            <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase ${
+                              item.status === 'Aprovado' ? 'bg-emerald-50 text-emerald-600' : 'bg-yellow-50 text-yellow-600'
+                            }`}>
+                              {item.status || 'Pendente'}
                             </span>
                           </TableCell>
                         </TableRow>

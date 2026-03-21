@@ -17,12 +17,16 @@ import { Button } from '@/components/ui/button';
 import { editaisData, EditalDetail } from '@/data/editais';
 import EditalDetailsDialog from '@/components/EditalDetailsDialog';
 import InscricaoDialog from '@/components/InscricaoDialog';
+import RecursoDialog from '@/components/RecursoDialog';
+import DocumentacaoDialog from '@/components/DocumentacaoDialog';
 
 const EditaisPNAB = () => {
   const navigate = useNavigate();
   const [filter, setFilter] = useState('Todos');
   const [selectedEdital, setSelectedEdital] = useState<EditalDetail | null>(null);
   const [inscricaoEdital, setInscricaoEdital] = useState<EditalDetail | null>(null);
+  const [recursoEdital, setRecursoEdital] = useState<EditalDetail | null>(null);
+  const [docEdital, setDocEdital] = useState<EditalDetail | null>(null);
 
   const filteredEditais = editaisData.filter(e => {
     if (filter === 'Todos') return true;
@@ -143,10 +147,16 @@ const EditaisPNAB = () => {
                   ) : (
                     <div className="space-y-3">
                       <div className="grid grid-cols-2 gap-3">
-                        <Button className="h-14 bg-[#ef4444] hover:bg-red-600 text-white font-bold rounded-xl flex gap-2">
+                        <Button 
+                          onClick={() => setRecursoEdital(edital)}
+                          className="h-14 bg-[#ef4444] hover:bg-red-600 text-white font-bold rounded-xl flex gap-2"
+                        >
                           <AlertTriangle size={18} /> Recursos
                         </Button>
-                        <Button className="h-14 bg-[#10b981] hover:bg-emerald-600 text-white font-bold rounded-xl flex gap-2">
+                        <Button 
+                          onClick={() => setDocEdital(edital)}
+                          className="h-14 bg-[#10b981] hover:bg-emerald-600 text-white font-bold rounded-xl flex gap-2"
+                        >
                           <CheckCircle2 size={18} /> Documentação
                         </Button>
                       </div>
@@ -175,6 +185,22 @@ const EditaisPNAB = () => {
           edital={inscricaoEdital} 
           open={!!inscricaoEdital} 
           onOpenChange={(open) => !open && setInscricaoEdital(null)} 
+        />
+      )}
+
+      {recursoEdital && (
+        <RecursoDialog 
+          edital={recursoEdital} 
+          open={!!recursoEdital} 
+          onOpenChange={(open) => !open && setRecursoEdital(null)} 
+        />
+      )}
+
+      {docEdital && (
+        <DocumentacaoDialog 
+          edital={docEdital} 
+          open={!!docEdital} 
+          onOpenChange={(open) => !open && setDocEdital(null)} 
         />
       )}
 
