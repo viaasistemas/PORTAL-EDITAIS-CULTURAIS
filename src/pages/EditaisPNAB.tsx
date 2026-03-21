@@ -16,11 +16,13 @@ import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { editaisData, EditalDetail } from '@/data/editais';
 import EditalDetailsDialog from '@/components/EditalDetailsDialog';
+import InscricaoDialog from '@/components/InscricaoDialog';
 
 const EditaisPNAB = () => {
   const navigate = useNavigate();
   const [filter, setFilter] = useState('Todos');
   const [selectedEdital, setSelectedEdital] = useState<EditalDetail | null>(null);
+  const [inscricaoEdital, setInscricaoEdital] = useState<EditalDetail | null>(null);
 
   const filteredEditais = editaisData.filter(e => {
     if (filter === 'Todos') return true;
@@ -132,7 +134,10 @@ const EditaisPNAB = () => {
                   </div>
 
                   {edital.status === 'Aberto' ? (
-                    <Button className="w-full h-14 bg-[#3b82f6] hover:bg-blue-600 text-white font-bold rounded-xl shadow-lg shadow-blue-100">
+                    <Button 
+                      onClick={() => setInscricaoEdital(edital)}
+                      className="w-full h-14 bg-[#3b82f6] hover:bg-blue-600 text-white font-bold rounded-xl shadow-lg shadow-blue-100"
+                    >
                       Inscrever-se
                     </Button>
                   ) : (
@@ -162,6 +167,14 @@ const EditaisPNAB = () => {
           edital={selectedEdital} 
           open={!!selectedEdital} 
           onOpenChange={(open) => !open && setSelectedEdital(null)} 
+        />
+      )}
+
+      {inscricaoEdital && (
+        <InscricaoDialog 
+          edital={inscricaoEdital} 
+          open={!!inscricaoEdital} 
+          onOpenChange={(open) => !open && setInscricaoEdital(null)} 
         />
       )}
 
