@@ -51,6 +51,7 @@ const InscricaoDialog = ({ edital, open, onOpenChange }: InscricaoDialogProps) =
 
   const handleConfirm = async () => {
     setLoading(true);
+    // Gera um protocolo de 10 dígitos
     const generatedProtocol = Math.floor(1000000000 + Math.random() * 9000000000).toString();
     
     try {
@@ -63,14 +64,17 @@ const InscricaoDialog = ({ edital, open, onOpenChange }: InscricaoDialogProps) =
         status: 'Pendente'
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error("Erro Supabase:", error);
+        throw error;
+      }
 
       setProtocol(generatedProtocol);
       setStep('success');
       toast.success("Inscrição realizada com sucesso!");
     } catch (error: any) {
       console.error("Erro ao salvar inscrição:", error);
-      toast.error("Erro ao processar inscrição. Tente novamente.");
+      toast.error(`Erro ao processar inscrição: ${error.message || 'Tente novamente.'}`);
     } finally {
       setLoading(false);
     }
@@ -83,9 +87,12 @@ const InscricaoDialog = ({ edital, open, onOpenChange }: InscricaoDialogProps) =
 
   return (
     <Dialog open={open} onOpenChange={(val) => {
-      if (step === 'success' && !val) {
-        setStep('form');
-        setFormData({ fullName: '', cpf: '', birthDate: '' });
+      if (!val) {
+        // Resetar ao fechar
+        setTimeout(() => {
+          setStep('form');
+          setFormData({ fullName: '', cpf: '', birthDate: '' });
+        }, 300);
       }
       onOpenChange(val);
     }}>
@@ -137,9 +144,9 @@ const InscricaoDialog = ({ edital, open, onOpenChange }: InscricaoDialogProps) =
               </div>
 
               <div className="grid grid-cols-2 gap-4">
-                {[1, 2, 3, 4, 5].map((i) => (
+                {[1, 2, 3].map((i) => (
                   <div key={i} className="space-y-2">
-                    <Label className="text-xs font-bold text-slate-500 uppercase">Anexo {i} {i <= 3 ? '*' : ''}</Label>
+                    <Label className="text-xs font-bold text-slate-500 uppercase">Anexo {i} *</Label>
                     <div className="relative">
                       <Input type="file" className="hidden" id={`anexo-${i}`} />
                       <label htmlFor={`anexo-${i}`} className="flex items-center justify-between px-4 h-12 rounded-xl border border-slate-200 bg-slate-50 cursor-pointer hover:bg-slate-100 transition-colors">
