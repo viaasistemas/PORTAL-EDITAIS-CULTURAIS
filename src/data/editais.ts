@@ -20,7 +20,7 @@ export interface EditalDetail {
 
 export const editaisData: EditalDetail[] = [
   {
-    id: "3",
+    id: "550e8400-e29b-41d4-a716-446655440000",
     number: "3",
     title: "PNAB - Fomento Cultura Popular 2026",
     subtitle: "Apoio financeiro para grupos populares, e coletivos da Política Nacional Aldir Blanc.",
@@ -39,7 +39,7 @@ export const editaisData: EditalDetail[] = [
     vagas: "10"
   },
   {
-    id: "2",
+    id: "550e8400-e29b-41d4-a716-446655440001",
     number: "2",
     title: "PNAB - Fomento às Artes Cênicas 2026",
     subtitle: "Apoio a grupos teatrais e companhias de dança",
@@ -58,7 +58,7 @@ export const editaisData: EditalDetail[] = [
     vagas: "N/A"
   },
   {
-    id: "1",
+    id: "550e8400-e29b-41d4-a716-446655440002",
     number: "1",
     title: "PNAB - Música Popular Brasileira 2024",
     subtitle: "Incentivo à produção musical brasileira",
