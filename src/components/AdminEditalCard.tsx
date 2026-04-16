@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState } from 'react';
-import { Eye, FileText, Cloud, Paperclip, Users, Calendar, Upload, Clock, Save, AlertCircle, CheckCircle2 } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Eye, FileText, Cloud, Paperclip, Users, Calendar, Clock, Save, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
@@ -30,6 +30,17 @@ const AdminEditalCard = ({ edital }: AdminEditalCardProps) => {
   const [showConfirm, setShowConfirm] = useState(false);
   const [isProrrogacao, setIsProrrogacao] = useState(false);
   
+  // Lógica de status conectada ao sistema
+  const now = new Date();
+  const openingDate = edital.dataAbertura ? new Date(edital.dataAbertura) : null;
+  const closingDate = edital.dataEncerramento ? new Date(edital.dataEncerramento) : null;
+
+  const isRegistrationOpen = openingDate && closingDate 
+    ? now >= openingDate && now <= closingDate
+    : edital.status === 'Aberto';
+
+  const isUpcoming = openingDate && now < openingDate;
+
   const [dates, setDates] = useState({
     abertura: edital.dataAbertura?.split('T')[0] || '',
     horaAbertura: edital.dataAbertura?.split('T')[1]?.substring(0, 5) || '08:00',
@@ -46,7 +57,6 @@ const AdminEditalCard = ({ edital }: AdminEditalCardProps) => {
   };
 
   const handleFinalConfirm = () => {
-    // Aqui salvaríamos no banco futuramente
     toast.success("Alterações salvas com sucesso!");
     setShowConfirm(false);
     setScheduleOpen(false);
@@ -61,11 +71,11 @@ const AdminEditalCard = ({ edital }: AdminEditalCardProps) => {
       <div className="flex justify-between items-start mb-4 gap-4 pr-8">
         <h3 className="text-lg font-bold text-slate-900 leading-tight">{edital.title}</h3>
         <span className={`shrink-0 px-3 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider ${
-          edital.status === 'Aberto' 
+          isRegistrationOpen 
             ? 'bg-emerald-50 text-emerald-600' 
-            : 'bg-rose-50 text-rose-600'
+            : isUpcoming ? 'bg-blue-50 text-blue-600' : 'bg-rose-50 text-rose-600'
         }`}>
-          {edital.status}
+          {isRegistrationOpen ? 'Aberto' : isUpcoming ? 'Em Breve' : 'Encerrado'}
         </span>
       </div>
       
@@ -110,7 +120,6 @@ const AdminEditalCard = ({ edital }: AdminEditalCardProps) => {
         </Button>
       </div>
 
-      {/* Diálogo de Programação */}
       <Dialog open={scheduleOpen} onOpenChange={(val) => {
         setScheduleOpen(val);
         if (!val) setShowConfirm(false);
