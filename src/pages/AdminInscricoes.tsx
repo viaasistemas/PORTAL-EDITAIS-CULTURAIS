@@ -21,8 +21,8 @@ import { editaisData } from '@/data/editais';
 const AdminInscricoes = () => {
   const { session, loading } = useSession();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('Todos');
-  const [statusFilter, setStatusFilter] = useState('todos');
+  const [activeTab, setActiveTab] = useState('Fomento Municipal');
+  const [statusFilter, setStatusFilter] = useState('aberto');
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
@@ -31,16 +31,14 @@ const AdminInscricoes = () => {
 
   if (loading || !session) return null;
 
-  const tabs = ["Todos", "Fomento Municipal", "LPG", "PNAB"];
+  const tabs = ["Fomento Municipal", "LPG", "PNAB"];
 
   const filteredEditais = editaisData.filter(edital => {
-    const matchesTab = activeTab === 'Todos' || 
-                      (activeTab === 'Fomento Municipal' && edital.tipo === 'FM') ||
+    const matchesTab = (activeTab === 'Fomento Municipal' && edital.tipo === 'FM') ||
                       (activeTab === 'LPG' && edital.tipo === 'LPG') ||
                       (activeTab === 'PNAB' && edital.tipo === 'PNAB');
     
-    const matchesStatus = statusFilter === 'todos' || 
-                         (statusFilter === 'aberto' && edital.status === 'Aberto') ||
+    const matchesStatus = (statusFilter === 'aberto' && edital.status === 'Aberto') ||
                          (statusFilter === 'encerrado' && edital.status === 'Encerrado');
 
     const matchesSearch = edital.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -96,7 +94,6 @@ const AdminInscricoes = () => {
                   <SelectValue placeholder="Status" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="todos">Todos os Status</SelectItem>
                   <SelectItem value="aberto">Aberto</SelectItem>
                   <SelectItem value="encerrado">Encerrado</SelectItem>
                 </SelectContent>
@@ -121,9 +118,15 @@ const AdminInscricoes = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredEditais.map((edital) => (
-              <AdminEditalCard key={edital.id} edital={edital} />
-            ))}
+            {filteredEditais.length > 0 ? (
+              filteredEditais.map((edital) => (
+                <AdminEditalCard key={edital.id} edital={edital} />
+              ))
+            ) : (
+              <div className="col-span-full py-20 text-center bg-white rounded-[2.5rem] border border-dashed border-slate-200">
+                <p className="text-slate-400 font-medium">Nenhum edital encontrado para este filtro.</p>
+              </div>
+            )}
           </div>
         </div>
       </main>
