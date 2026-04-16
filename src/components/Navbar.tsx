@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { useSession } from './SessionContextProvider';
 
 const Navbar = () => {
-  const { session } = useSession();
+  const { session, logoutFake } = useSession();
   const location = useLocation();
   const isHome = location.pathname === "/";
 
@@ -35,7 +35,7 @@ const Navbar = () => {
             <Button 
               variant="ghost" 
               className="text-xs font-bold uppercase tracking-wider text-gray-500"
-              onClick={() => import('@/integrations/supabase/client').then(m => m.supabase.auth.signOut())}
+              onClick={logoutFake}
             >
               Sair
             </Button>

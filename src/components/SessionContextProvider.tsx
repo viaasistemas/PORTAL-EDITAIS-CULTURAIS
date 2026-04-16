@@ -4,28 +4,62 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 
-const SessionContext = createContext<{ session: Session | null; loading: boolean }>({ session: null, loading: true });
+interface SessionContextType {
+  session: any | null;
+  loading: boolean;
+  loginFake: () => void;
+  logoutFake: () => void;
+}
+
+const SessionContext = createContext<SessionContextType>({ 
+  session: null, 
+  loading: true,
+  loginFake: () => {},
+  logoutFake: () => {}
+});
 
 export const SessionContextProvider = ({ children }: { children: React.ReactNode }) => {
-  const [session, setSession] = useState<Session | null>(null);
+  const [session, setSession] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
+    // Verificar se existe um login fake no localStorage
+    const fakeUser = localStorage.getItem('fake_session');
+    if (fakeUser) {
+      setSession(JSON.parse(fakeUser));
       setLoading(false);
-    });
+    } else {
+      // Tentar buscar sessão real do Supabase se não houver fake
+      supabase.auth.getSession().then(({ data: { session } }) => {
+        if (session) setSession(session);
+        setLoading(false);
+      });
+    }
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
+      if (!localStorage.getItem('fake_session')) {
+        setSession(session);
+      }
       setLoading(false);
     });
 
     return () => subscription.unsubscribe();
   }, []);
 
+  const loginFake = () => {
+    const mockSession = { user: { email: 'admin@cultura.gov.br', id: 'fake-id' } };
+    localStorage.setItem('fake_session', JSON.stringify(mockSession));
+    setSession(mockSession);
+  };
+
+  const logoutFake = () => {
+    localStorage.removeItem('fake_session');
+    setSession(null);
+    supabase.auth.signOut();
+  };
+
   return (
-    <SessionContext.Provider value={{ session, loading }}>
+    <SessionContext.Provider value={{ session, loading, loginFake, logoutFake }}>
       {children}
     </SessionContext.Provider>
   );
