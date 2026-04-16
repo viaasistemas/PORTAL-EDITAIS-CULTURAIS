@@ -7,6 +7,8 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import AdminEditalCard from '@/components/AdminEditalCard';
+import { Input } from '@/components/ui/input';
+import { Search } from 'lucide-react';
 import {
   Select,
   SelectContent,
@@ -21,6 +23,7 @@ const AdminInscricoes = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('Todos');
   const [statusFilter, setStatusFilter] = useState('todos');
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     if (!loading && !session) navigate('/login');
@@ -40,7 +43,10 @@ const AdminInscricoes = () => {
                          (statusFilter === 'aberto' && edital.status === 'Aberto') ||
                          (statusFilter === 'encerrado' && edital.status === 'Encerrado');
 
-    return matchesTab && matchesStatus;
+    const matchesSearch = edital.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         edital.number.includes(searchTerm);
+
+    return matchesTab && matchesStatus && matchesSearch;
   });
 
   return (
@@ -75,16 +81,27 @@ const AdminInscricoes = () => {
               <p className="text-slate-500 text-sm font-medium">Visualizar e gerenciar as inscrições recebidas por edital</p>
             </div>
             
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-[200px] bg-white border-slate-200 rounded-xl h-11">
-                <SelectValue placeholder="Todos os Status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="todos">Todos os Status</SelectItem>
-                <SelectItem value="aberto">Aberto</SelectItem>
-                <SelectItem value="encerrado">Encerrado</SelectItem>
-              </SelectContent>
-            </Select>
+            <div className="flex items-center gap-3 w-full md:w-auto">
+              <div className="relative flex-grow md:w-64">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                <Input 
+                  placeholder="Buscar edital..." 
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10 h-11 rounded-xl border-slate-200 bg-white"
+                />
+              </div>
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
+                <SelectTrigger className="w-[180px] bg-white border-slate-200 rounded-xl h-11">
+                  <SelectValue placeholder="Status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="todos">Todos os Status</SelectItem>
+                  <SelectItem value="aberto">Aberto</SelectItem>
+                  <SelectItem value="encerrado">Encerrado</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
           <div className="flex gap-2 overflow-x-auto pb-2">

@@ -1,9 +1,11 @@
 "use client";
 
 import React, { useState } from 'react';
-import { Eye, FileText, Cloud, Paperclip, Users, Calendar, Upload } from 'lucide-react';
+import { Eye, FileText, Cloud, Paperclip, Users, Calendar, Upload, Clock, Save } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   Dialog,
   DialogContent,
@@ -11,9 +13,11 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogFooter,
 } from "@/components/ui/dialog";
 import { EditalDetail } from '@/data/editais';
 import EditalDetailsDialog from './EditalDetailsDialog';
+import { toast } from 'sonner';
 
 interface AdminEditalCardProps {
   edital: EditalDetail;
@@ -22,6 +26,19 @@ interface AdminEditalCardProps {
 const AdminEditalCard = ({ edital }: AdminEditalCardProps) => {
   const navigate = useNavigate();
   const [detailsOpen, setDetailsOpen] = useState(false);
+  const [scheduleOpen, setScheduleOpen] = useState(false);
+  
+  const [dates, setDates] = useState({
+    abertura: edital.dataAbertura?.split('T')[0] || '',
+    horaAbertura: edital.dataAbertura?.split('T')[1]?.substring(0, 5) || '08:00',
+    encerramento: edital.dataEncerramento?.split('T')[0] || '',
+    horaEncerramento: edital.dataEncerramento?.split('T')[1]?.substring(0, 5) || '23:59',
+  });
+
+  const handleSaveSchedule = () => {
+    toast.success("Datas de inscrição atualizadas com sucesso!");
+    setScheduleOpen(false);
+  };
 
   return (
     <div className="bg-white rounded-2xl border border-slate-100 p-8 shadow-sm hover:shadow-md transition-all flex flex-col h-full relative">
@@ -45,9 +62,10 @@ const AdminEditalCard = ({ edital }: AdminEditalCardProps) => {
           <Users size={14} />
           <span>0 inscrições</span>
         </div>
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-1.5 group cursor-pointer" onClick={() => setScheduleOpen(true)}>
           <Calendar size={14} />
           <span>{edital.terminoInscricao}</span>
+          <Clock size={14} className="ml-1 text-blue-500 opacity-0 group-hover:opacity-100 transition-opacity" />
         </div>
       </div>
 
@@ -67,7 +85,6 @@ const AdminEditalCard = ({ edital }: AdminEditalCardProps) => {
           <FileText size={14} /> Ver detalhes
         </Button>
 
-        {/* Pop-up Resultados */}
         <Dialog>
           <DialogTrigger asChild>
             <Button variant="secondary" className="bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold text-[11px] h-11 rounded-xl flex gap-2">
@@ -92,7 +109,6 @@ const AdminEditalCard = ({ edital }: AdminEditalCardProps) => {
           </DialogContent>
         </Dialog>
 
-        {/* Pop-up Anexos */}
         <Dialog>
           <DialogTrigger asChild>
             <Button variant="secondary" className="bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold text-[11px] h-11 rounded-xl flex gap-2">
@@ -116,6 +132,66 @@ const AdminEditalCard = ({ edital }: AdminEditalCardProps) => {
           </DialogContent>
         </Dialog>
       </div>
+
+      {/* Diálogo de Agendamento */}
+      <Dialog open={scheduleOpen} onOpenChange={setScheduleOpen}>
+        <DialogContent className="sm:max-w-[450px] rounded-[2.5rem] p-8">
+          <DialogHeader className="mb-6">
+            <div className="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600 mb-4">
+              <Clock size={24} />
+            </div>
+            <DialogTitle className="text-2xl font-bold text-slate-900">Agendar Inscrições</DialogTitle>
+            <DialogDescription className="text-slate-500 font-medium">
+              Defina o período em que o botão "Inscrever-se" ficará disponível.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-6">
+            <div className="space-y-4">
+              <Label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Abertura das Inscrições</Label>
+              <div className="grid grid-cols-2 gap-4">
+                <Input 
+                  type="date" 
+                  value={dates.abertura} 
+                  onChange={(e) => setDates({...dates, abertura: e.target.value})}
+                  className="rounded-xl h-12 border-slate-200"
+                />
+                <Input 
+                  type="time" 
+                  value={dates.horaAbertura} 
+                  onChange={(e) => setDates({...dates, horaAbertura: e.target.value})}
+                  className="rounded-xl h-12 border-slate-200"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <Label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Encerramento das Inscrições</Label>
+              <div className="grid grid-cols-2 gap-4">
+                <Input 
+                  type="date" 
+                  value={dates.encerramento} 
+                  onChange={(e) => setDates({...dates, encerramento: e.target.value})}
+                  className="rounded-xl h-12 border-slate-200"
+                />
+                <Input 
+                  type="time" 
+                  value={dates.horaEncerramento} 
+                  onChange={(e) => setDates({...dates, horaEncerramento: e.target.value})}
+                  className="rounded-xl h-12 border-slate-200"
+                />
+              </div>
+            </div>
+          </div>
+
+          <DialogFooter className="mt-10 gap-3">
+            <Button variant="ghost" onClick={() => setScheduleOpen(false)} className="rounded-xl font-bold text-slate-500">Cancelar</Button>
+            <Button onClick={handleSaveSchedule} className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl px-8 font-bold flex gap-2 shadow-lg shadow-blue-100">
+              <Save size={18} /> Salvar Agendamento
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <EditalDetailsDialog 
         edital={edital} 

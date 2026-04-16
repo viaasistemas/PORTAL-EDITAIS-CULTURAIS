@@ -9,6 +9,8 @@ export interface EditalDetail {
   valorMaximo: string;
   inicioInscricao: string;
   terminoInscricao: string;
+  dataAbertura?: string; // ISO String
+  dataEncerramento?: string; // ISO String
   etapas: string[];
   requisitos: string;
   documentos: string;
@@ -30,6 +32,8 @@ export const editaisData: EditalDetail[] = [
     valorMaximo: "R$ 15.000,00",
     inicioInscricao: "05/03/2026",
     terminoInscricao: "05/04/2026",
+    dataAbertura: "2026-03-05T08:00:00",
+    dataEncerramento: "2026-04-05T23:59:59",
     etapas: ["1. Inscrição online", "2. Análise documental", "3. Avaliação técnica", "4. Resultado final"],
     requisitos: "Ser maior de 18 anos, residir no estado.",
     documentos: "RG, CPF, Comprovante de residência.",
@@ -49,6 +53,8 @@ export const editaisData: EditalDetail[] = [
     valorMaximo: "R$ 50.000,00",
     inicioInscricao: "15/03/2024",
     terminoInscricao: "15/05/2024",
+    dataAbertura: "2024-03-15T08:00:00",
+    dataEncerramento: "2024-05-15T23:59:59",
     etapas: ["1. Inscrição online", "2. Análise documental", "3. Avaliação técnica", "4. Resultado final"],
     requisitos: "Grupo constituído há pelo menos 2 anos...",
     documentos: "Estatuto social, projeto cultural...",
@@ -68,6 +74,8 @@ export const editaisData: EditalDetail[] = [
     valorMaximo: "R$ 35.000,00",
     inicioInscricao: "01/04/2024",
     terminoInscricao: "30/05/2024",
+    dataAbertura: "2024-04-01T08:00:00",
+    dataEncerramento: "2024-05-30T23:59:59",
     etapas: ["1. Inscrição digital", "2. Avaliação", "3. Resultado"],
     requisitos: "Artista com produção musical comprovada...",
     documentos: "Projeto musical, orçamento...",
