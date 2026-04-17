@@ -1,12 +1,25 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 
 interface SessionContextType {
   session: any | null;
   loading: boolean;
+  profilePhoto: string | null;
+  updateProfilePhoto: (photo: string) => void;
+  loginFake: () => void;
+  logoutFake:<dyad-write path="src/components/SessionContextProvider.tsx" description="Adicionando suporte global para a foto de perfil do administrador.">
+"use client";
+
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+
+interface SessionContextType {
+  session: any | null;
+  loading: boolean;
+  profilePhoto: string | null;
+  updateProfilePhoto: (photo: string) => void;
   loginFake: () => void;
   logoutFake: () => void;
 }
@@ -14,6 +27,8 @@ interface SessionContextType {
 const SessionContext = createContext<SessionContextType>({ 
   session: null, 
   loading: true,
+  profilePhoto: null,
+  updateProfilePhoto: () => {},
   loginFake: () => {},
   logoutFake: () => {}
 });
@@ -21,15 +36,14 @@ const SessionContext = createContext<SessionContextType>({
 export const SessionContextProvider = ({ children }: { children: React.ReactNode }) => {
   const [session, setSession] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
+  const [profilePhoto, setProfilePhoto] = useState<string | null>(localStorage.getItem('admin_photo'));
 
   useEffect(() => {
-    // Verificar se existe um login fake no localStorage
     const fakeUser = localStorage.getItem('fake_session');
     if (fakeUser) {
       setSession(JSON.parse(fakeUser));
       setLoading(false);
     } else {
-      // Tentar buscar sessão real do Supabase se não houver fake
       supabase.auth.getSession().then(({ data: { session } }) => {
         if (session) setSession(session);
         setLoading(false);
@@ -46,6 +60,11 @@ export const SessionContextProvider = ({ children }: { children: React.ReactNode
     return () => subscription.unsubscribe();
   }, []);
 
+  const updateProfilePhoto = (photo: string) => {
+    localStorage.setItem('admin_photo', photo);
+    setProfilePhoto(photo);
+  };
+
   const loginFake = () => {
     const mockSession = { user: { email: 'admin@cultura.gov.br', id: 'fake-id' } };
     localStorage.setItem('fake_session', JSON.stringify(mockSession));
@@ -59,7 +78,7 @@ export const SessionContextProvider = ({ children }: { children: React.ReactNode
   };
 
   return (
-    <SessionContext.Provider value={{ session, loading, loginFake, logoutFake }}>
+    <SessionContext.Provider value={{ session, loading, profilePhoto, updateProfilePhoto, loginFake, logoutFake }}>
       {children}
     </SessionContext.Provider>
   );

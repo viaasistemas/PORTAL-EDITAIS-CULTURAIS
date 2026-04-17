@@ -16,6 +16,7 @@ import Admin from "./pages/Admin";
 import AdminInscricoes from "./pages/AdminInscricoes";
 import AdminEditalDetalhes from "./pages/AdminEditalDetalhes";
 import AdminConteudo from "./pages/AdminConteudo";
+import AdminConfiguracoes from "./pages/AdminConfiguracoes";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -40,6 +41,7 @@ const App = () => (
             <Route path="/admin/inscricoes" element={<AdminInscricoes />} />
             <Route path="/admin/inscricoes/:id" element={<AdminEditalDetalhes />} />
             <Route path="/admin/conteudo" element={<AdminConteudo />} />
+            <Route path="/admin/configuracoes" element={<AdminConfiguracoes />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
