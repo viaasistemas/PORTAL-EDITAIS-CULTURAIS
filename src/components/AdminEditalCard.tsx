@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { Eye, FileText, Cloud, Paperclip, Users, Calendar, Clock, Save, AlertCircle, Globe, ShieldCheck } from 'lucide-react';
+import { Eye, FileText, Cloud, Paperclip, Users, Calendar, Clock, Save, AlertCircle, Globe } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
@@ -69,11 +69,11 @@ const AdminEditalCard = ({ edital }: AdminEditalCardProps) => {
 
   return (
     <div className="bg-white rounded-2xl border border-slate-100 p-8 shadow-sm hover:shadow-md transition-all flex flex-col h-full relative">
-      <div className="absolute top-4 right-4 w-8 h-8 bg-slate-50 rounded-full flex items-center justify-center text-slate-400 font-bold text-xs border border-slate-100">
-        {edital.number}
+      <div className="absolute top-4 right-4 px-3 py-1 bg-slate-50 rounded-full flex items-center justify-center text-slate-400 font-bold text-[10px] border border-slate-100">
+        #{edital.number}
       </div>
       
-      <div className="flex justify-between items-start mb-4 gap-4 pr-8">
+      <div className="flex justify-between items-start mb-4 gap-4 pr-16">
         <h3 className="text-lg font-bold text-slate-900 leading-tight">{edital.title}</h3>
         <div className="flex flex-col items-end gap-2">
           <span className={`shrink-0 px-3 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider ${
@@ -135,7 +135,6 @@ const AdminEditalCard = ({ edital }: AdminEditalCardProps) => {
         </Button>
       </div>
 
-      {/* Diálogo de Programação e Configurações */}
       <Dialog open={scheduleOpen} onOpenChange={(val) => {
         setScheduleOpen(val);
         if (!val) setShowConfirm(false);
@@ -154,7 +153,6 @@ const AdminEditalCard = ({ edital }: AdminEditalCardProps) => {
               </DialogHeader>
 
               <div className="space-y-8">
-                {/* Visibilidade */}
                 <div className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100">
                   <div className="flex items-center gap-3">
                     <div className={`p-2 rounded-lg ${isVisible ? 'bg-blue-100 text-blue-600' : 'bg-slate-200 text-slate-400'}`}>
@@ -168,7 +166,6 @@ const AdminEditalCard = ({ edital }: AdminEditalCardProps) => {
                   <Switch checked={isVisible} onCheckedChange={setIsVisible} />
                 </div>
 
-                {/* Prazos Principais */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-3">
                     <Label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Abertura</Label>
@@ -186,7 +183,6 @@ const AdminEditalCard = ({ edital }: AdminEditalCardProps) => {
                   </div>
                 </div>
 
-                {/* Toggles de Períodos Extras */}
                 <div className="space-y-4 pt-4 border-t border-slate-100">
                   {/* Prorrogação */}
                   <div className="space-y-4">
@@ -199,10 +195,12 @@ const AdminEditalCard = ({ edital }: AdminEditalCardProps) => {
                         <div className="space-y-2">
                           <Label className="text-[10px] font-bold text-blue-600 uppercase">Início</Label>
                           <Input type="date" value={dates.prorrogacaoInicio} onChange={(e) => setDates({...dates, prorrogacaoInicio: e.target.value})} className="h-10 rounded-lg" />
+                          <Input type="time" value={dates.prorrogacaoHoraInicio} onChange={(e) => setDates({...dates, prorrogacaoHoraInicio: e.target.value})} className="h-10 rounded-lg" />
                         </div>
                         <div className="space-y-2">
                           <Label className="text-[10px] font-bold text-blue-600 uppercase">Fim</Label>
                           <Input type="date" value={dates.prorrogacaoFim} onChange={(e) => setDates({...dates, prorrogacaoFim: e.target.value})} className="h-10 rounded-lg" />
+                          <Input type="time" value={dates.prorrogacaoHoraFim} onChange={(e) => setDates({...dates, prorrogacaoHoraFim: e.target.value})} className="h-10 rounded-lg" />
                         </div>
                       </div>
                     )}
@@ -219,10 +217,12 @@ const AdminEditalCard = ({ edital }: AdminEditalCardProps) => {
                         <div className="space-y-2">
                           <Label className="text-[10px] font-bold text-red-600 uppercase">Início</Label>
                           <Input type="date" value={dates.recursoInicio} onChange={(e) => setDates({...dates, recursoInicio: e.target.value})} className="h-10 rounded-lg" />
+                          <Input type="time" value={dates.recursoHoraInicio} onChange={(e) => setDates({...dates, recursoHoraInicio: e.target.value})} className="h-10 rounded-lg" />
                         </div>
                         <div className="space-y-2">
                           <Label className="text-[10px] font-bold text-red-600 uppercase">Fim</Label>
                           <Input type="date" value={dates.recursoFim} onChange={(e) => setDates({...dates, recursoFim: e.target.value})} className="h-10 rounded-lg" />
+                          <Input type="time" value={dates.recursoHoraFim} onChange={(e) => setDates({...dates, recursoHoraFim: e.target.value})} className="h-10 rounded-lg" />
                         </div>
                       </div>
                     )}
@@ -239,10 +239,12 @@ const AdminEditalCard = ({ edital }: AdminEditalCardProps) => {
                         <div className="space-y-2">
                           <Label className="text-[10px] font-bold text-emerald-600 uppercase">Início</Label>
                           <Input type="date" value={dates.docInicio} onChange={(e) => setDates({...dates, docInicio: e.target.value})} className="h-10 rounded-lg" />
+                          <Input type="time" value={dates.docHoraInicio} onChange={(e) => setDates({...dates, docHoraInicio: e.target.value})} className="h-10 rounded-lg" />
                         </div>
                         <div className="space-y-2">
                           <Label className="text-[10px] font-bold text-emerald-600 uppercase">Fim</Label>
                           <Input type="date" value={dates.docFim} onChange={(e) => setDates({...dates, docFim: e.target.value})} className="h-10 rounded-lg" />
+                          <Input type="time" value={dates.docHoraFim} onChange={(e) => setDates({...dates, docHoraFim: e.target.value})} className="h-10 rounded-lg" />
                         </div>
                       </div>
                     )}
@@ -275,7 +277,6 @@ const AdminEditalCard = ({ edital }: AdminEditalCardProps) => {
         </DialogContent>
       </Dialog>
 
-      {/* Diálogos de Upload */}
       <AdminFileUploadDialog 
         title="Anexar Resultados" 
         type="Resultados" 
@@ -284,7 +285,7 @@ const AdminEditalCard = ({ edital }: AdminEditalCardProps) => {
         editalTitle={edital.title} 
       />
       <AdminFileUploadDialog 
-        title="Anexar Documentos" 
+        title="Anexar Anexos" 
         type="Anexos" 
         open={attachmentsOpen} 
         onOpenChange={setAttachmentsOpen} 
