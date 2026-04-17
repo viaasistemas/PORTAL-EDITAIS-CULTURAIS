@@ -5,10 +5,10 @@ import AdminSidebar from '@/components/AdminSidebar';
 import { useSession } from '@/components/SessionContextProvider';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import AdminEditalCard from '@/components/AdminEditalCard';
 import { Input } from '@/components/ui/input';
-import { Search, Menu } from 'lucide-react';
+import { Search, Menu, Bell } from 'lucide-react';
 import {
   Select,
   SelectContent,
@@ -19,7 +19,7 @@ import {
 import { editaisData } from '@/data/editais';
 
 const AdminInscricoes = () => {
-  const { session, loading } = useSession();
+  const { session, loading, profilePhoto } = useSession();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('Todos');
   const [statusFilter, setStatusFilter] = useState('todos');
@@ -59,9 +59,9 @@ const AdminInscricoes = () => {
       <AdminSidebar />
       
       <main className="flex-grow flex flex-col">
-        <header className="h-20 bg-white border-b border-slate-100 px-8 flex items-center justify-between sticky top-0 z-10">
+        <header className="h-20 bg-white border-b border-slate-100 px-8 flex items-center justify-between sticky top-0 z-10 rounded-none">
           <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" onClick={toggleSidebar} className="text-slate-500 hover:bg-slate-50 rounded-xl">
+            <Button variant="ghost" size="icon" onClick={toggleSidebar} className="text-slate-500 hover:bg-slate-50 rounded-none">
               <Menu size={24} />
             </Button>
             <div className="flex flex-col">
@@ -70,15 +70,22 @@ const AdminInscricoes = () => {
             </div>
           </div>
           
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-6">
             <div className="text-right hidden sm:block">
-              <p className="text-xs font-medium text-slate-500">
-                Bem-vindo, <span className="font-bold text-slate-900">Administrador</span>
+              <p className="text-sm font-medium text-slate-500">
+                Olá, <span className="font-bold text-slate-900">Administrador</span>
               </p>
             </div>
-            <Avatar className="h-10 w-10 border-2 border-blue-600 p-0.5">
-              <AvatarFallback className="bg-blue-600 text-white text-xs font-bold">AD</AvatarFallback>
-            </Avatar>
+            <div className="flex items-center gap-4">
+              <button className="text-slate-400 hover:text-blue-600 transition-colors relative">
+                <Bell size={24} />
+                <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+              </button>
+              <Avatar className="h-12 w-12 border-2 border-blue-600 p-0.5 rounded-none">
+                <AvatarImage src={profilePhoto || ''} className="rounded-none" />
+                <AvatarFallback className="bg-blue-600 text-white text-xs font-bold rounded-none">AD</AvatarFallback>
+              </Avatar>
+            </div>
           </div>
         </header>
 
@@ -96,14 +103,14 @@ const AdminInscricoes = () => {
                   placeholder="Buscar edital (ex: #012026)..." 
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 h-11 rounded-xl border-slate-200 bg-white"
+                  className="pl-10 h-11 rounded-none border-slate-200 bg-white"
                 />
               </div>
               <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger className="w-[180px] bg-white border-slate-200 rounded-xl h-11">
+                <SelectTrigger className="w-[180px] bg-white border-slate-200 rounded-none h-11">
                   <SelectValue placeholder="Status" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="rounded-none">
                   <SelectItem value="todos">Todos os Status</SelectItem>
                   <SelectItem value="aberto">Aberto</SelectItem>
                   <SelectItem value="encerrado">Encerrado</SelectItem>
@@ -117,9 +124,9 @@ const AdminInscricoes = () => {
               <Button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`rounded-xl px-6 h-11 font-bold text-sm transition-all ${
+                className={`rounded-none px-6 h-11 font-bold text-sm transition-all ${
                   activeTab === tab 
-                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-100' 
+                    ? 'bg-blue-600 text-white shadow-lg' 
                     : 'bg-white text-slate-600 border border-slate-100 hover:bg-slate-50'
                 }`}
               >
@@ -134,7 +141,7 @@ const AdminInscricoes = () => {
                 <AdminEditalCard key={edital.id} edital={edital} />
               ))
             ) : (
-              <div className="col-span-full py-20 text-center bg-white rounded-[2.5rem] border border-dashed border-slate-200">
+              <div className="col-span-full py-20 text-center bg-white rounded-none border border-dashed border-slate-200">
                 <p className="text-slate-400 font-medium">Nenhum edital encontrado para este filtro.</p>
               </div>
             )}

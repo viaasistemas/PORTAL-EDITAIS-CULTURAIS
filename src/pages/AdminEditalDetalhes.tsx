@@ -5,7 +5,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import AdminSidebar from '@/components/AdminSidebar';
 import { useSession } from '@/components/SessionContextProvider';
 import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from '@/components/ui/input';
 import { 
   FileText, 
@@ -14,7 +14,8 @@ import {
   ArrowLeft, 
   Search, 
   Calendar as CalendarIcon,
-  Menu
+  Menu,
+  Bell
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import {
@@ -36,7 +37,7 @@ import { ptBR } from "date-fns/locale";
 
 const AdminEditalDetalhes = () => {
   const { id } = useParams();
-  const { session, loading } = useSession();
+  const { session, loading, profilePhoto } = useSession();
   const navigate = useNavigate();
   const [activeView, setActiveView] = useState<'overview' | 'inscricoes' | 'recursos' | 'documentacao'>('overview');
   const [data, setData] = useState<any[]>([]);
@@ -107,12 +108,12 @@ const AdminEditalDetalhes = () => {
       <AdminSidebar />
       
       <main className="flex-grow flex flex-col">
-        <header className="h-20 bg-white border-b border-slate-100 px-8 flex items-center justify-between sticky top-0 z-10">
+        <header className="h-20 bg-white border-b border-slate-100 px-8 flex items-center justify-between sticky top-0 z-10 rounded-none">
           <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" onClick={toggleSidebar} className="text-slate-500 hover:bg-slate-50 rounded-xl">
+            <Button variant="ghost" size="icon" onClick={toggleSidebar} className="text-slate-500 hover:bg-slate-50 rounded-none">
               <Menu size={24} />
             </Button>
-            <Button variant="ghost" size="icon" onClick={() => navigate('/admin/inscricoes')} className="rounded-full">
+            <Button variant="ghost" size="icon" onClick={() => navigate('/admin/inscricoes')} className="rounded-none">
               <ArrowLeft size={20} />
             </Button>
             <div className="flex flex-col">
@@ -121,23 +122,35 @@ const AdminEditalDetalhes = () => {
             </div>
           </div>
           
-          <div className="flex items-center gap-4">
-            <Avatar className="h-10 w-10 border-2 border-blue-600 p-0.5">
-              <AvatarFallback className="bg-blue-600 text-white text-xs font-bold">AD</AvatarFallback>
-            </Avatar>
+          <div className="flex items-center gap-6">
+            <div className="text-right hidden sm:block">
+              <p className="text-sm font-medium text-slate-500">
+                Olá, <span className="font-bold text-slate-900">Administrador</span>
+              </p>
+            </div>
+            <div className="flex items-center gap-4">
+              <button className="text-slate-400 hover:text-blue-600 transition-colors relative">
+                <Bell size={24} />
+                <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+              </button>
+              <Avatar className="h-12 w-12 border-2 border-blue-600 p-0.5 rounded-none">
+                <AvatarImage src={profilePhoto || ''} className="rounded-none" />
+                <AvatarFallback className="bg-blue-600 text-white text-xs font-bold rounded-none">AD</AvatarFallback>
+              </Avatar>
+            </div>
           </div>
         </header>
 
         <div className="p-8 max-w-7xl mx-auto w-full space-y-8">
-          <div className="bg-white p-10 rounded-[2.5rem] border border-slate-100 shadow-sm">
+          <div className="bg-white p-10 rounded-none border border-slate-100 shadow-sm">
             <h2 className="text-2xl font-bold text-slate-900 mb-8">Ações de Gestão</h2>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <Button 
                 onClick={() => setActiveView('inscricoes')}
-                className={`h-24 rounded-3xl flex flex-col gap-2 font-bold transition-all ${
+                className={`h-24 rounded-none flex flex-col gap-2 font-bold transition-all ${
                   activeView === 'inscricoes' 
-                    ? 'bg-blue-600 text-white shadow-xl shadow-blue-100' 
+                    ? 'bg-blue-600 text-white shadow-xl' 
                     : 'bg-white border border-slate-100 text-slate-600 hover:bg-slate-50'
                 }`}
               >
@@ -147,9 +160,9 @@ const AdminEditalDetalhes = () => {
               
               <Button 
                 onClick={() => setActiveView('recursos')}
-                className={`h-24 rounded-3xl flex flex-col gap-2 font-bold transition-all ${
+                className={`h-24 rounded-none flex flex-col gap-2 font-bold transition-all ${
                   activeView === 'recursos' 
-                    ? 'bg-red-600 text-white shadow-xl shadow-red-100' 
+                    ? 'bg-red-600 text-white shadow-xl' 
                     : 'bg-white border border-rose-100 text-rose-600 hover:bg-rose-50'
                 }`}
               >
@@ -159,9 +172,9 @@ const AdminEditalDetalhes = () => {
               
               <Button 
                 onClick={() => setActiveView('documentacao')}
-                className={`h-24 rounded-3xl flex flex-col gap-2 font-bold transition-all ${
+                className={`h-24 rounded-none flex flex-col gap-2 font-bold transition-all ${
                   activeView === 'documentacao' 
-                    ? 'bg-emerald-600 text-white shadow-xl shadow-emerald-100' 
+                    ? 'bg-emerald-600 text-white shadow-xl' 
                     : 'bg-white border border-emerald-100 text-emerald-600 hover:bg-emerald-50'
                 }`}
               >
@@ -172,7 +185,7 @@ const AdminEditalDetalhes = () => {
           </div>
 
           {activeView !== 'overview' && (
-            <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden">
+            <div className="bg-white rounded-none border border-slate-100 shadow-sm overflow-hidden">
               <div className="p-8 border-b border-slate-50 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <h3 className="text-xl font-bold text-slate-900">
                   {activeView === 'inscricoes' ? 'Lista de Inscrições' : 
@@ -186,13 +199,13 @@ const AdminEditalDetalhes = () => {
                       placeholder="Pesquisar..." 
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-10 h-11 rounded-xl border-slate-200"
+                      className="pl-10 h-11 rounded-none border-slate-200"
                     />
                   </div>
 
                   <Popover>
                     <PopoverTrigger asChild>
-                      <Button variant="outline" className="h-11 rounded-xl border-slate-200 flex gap-2 text-slate-600 font-medium">
+                      <Button variant="outline" className="h-11 rounded-none border-slate-200 flex gap-2 text-slate-600 font-medium">
                         <CalendarIcon size={18} />
                         {dateRange.from ? (
                           dateRange.to ? (
@@ -207,7 +220,7 @@ const AdminEditalDetalhes = () => {
                         )}
                       </Button>
                     </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0 rounded-2xl" align="end">
+                    <PopoverContent className="w-auto p-0 rounded-none" align="end">
                       <Calendar
                         initialFocus
                         mode="range"
@@ -259,12 +272,12 @@ const AdminEditalDetalhes = () => {
                             </div>
                           </TableCell>
                           <TableCell>
-                            <Button variant="ghost" size="sm" className="rounded-lg bg-slate-100 text-slate-500 hover:bg-blue-50 hover:text-blue-600 flex gap-2">
+                            <Button variant="ghost" size="sm" className="rounded-none bg-slate-100 text-slate-500 hover:bg-blue-50 hover:text-blue-600 flex gap-2">
                               <FileText size={14} /> {item.file_name || 'Ver Arquivo'}
                             </Button>
                           </TableCell>
                           <TableCell>
-                            <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase ${
+                            <span className={`px-3 py-1 rounded-none text-[10px] font-bold uppercase ${
                               item.status === 'Aprovado' ? 'bg-emerald-50 text-emerald-600' : 'bg-yellow-50 text-yellow-600'
                             }`}>
                               {item.status || 'Pendente'}
@@ -280,7 +293,7 @@ const AdminEditalDetalhes = () => {
           )}
 
           {activeView === 'overview' && (
-            <div className="bg-slate-50 border-2 border-dashed border-slate-200 rounded-[2.5rem] p-20 text-center">
+            <div className="bg-slate-50 border-2 border-dashed border-slate-200 rounded-none p-20 text-center">
               <p className="text-slate-400 font-medium">Selecione uma ação acima para visualizar os dados.</p>
             </div>
           )}
