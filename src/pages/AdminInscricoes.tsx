@@ -2,13 +2,13 @@
 
 import React, { useState, useEffect } from 'react';
 import AdminSidebar from '@/components/AdminSidebar';
+import AdminHeader from '@/components/AdminHeader';
 import { useSession } from '@/components/SessionContextProvider';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import AdminEditalCard from '@/components/AdminEditalCard';
 import { Input } from '@/components/ui/input';
-import { Search, Menu, Bell } from 'lucide-react';
+import { Search } from 'lucide-react';
 import {
   Select,
   SelectContent,
@@ -19,7 +19,7 @@ import {
 import { editaisData } from '@/data/editais';
 
 const AdminInscricoes = () => {
-  const { session, loading, profilePhoto } = useSession();
+  const { session, loading } = useSession();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('Todos');
   const [statusFilter, setStatusFilter] = useState('todos');
@@ -28,10 +28,6 @@ const AdminInscricoes = () => {
   useEffect(() => {
     if (!loading && !session) navigate('/login');
   }, [session, loading, navigate]);
-
-  const toggleSidebar = () => {
-    window.dispatchEvent(new CustomEvent('toggle-admin-sidebar'));
-  };
 
   if (loading || !session) return null;
 
@@ -59,37 +55,9 @@ const AdminInscricoes = () => {
       <AdminSidebar />
       
       <main className="flex-grow flex flex-col">
-        <header className="h-20 bg-white border-b border-slate-100 px-8 flex items-center justify-between sticky top-0 z-10">
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" onClick={toggleSidebar} className="text-slate-500 hover:bg-slate-50 rounded-xl">
-              <Menu size={24} />
-            </Button>
-            <div className="flex flex-col">
-              <h1 className="text-lg font-bold text-slate-900 leading-none">Gestão de Editais</h1>
-              <p className="text-[10px] font-medium text-slate-400 uppercase tracking-widest mt-1">Sistema de Gestão Cultural</p>
-            </div>
-          </div>
-          
-          <div className="flex items-center gap-6">
-            <div className="text-right hidden sm:block">
-              <p className="text-sm font-medium text-slate-500">
-                Olá, <span className="font-bold text-slate-900">Administrador</span>
-              </p>
-            </div>
-            <div className="flex items-center gap-4">
-              <button className="text-slate-400 hover:text-blue-600 transition-colors relative">
-                <Bell size={24} />
-                <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
-              </button>
-              <Avatar className="h-12 w-12 border-2 border-blue-600 p-0.5 rounded-xl">
-                <AvatarImage src={profilePhoto || ''} className="rounded-xl" />
-                <AvatarFallback className="bg-blue-600 text-white text-xs font-bold rounded-xl">AD</AvatarFallback>
-              </Avatar>
-            </div>
-          </div>
-        </header>
+        <AdminHeader title="Gestão de Editais" />
 
-        <div className="p-8 max-w-7xl mx-auto w-full space-y-8">
+        <div className="p-4 md:p-8 max-w-7xl mx-auto w-full space-y-8">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
               <h2 className="text-2xl font-bold text-slate-900">Gestão de Inscrições</h2>
@@ -124,7 +92,7 @@ const AdminInscricoes = () => {
               <Button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`rounded-xl px-6 h-11 font-bold text-sm transition-all ${
+                className={`rounded-xl px-6 h-11 font-bold text-sm transition-all shrink-0 ${
                   activeTab === tab 
                     ? 'bg-blue-600 text-white shadow-lg shadow-blue-100' 
                     : 'bg-white text-slate-600 border border-slate-100 hover:bg-slate-50'

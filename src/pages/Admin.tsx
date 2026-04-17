@@ -4,45 +4,48 @@ import React, { useEffect, useState } from 'react';
 import { 
   Users, 
   FileText, 
-  BarChart2, 
   TrendingUp,
   ArrowUpRight,
-  Menu,
-  Bell,
-  Archive
+  Archive,
+  Book
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useSession } from '@/components/SessionContextProvider';
 import AdminSidebar from '@/components/AdminSidebar';
+import AdminHeader from '@/components/AdminHeader';
 import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { editaisData } from '@/data/editais';
 import { supabase } from '@/integrations/supabase/client';
 
 const Admin = () => {
-  const { session, loading, profilePhoto } = useSession();
+  const { session, loading } = useSession();
   const navigate = useNavigate();
   const [totalInscriptions, setTotalInscriptions] = useState(0);
+  const [recentInscriptions, setRecentInscriptions] = useState<any[]>([]);
 
   useEffect(() => {
     if (!loading && !session) navigate('/login');
     
-    const fetchTotalInscriptions = async () => {
-      const { count, error } = await supabase
+    const fetchData = async () => {
+      // Total Inscriptions
+      const { count } = await supabase
         .from('inscricoes')
         .select('*', { count: 'exact', head: true });
       
-      if (!error && count !== null) {
-        setTotalInscriptions(count);
-      }
+      if (count !== null) setTotalInscriptions(count);
+
+      // Recent Inscriptions
+      const { data } = await supabase
+        .from('inscricoes')
+        .select('id, full_name, created_at, edital_id')
+        .order('created_at', { ascending: false })
+        .limit(4);
+      
+      if (data) setRecentInscriptions(data);
     };
 
-    if (session) fetchTotalInscriptions();
+    if (session) fetchData();
   }, [session, loading, navigate]);
-
-  const toggleSidebar = () => {
-    window.dispatchEvent(new CustomEvent('toggle-admin-sidebar'));
-  };
 
   if (loading || !session) return null;
 
@@ -53,14 +56,7 @@ const Admin = () => {
     { label: "Inscrições Totais", value: totalInscriptions.toString(), icon: Users, color: "bg-blue-50 text-blue-600", trend: "+12%" },
     { label: "Editais Ativos", value: activeEditaisCount.toString(), icon: FileText, color: "bg-green-50 text-green-600", trend: "Estável" },
     { label: "ENCERRADOS", value: encerradosCount.toString(), icon: Archive, color: "bg-rose-50 text-rose-600", trend: "Finalizados" },
-    { label: "Finalizados", value: "24", icon: TrendingUp, color: "bg-purple-50 text-purple-600", trend: "+5%" },
-  ];
-
-  const recentInscriptions = [
-    { name: "João Silva", time: "há 5 minutos", status: "Pendente" },
-    { name: "Maria Santos", time: "há 2 horas", status: "Aprovado" },
-    { name: "Ricardo Pereira", time: "há 5 horas", status: "Reprovado" },
-    { name: "Ana Oliveira", time: "há 1 dia", status: "Pendente" },
+    { label: "FINALIZADOS", value: "24", icon: TrendingUp, color: "bg-purple-50 text-purple-600", trend: "+5%" },
   ];
 
   return (
@@ -68,34 +64,9 @@ const Admin = () => {
       <AdminSidebar />
 
       <main className="flex-grow flex flex-col">
-        <header className="h-20 bg-white border-b border-slate-100 px-8 flex items-center justify-between sticky top-0 z-10">
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" onClick={toggleSidebar} className="text-slate-500 hover:bg-slate-50 rounded-xl">
-              <Menu size={24} />
-            </Button>
-            <h2 className="text-lg font-bold text-slate-900 leading-none">Painel de Controle</h2>
-          </div>
+        <AdminHeader title="Painel de Controle" />
 
-          <div className="flex items-center gap-6">
-            <div className="text-right hidden sm:block">
-              <p className="text-sm font-medium text-slate-500">
-                Olá, <span className="font-bold text-slate-900">Administrador</span>
-              </p>
-            </div>
-            <div className="flex items-center gap-4">
-              <button className="text-slate-400 hover:text-blue-600 transition-colors relative">
-                <Bell size={24} />
-                <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
-              </button>
-              <Avatar className="h-12 w-12 border-2 border-blue-600 p-0.5 rounded-xl">
-                <AvatarImage src={profilePhoto || ''} className="rounded-xl" />
-                <AvatarFallback className="bg-blue-600 text-white text-xs font-bold rounded-xl">AD</AvatarFallback>
-              </Avatar>
-            </div>
-          </div>
-        </header>
-
-        <div className="p-8 max-w-7xl mx-auto w-full space-y-10">
+        <div className="p-4 md:p-8 max-w-7xl mx-auto w-full space-y-10">
           <div>
             <h1 className="text-3xl font-bold text-slate-900">Bem-vindo de volta</h1>
             <p className="text-slate-500 text-lg mt-1">Aqui está o resumo das atividades culturais de hoje.</p>
@@ -121,7 +92,7 @@ const Admin = () => {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-2 bg-white p-10 rounded-xl border border-slate-100 shadow-sm flex flex-col">
+            <div className="lg:col-span-2 bg-white p-6 md:p-10 rounded-xl border border-slate-100 shadow-sm flex flex-col">
               <div className="flex justify-between items-center mb-10">
                 <div>
                   <h3 className="text-xl font-bold text-slate-900 mb-1">Inscrições Recentes</h3>
@@ -133,34 +104,42 @@ const Admin = () => {
               </div>
               
               <div className="space-y-5 flex-grow">
-                {recentInscriptions.map((item, i) => (
-                  <div key={i} className="flex items-center justify-between p-5 rounded-xl border border-slate-50 hover:bg-slate-50 transition-all">
-                    <div className="flex items-center gap-5">
-                      <div className="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center text-slate-500 font-bold text-sm">
-                        {item.name.charAt(0)}
+                {recentInscriptions.length > 0 ? (
+                  recentInscriptions.map((item, i) => (
+                    <div key={i} className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-5 rounded-xl border border-slate-50 hover:bg-slate-50 transition-all gap-4">
+                      <div className="flex items-center gap-5">
+                        <div className="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center text-slate-500 font-bold text-sm">
+                          {item.full_name.charAt(0)}
+                        </div>
+                        <div>
+                          <p className="text-base font-bold text-slate-900">{item.full_name}</p>
+                          <p className="text-xs text-slate-400 font-medium">
+                            {new Date(item.created_at).toLocaleString('pt-BR')}
+                          </p>
+                        </div>
                       </div>
-                      <div>
-                        <p className="text-base font-bold text-slate-900">{item.name}</p>
-                        <p className="text-xs text-slate-400 font-medium">{item.time}</p>
-                      </div>
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        onClick={() => navigate(`/admin/inscricoes/${item.edital_id}`)}
+                        className="w-full sm:w-auto border-blue-100 text-blue-600 font-bold hover:bg-blue-50 rounded-xl"
+                      >
+                        Ver Inscrição
+                      </Button>
                     </div>
-                    <span className={`text-xs font-bold px-3 py-1.5 rounded-lg ${
-                      item.status === 'Aprovado' ? 'bg-green-50 text-green-600' : 
-                      item.status === 'Reprovado' ? 'bg-red-50 text-red-600' : 'bg-yellow-50 text-yellow-600'
-                    }`}>
-                      {item.status}
-                    </span>
-                  </div>
-                ))}
+                  ))
+                ) : (
+                  <div className="text-center py-10 text-slate-400">Nenhuma inscrição recente.</div>
+                )}
               </div>
             </div>
 
-            <div className="bg-white p-10 rounded-xl border border-slate-100 shadow-sm">
+            <div className="bg-white p-6 md:p-10 rounded-xl border border-slate-100 shadow-sm">
               <h3 className="text-xl font-bold text-slate-900 mb-1">Atalhos</h3>
               <p className="text-slate-400 text-sm font-medium mb-10">Acesso rápido às ferramentas</p>
               
               <div className="space-y-4">
-                <button onClick={() => navigate('/admin/conteudo')} className="w-full flex items-center justify-between p-5 rounded-xl border border-slate-50 hover:bg-slate-50 transition-all text-slate-700 font-bold text-base group">
+                <button onClick={() => navigate('/admin/inscricoes')} className="w-full flex items-center justify-between p-5 rounded-xl border border-slate-50 hover:bg-slate-50 transition-all text-slate-700 font-bold text-base group">
                   <span className="flex items-center gap-4">
                     <FileText size={22} className="text-blue-600" />
                     Editar Editais
@@ -169,8 +148,8 @@ const Admin = () => {
                 </button>
                 <button onClick={() => navigate('/admin/conteudo')} className="w-full flex items-center justify-between p-5 rounded-xl border border-slate-50 hover:bg-slate-50 transition-all text-slate-700 font-bold text-base group">
                   <span className="flex items-center gap-4">
-                    <BarChart2 size={22} className="text-purple-600" />
-                    Relatórios
+                    <Book size={22} className="text-purple-600" />
+                    Conteúdo
                   </span>
                   <ArrowUpRight size={20} className="text-slate-300 group-hover:text-purple-600 transition-colors" />
                 </button>
