@@ -51,12 +51,14 @@ const Admin = () => {
 
   const activeEditaisCount = editaisData.filter(e => e.status === 'Aberto').length;
   const encerradosCount = editaisData.filter(e => e.status === 'Encerrado').length;
+  // Mock de finalizados para demonstração dinâmica
+  const finalizadosCount = 0; 
 
   const stats = [
     { label: "Inscrições Totais", value: totalInscriptions.toString(), icon: Users, color: "bg-blue-50 text-blue-600", trend: "+12%" },
     { label: "Editais Ativos", value: activeEditaisCount.toString(), icon: FileText, color: "bg-green-50 text-green-600", trend: "Estável" },
     { label: "ENCERRADOS", value: encerradosCount.toString(), icon: Archive, color: "bg-rose-50 text-rose-600", trend: "Finalizados" },
-    { label: "FINALIZADOS", value: "24", icon: TrendingUp, color: "bg-purple-50 text-purple-600", trend: "+5%" },
+    { label: "FINALIZADOS", value: finalizadosCount.toString(), icon: TrendingUp, color: "bg-purple-50 text-purple-600", trend: "Concluídos" },
   ];
 
   return (
@@ -142,7 +144,7 @@ const Admin = () => {
                 <button onClick={() => navigate('/admin/inscricoes')} className="w-full flex items-center justify-between p-5 rounded-xl border border-slate-50 hover:bg-slate-50 transition-all text-slate-700 font-bold text-base group">
                   <span className="flex items-center gap-4">
                     <FileText size={22} className="text-blue-600" />
-                    Editar Editais
+                    Editais
                   </span>
                   <ArrowUpRight size={20} className="text-slate-300 group-hover:text-blue-600 transition-colors" />
                 </button>
