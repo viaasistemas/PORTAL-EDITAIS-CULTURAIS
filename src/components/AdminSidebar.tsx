@@ -3,14 +3,11 @@
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
-  BarChart3, 
-  Calendar, 
-  Book, 
   Settings, 
-  Menu,
   LogOut,
   FileText,
-  LayoutDashboard
+  LayoutDashboard,
+  Book
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -35,7 +32,7 @@ const AdminSidebar = () => {
   ];
 
   return (
-    <aside className="w-20 lg:w-64 bg-white border-r border-slate-200 flex flex-col py-8 transition-all duration-300">
+    <aside className="w-20 lg:w-64 bg-white border-r border-slate-200 flex flex-col py-8 transition-all duration-300 sticky top-0 h-screen">
       <div className="px-6 mb-10 flex items-center gap-3">
         <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white font-bold shrink-0">
           CE
@@ -48,7 +45,11 @@ const AdminSidebar = () => {
       
       <nav className="flex flex-col gap-2 px-4 flex-grow">
         {menuItems.map((item) => {
-          const isActive = location.pathname === item.path;
+          // Verifica se o path atual começa com o path do item (exceto para a home do admin)
+          const isActive = item.path === "/admin" 
+            ? location.pathname === "/admin"
+            : location.pathname.startsWith(item.path);
+
           return (
             <Link 
               key={item.path}

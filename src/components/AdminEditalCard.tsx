@@ -32,7 +32,6 @@ const AdminEditalCard = ({ edital }: AdminEditalCardProps) => {
   const [attachmentsOpen, setAttachmentsOpen] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   
-  // Estados de configuração
   const [isVisible, setIsVisible] = useState(true);
   const [isProrrogacao, setIsProrrogacao] = useState(false);
   const [isRecurso, setIsRecurso] = useState(false);
@@ -74,7 +73,7 @@ const AdminEditalCard = ({ edital }: AdminEditalCardProps) => {
       </div>
       
       <div className="flex justify-between items-start mb-4 gap-4 pr-16">
-        <h3 className="text-lg font-bold text-slate-900 leading-tight">{edital.title}</h3>
+        <h3 className="text-xl font-bold text-slate-900 leading-tight">{edital.title}</h3>
         <div className="flex flex-col items-end gap-2">
           <span className={`shrink-0 px-3 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider ${
             edital.status === 'Aberto' ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'
@@ -87,51 +86,51 @@ const AdminEditalCard = ({ edital }: AdminEditalCardProps) => {
         </div>
       </div>
       
-      <div className="flex items-center gap-6 text-slate-500 text-sm font-bold mb-8">
-        <div className="flex items-center gap-2">
-          <Users size={18} className="text-blue-600" />
-          <span className="text-base">0 inscrições</span>
+      <div className="flex items-center gap-8 text-slate-500 font-bold mb-10">
+        <div className="flex items-center gap-2.5">
+          <Users size={22} className="text-blue-600" />
+          <span className="text-lg">0 inscrições</span>
         </div>
         <div 
-          className="flex items-center gap-2 cursor-pointer hover:text-blue-600 transition-colors group" 
+          className="flex items-center gap-2.5 cursor-pointer hover:text-blue-600 transition-colors group" 
           onClick={() => setScheduleOpen(true)}
         >
-          <Calendar size={18} className="text-blue-600" />
-          <span className="text-base">Programar</span>
-          <Clock size={16} className="ml-0.5 text-blue-400" />
+          <Calendar size={22} className="text-blue-600" />
+          <span className="text-lg">Programar</span>
+          <Clock size={18} className="ml-0.5 text-blue-400" />
         </div>
       </div>
 
       <div className="grid grid-cols-2 gap-4 mt-auto">
         <Button 
           onClick={() => navigate(`/admin/inscricoes/${edital.id}`)}
-          className="bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm h-12 rounded-xl flex gap-2 shadow-lg shadow-blue-100"
+          className="bg-blue-600 hover:bg-blue-700 text-white font-bold text-base h-14 rounded-xl flex gap-2 shadow-lg shadow-blue-100"
         >
-          <Eye size={16} /> Ver Inscrições
+          <Eye size={18} /> Ver Inscrições
         </Button>
         
         <Button 
           variant="outline" 
           onClick={() => setDetailsOpen(true)}
-          className="border-slate-100 text-slate-600 font-bold text-sm h-12 rounded-xl flex gap-2 hover:bg-slate-50"
+          className="border-slate-100 text-slate-600 font-bold text-base h-14 rounded-xl flex gap-2 hover:bg-slate-50"
         >
-          <FileText size={16} /> Ver detalhes
+          <FileText size={18} /> Ver detalhes
         </Button>
 
         <Button 
           variant="secondary" 
           onClick={() => setResultsOpen(true)}
-          className="bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold text-sm h-12 rounded-xl flex gap-2"
+          className="bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold text-base h-14 rounded-xl flex gap-2"
         >
-          <Cloud size={16} /> Resultados
+          <Cloud size={18} /> Resultados
         </Button>
 
         <Button 
           variant="secondary" 
           onClick={() => setAttachmentsOpen(true)}
-          className="bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold text-sm h-12 rounded-xl flex gap-2"
+          className="bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold text-base h-14 rounded-xl flex gap-2"
         >
-          <Paperclip size={16} /> Anexos
+          <Paperclip size={18} /> Anexos
         </Button>
       </div>
 
@@ -184,7 +183,6 @@ const AdminEditalCard = ({ edital }: AdminEditalCardProps) => {
                 </div>
 
                 <div className="space-y-4 pt-4 border-t border-slate-100">
-                  {/* Prorrogação */}
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
                       <Label className="text-sm font-bold text-slate-900">Prorrogação</Label>
@@ -206,7 +204,6 @@ const AdminEditalCard = ({ edital }: AdminEditalCardProps) => {
                     )}
                   </div>
 
-                  {/* Recurso */}
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
                       <Label className="text-sm font-bold text-slate-900">Recurso</Label>
@@ -228,7 +225,6 @@ const AdminEditalCard = ({ edital }: AdminEditalCardProps) => {
                     )}
                   </div>
 
-                  {/* Documentação */}
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
                       <Label className="text-sm font-bold text-slate-900">Documentação</Label>
