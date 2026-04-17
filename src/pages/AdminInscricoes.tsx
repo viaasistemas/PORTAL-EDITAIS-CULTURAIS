@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import AdminEditalCard from '@/components/AdminEditalCard';
 import { Input } from '@/components/ui/input';
-import { Search } from 'lucide-react';
+import { Search, Menu } from 'lucide-react';
 import {
   Select,
   SelectContent,
@@ -29,6 +29,10 @@ const AdminInscricoes = () => {
     if (!loading && !session) navigate('/login');
   }, [session, loading, navigate]);
 
+  const toggleSidebar = () => {
+    window.dispatchEvent(new CustomEvent('toggle-admin-sidebar'));
+  };
+
   if (loading || !session) return null;
 
   const tabs = ["Todos", "Fomento Municipal", "LPG", "PNAB"];
@@ -43,7 +47,6 @@ const AdminInscricoes = () => {
                          (statusFilter === 'aberto' && edital.status === 'Aberto') ||
                          (statusFilter === 'encerrado' && edital.status === 'Encerrado');
 
-    // Busca por título ou número (com ou sem #)
     const cleanSearch = searchTerm.toLowerCase().replace('#', '');
     const matchesSearch = edital.title.toLowerCase().includes(cleanSearch) ||
                          edital.number.includes(cleanSearch);
@@ -58,6 +61,9 @@ const AdminInscricoes = () => {
       <main className="flex-grow flex flex-col">
         <header className="h-20 bg-white border-b border-slate-100 px-8 flex items-center justify-between sticky top-0 z-10">
           <div className="flex items-center gap-4">
+            <Button variant="ghost" size="icon" onClick={toggleSidebar} className="text-slate-500 hover:bg-slate-50 rounded-xl">
+              <Menu size={24} />
+            </Button>
             <div className="flex flex-col">
               <h1 className="text-lg font-bold text-slate-900 leading-none">Gestão de Editais</h1>
               <p className="text-[10px] font-medium text-slate-400 uppercase tracking-widest mt-1">Sistema de Gestão Cultural</p>

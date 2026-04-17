@@ -13,7 +13,8 @@ import {
   Folder, 
   ArrowLeft, 
   Search, 
-  Calendar as CalendarIcon
+  Calendar as CalendarIcon,
+  Menu
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import {
@@ -49,6 +50,10 @@ const AdminEditalDetalhes = () => {
   useEffect(() => {
     if (!loading && !session) navigate('/login');
   }, [session, loading, navigate]);
+
+  const toggleSidebar = () => {
+    window.dispatchEvent(new CustomEvent('toggle-admin-sidebar'));
+  };
 
   const fetchData = async (view: string) => {
     setFetching(true);
@@ -104,6 +109,9 @@ const AdminEditalDetalhes = () => {
       <main className="flex-grow flex flex-col">
         <header className="h-20 bg-white border-b border-slate-100 px-8 flex items-center justify-between sticky top-0 z-10">
           <div className="flex items-center gap-4">
+            <Button variant="ghost" size="icon" onClick={toggleSidebar} className="text-slate-500 hover:bg-slate-50 rounded-xl">
+              <Menu size={24} />
+            </Button>
             <Button variant="ghost" size="icon" onClick={() => navigate('/admin/inscricoes')} className="rounded-full">
               <ArrowLeft size={20} />
             </Button>

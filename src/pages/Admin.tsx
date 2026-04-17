@@ -6,7 +6,8 @@ import {
   FileText, 
   BarChart2, 
   TrendingUp,
-  ArrowUpRight
+  ArrowUpRight,
+  Menu
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useSession } from '@/components/SessionContextProvider';
@@ -21,6 +22,10 @@ const Admin = () => {
   useEffect(() => {
     if (!loading && !session) navigate('/login');
   }, [session, loading, navigate]);
+
+  const toggleSidebar = () => {
+    window.dispatchEvent(new CustomEvent('toggle-admin-sidebar'));
+  };
 
   if (loading || !session) return null;
 
@@ -43,8 +48,11 @@ const Admin = () => {
       <AdminSidebar />
 
       <main className="flex-grow flex flex-col">
-        <header className="h-20 bg-white border-b border-slate-100 px-8 flex items-center justify-between">
-          <div className="flex items-center gap-3">
+        <header className="h-20 bg-white border-b border-slate-100 px-8 flex items-center justify-between sticky top-0 z-10">
+          <div className="flex items-center gap-4">
+            <Button variant="ghost" size="icon" onClick={toggleSidebar} className="text-slate-500 hover:bg-slate-50 rounded-xl">
+              <Menu size={24} />
+            </Button>
             <h2 className="text-sm font-semibold text-slate-900 leading-none">Painel de Controle</h2>
           </div>
 
