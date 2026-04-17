@@ -13,7 +13,9 @@ interface EditalCardProps {
 const EditalCard = ({ edital }: EditalCardProps) => {
   const navigate = useNavigate();
 
-  // Lógica para verificar se as inscrições estão abertas
+  // Verificação de segurança para evitar erro de undefined
+  if (!edital) return null;
+
   const now = new Date();
   const openingDate = edital.dataAbertura ? new Date(edital.dataAbertura) : null;
   const closingDate = edital.dataEncerramento ? new Date(edital.dataEncerramento) : null;

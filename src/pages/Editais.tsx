@@ -1,12 +1,13 @@
 "use client";
 
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import EditalCard from '@/components/EditalCard';
+import { ArrowRight } from 'lucide-react';
 
 const Editais = () => {
-  const editais = [
+  const categories = [
     {
       title: "Fomento Municipal",
       description: "Editais de Extremoz-RN",
@@ -35,7 +36,7 @@ const Editais = () => {
         <section className="relative pt-48 pb-40 bg-blue-600 overflow-hidden">
           <div className="absolute inset-0 opacity-20">
             <img 
-              src="/src/assets/editais-hero.png" 
+              src="https://images.unsplash.com/photo-1459749411177-042180ce673c?q=80&w=1600&auto=format&fit=crop" 
               alt="Background" 
               className="w-full h-full object-cover"
             />
@@ -54,8 +55,26 @@ const Editais = () => {
 
         <section className="relative z-20 -mt-20 pb-24 container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {editais.map((edital, index) => (
-              <EditalCard key={index} {...edital} />
+            {categories.map((cat, index) => (
+              <Link 
+                key={index} 
+                to={cat.link}
+                className="bg-white rounded-[2.5rem] overflow-hidden border border-slate-100 shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 group"
+              >
+                <div className="h-48 overflow-hidden relative">
+                  <img src={cat.image} alt={cat.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                  <div className="absolute bottom-6 left-8">
+                    <h3 className="text-2xl font-bold text-white">{cat.title}</h3>
+                  </div>
+                </div>
+                <div className="p-8">
+                  <p className="text-slate-500 font-medium mb-6">{cat.description}</p>
+                  <div className="flex items-center gap-2 text-blue-600 font-bold text-sm group-hover:gap-4 transition-all">
+                    Ver Editais <ArrowRight size={18} />
+                  </div>
+                </div>
+              </Link>
             ))}
           </div>
         </section>
