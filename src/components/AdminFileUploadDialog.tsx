@@ -92,17 +92,22 @@ const AdminFileUploadDialog = ({ title, type, open, onOpenChange, editalTitle }:
               </div>
 
               {files.length > 0 && (
-                <div className="space-y-2 max-h-40 overflow-y-auto pr-2">
+                <div className="space-y-2 max-h-60 overflow-y-auto pr-2">
                   {files.map((file, i) => (
-                    <div key={i} className="flex items-center justify-between p-3 bg-slate-50 rounded-xl border border-slate-100 gap-3">
-                      <div className="flex items-center gap-3 min-w-0 flex-1">
-                        <FileText size={18} className="text-blue-600 shrink-0" />
+                    <div key={i} className="flex items-start justify-between p-3 bg-slate-50 rounded-xl border border-slate-100 gap-3">
+                      <div className="flex items-start gap-3 min-w-0 flex-1">
+                        <FileText size={18} className="text-blue-600 shrink-0 mt-0.5" />
                         <div className="min-w-0 flex-1">
-                          <p className="text-xs font-bold text-slate-900 truncate break-all" title={file.name}>{file.name}</p>
-                          <p className="text-[10px] text-slate-400">{file.size}</p>
+                          <p className="text-xs font-bold text-slate-900 break-all leading-tight" title={file.name}>
+                            {file.name}
+                          </p>
+                          <p className="text-[10px] text-slate-400 mt-1">{file.size}</p>
                         </div>
                       </div>
-                      <button onClick={(e) => { e.stopPropagation(); removeFile(i); }} className="text-slate-400 hover:text-red-500 transition-colors shrink-0">
+                      <button 
+                        onClick={(e) => { e.stopPropagation(); removeFile(i); }} 
+                        className="text-slate-400 hover:text-red-500 transition-colors shrink-0 p-1"
+                      >
                         <Trash2 size={16} />
                       </button>
                     </div>
