@@ -44,6 +44,9 @@ const AdminEditalCard = ({ edital }: AdminEditalCardProps) => {
   
   const [isVisible, setIsVisible] = useState(true);
   const [isFinalized, setIsFinalized] = useState(true); // Ligado = Ativo, Desligado = Finalizado
+  const [isProrrogacao, setIsProrrogacao] = useState(false);
+  const [isRecurso, setIsRecurso] = useState(false);
+  const [isDocumentacao, setIsDocumentacao] = useState(false);
   
   const [showVisibilityAlert, setShowVisibilityAlert] = useState(false);
   const [showFinalizeAlert, setShowFinalizeAlert] = useState(false);
@@ -53,6 +56,18 @@ const AdminEditalCard = ({ edital }: AdminEditalCardProps) => {
     horaAbertura: edital.dataAbertura?.split('T')[1]?.substring(0, 5) || '08:00',
     encerramento: edital.dataEncerramento?.split('T')[0] || '',
     horaEncerramento: edital.dataEncerramento?.split('T')[1]?.substring(0, 5) || '23:59',
+    prorrogacaoInicio: '',
+    prorrogacaoHoraInicio: '08:00',
+    prorrogacaoFim: '',
+    prorrogacaoHoraFim: '23:59',
+    recursoInicio: '',
+    recursoHoraInicio: '08:00',
+    recursoFim: '',
+    recursoHoraFim: '23:59',
+    docInicio: '',
+    docHoraInicio: '08:00',
+    docFim: '',
+    docHoraFim: '23:59',
   });
 
   const handleVisibilityToggle = (checked: boolean) => {
@@ -224,6 +239,71 @@ const AdminEditalCard = ({ edital }: AdminEditalCardProps) => {
                       <Input type="date" value={dates.encerramento} onChange={(e) => setDates({...dates, encerramento: e.target.value})} className="rounded-xl h-11" />
                       <Input type="time" value={dates.horaEncerramento} onChange={(e) => setDates({...dates, horaEncerramento: e.target.value})} className="rounded-xl h-11" />
                     </div>
+                  </div>
+                </div>
+
+                <div className="space-y-4 pt-4 border-t border-slate-100">
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <Label className="text-sm font-bold text-slate-900">Prorrogação</Label>
+                      <Switch checked={isProrrogacao} onCheckedChange={setIsProrrogacao} />
+                    </div>
+                    {isProrrogacao && (
+                      <div className="grid grid-cols-2 gap-4 p-4 bg-blue-50/50 rounded-xl border border-blue-100 animate-in fade-in slide-in-from-top-2">
+                        <div className="space-y-2">
+                          <Label className="text-[10px] font-bold text-blue-600 uppercase">Início</Label>
+                          <Input type="date" value={dates.prorrogacaoInicio} onChange={(e) => setDates({...dates, prorrogacaoInicio: e.target.value})} className="h-10 rounded-lg" />
+                          <Input type="time" value={dates.prorrogacaoHoraInicio} onChange={(e) => setDates({...dates, prorrogacaoHoraInicio: e.target.value})} className="h-10 rounded-lg" />
+                        </div>
+                        <div className="space-y-2">
+                          <Label className="text-[10px] font-bold text-blue-600 uppercase">Fim</Label>
+                          <Input type="date" value={dates.prorrogacaoFim} onChange={(e) => setDates({...dates, prorrogacaoFim: e.target.value})} className="h-10 rounded-lg" />
+                          <Input type="time" value={dates.prorrogacaoHoraFim} onChange={(e) => setDates({...dates, prorrogacaoHoraFim: e.target.value})} className="h-10 rounded-lg" />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <Label className="text-sm font-bold text-slate-900">Recurso</Label>
+                      <Switch checked={isRecurso} onCheckedChange={setIsRecurso} />
+                    </div>
+                    {isRecurso && (
+                      <div className="grid grid-cols-2 gap-4 p-4 bg-red-50/50 rounded-xl border border-red-100 animate-in fade-in slide-in-from-top-2">
+                        <div className="space-y-2">
+                          <Label className="text-[10px] font-bold text-red-600 uppercase">Início</Label>
+                          <Input type="date" value={dates.recursoInicio} onChange={(e) => setDates({...dates, recursoInicio: e.target.value})} className="h-10 rounded-lg" />
+                          <Input type="time" value={dates.recursoHoraInicio} onChange={(e) => setDates({...dates, recursoHoraInicio: e.target.value})} className="h-10 rounded-lg" />
+                        </div>
+                        <div className="space-y-2">
+                          <Label className="text-[10px] font-bold text-red-600 uppercase">Fim</Label>
+                          <Input type="date" value={dates.recursoFim} onChange={(e) => setDates({...dates, recursoFim: e.target.value})} className="h-10 rounded-lg" />
+                          <Input type="time" value={dates.recursoHoraFim} onChange={(e) => setDates({...dates, recursoHoraFim: e.target.value})} className="h-10 rounded-lg" />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <Label className="text-sm font-bold text-slate-900">Documentação</Label>
+                      <Switch checked={isDocumentacao} onCheckedChange={setIsDocumentacao} />
+                    </div>
+                    {isDocumentacao && (
+                      <div className="grid grid-cols-2 gap-4 p-4 bg-emerald-50/50 rounded-xl border border-emerald-100 animate-in fade-in slide-in-from-top-2">
+                        <div className="space-y-2">
+                          <Label className="text-[10px] font-bold text-emerald-600 uppercase">Início</Label>
+                          <Input type="date" value={dates.docInicio} onChange={(e) => setDates({...dates, docInicio: e.target.value})} className="h-10 rounded-lg" />
+                          <Input type="time" value={dates.docHoraInicio} onChange={(e) => setDates({...dates, docHoraInicio: e.target.value})} className="h-10 rounded-lg" />
+                        </div>
+                        <div className="space-y-2">
+                          <Label className="text-[10px] font-bold text-emerald-600 uppercase">Fim</Label>
+                          <Input type="date" value={dates.docFim} onChange={(e) => setDates({...dates, docFim: e.target.value})} className="h-10 rounded-lg" />
+                          <Input type="time" value={dates.docHoraFim} onChange={(e) => setDates({...dates, docHoraFim: e.target.value})} className="h-10 rounded-lg" />
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
