@@ -7,8 +7,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from "@/ui/dialog";
-import { Button } from '@/ui/button';
+} from "@/components/ui/dialog";
+import { Button } from '@/components/ui/button';
 import { Upload, FileText, Trash2, Loader2, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
 
