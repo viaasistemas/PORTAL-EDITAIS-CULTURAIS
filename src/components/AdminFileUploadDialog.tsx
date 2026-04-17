@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -9,7 +9,6 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Upload, FileText, Trash2, Loader2, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
@@ -26,6 +25,7 @@ const AdminFileUploadDialog = ({ title, type, open, onOpenChange, editalTitle }:
   const [files, setFiles] = useState<{ name: string; size: string }[]>([]);
   const [uploading, setUploading] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -59,7 +59,10 @@ const AdminFileUploadDialog = ({ title, type, open, onOpenChange, editalTitle }:
   return (
     <Dialog open={open} onOpenChange={(val) => {
       onOpenChange(val);
-      if (!val) setShowConfirm(false);
+      if (!val) {
+        setShowConfirm(false);
+        setFiles([]);
+      }
     }}>
       <DialogContent className="max-w-md rounded-[2.5rem] p-8">
         {!showConfirm ? (
@@ -73,14 +76,18 @@ const AdminFileUploadDialog = ({ title, type, open, onOpenChange, editalTitle }:
             </DialogHeader>
 
             <div className="space-y-6">
-              <div className="border-2 border-dashed border-slate-200 rounded-2xl p-8 text-center hover:border-blue-400 transition-colors cursor-pointer relative">
-                <Input 
+              <div 
+                onClick={() => fileInputRef.current?.click()}
+                className="border-2 border-dashed border-slate-200 rounded-2xl p-8 text-center hover:border-blue-400 hover:bg-blue-50/30 transition-all cursor-pointer relative group"
+              >
+                <input 
                   type="file" 
+                  ref={fileInputRef}
                   multiple 
-                  className="absolute inset-0 opacity-0 cursor-pointer" 
+                  className="hidden" 
                   onChange={handleFileChange}
                 />
-                <Upload className="mx-auto text-slate-400 mb-2" size={32} />
+                <Upload className="mx-auto text-slate-400 mb-2 group-hover:text-blue-500 transition-colors" size={32} />
                 <p className="text-sm font-bold text-slate-600">Clique ou arraste arquivos</p>
                 <p className="text-xs text-slate-400 mt-1">PDF, DOCX ou Imagens (Máx. 10MB)</p>
               </div>
@@ -96,7 +103,7 @@ const AdminFileUploadDialog = ({ title, type, open, onOpenChange, editalTitle }:
                           <p className="text-[10px] text-slate-400">{file.size}</p>
                         </div>
                       </div>
-                      <button onClick={() => removeFile(i)} className="text-slate-400 hover:text-red-500 transition-colors">
+                      <button onClick={(e) => { e.stopPropagation(); removeFile(i); }} className="text-slate-400 hover:text-red-500 transition-colors">
                         <Trash2 size={16} />
                       </button>
                     </div>
