@@ -9,18 +9,6 @@ interface SessionContextType {
   profilePhoto: string | null;
   updateProfilePhoto: (photo: string) => void;
   loginFake: () => void;
-  logoutFake:<dyad-write path="src/components/SessionContextProvider.tsx" description="Adicionando suporte global para a foto de perfil do administrador.">
-"use client";
-
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { supabase } from '@/integrations/supabase/client';
-
-interface SessionContextType {
-  session: any | null;
-  loading: boolean;
-  profilePhoto: string | null;
-  updateProfilePhoto: (photo: string) => void;
-  loginFake: () => void;
   logoutFake: () => void;
 }
 
