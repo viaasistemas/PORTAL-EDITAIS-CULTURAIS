@@ -87,51 +87,51 @@ const AdminEditalCard = ({ edital }: AdminEditalCardProps) => {
         </div>
       </div>
       
-      <div className="flex items-center gap-4 text-slate-400 text-xs font-bold mb-8">
-        <div className="flex items-center gap-1.5">
-          <Users size={14} />
-          <span>0 inscrições</span>
+      <div className="flex items-center gap-6 text-slate-500 text-sm font-bold mb-8">
+        <div className="flex items-center gap-2">
+          <Users size={18} className="text-blue-600" />
+          <span className="text-base">0 inscrições</span>
         </div>
         <div 
-          className="flex items-center gap-1.5 cursor-pointer hover:text-blue-600 transition-colors group" 
+          className="flex items-center gap-2 cursor-pointer hover:text-blue-600 transition-colors group" 
           onClick={() => setScheduleOpen(true)}
         >
-          <Calendar size={14} />
-          <span>{edital.terminoInscricao}</span>
-          <Clock size={14} className="ml-0.5 text-blue-500" />
+          <Calendar size={18} className="text-blue-600" />
+          <span className="text-base">Programar</span>
+          <Clock size={16} className="ml-0.5 text-blue-400" />
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-3 mt-auto">
+      <div className="grid grid-cols-2 gap-4 mt-auto">
         <Button 
           onClick={() => navigate(`/admin/inscricoes/${edital.id}`)}
-          className="bg-blue-600 hover:bg-blue-700 text-white font-bold text-[11px] h-11 rounded-xl flex gap-2 shadow-lg shadow-blue-100"
+          className="bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm h-12 rounded-xl flex gap-2 shadow-lg shadow-blue-100"
         >
-          <Eye size={14} /> Ver Inscrições
+          <Eye size={16} /> Ver Inscrições
         </Button>
         
         <Button 
           variant="outline" 
           onClick={() => setDetailsOpen(true)}
-          className="border-slate-100 text-slate-600 font-bold text-[11px] h-11 rounded-xl flex gap-2 hover:bg-slate-50"
+          className="border-slate-100 text-slate-600 font-bold text-sm h-12 rounded-xl flex gap-2 hover:bg-slate-50"
         >
-          <FileText size={14} /> Ver detalhes
+          <FileText size={16} /> Ver detalhes
         </Button>
 
         <Button 
           variant="secondary" 
           onClick={() => setResultsOpen(true)}
-          className="bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold text-[11px] h-11 rounded-xl flex gap-2"
+          className="bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold text-sm h-12 rounded-xl flex gap-2"
         >
-          <Cloud size={14} /> Resultados
+          <Cloud size={16} /> Resultados
         </Button>
 
         <Button 
           variant="secondary" 
           onClick={() => setAttachmentsOpen(true)}
-          className="bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold text-[11px] h-11 rounded-xl flex gap-2"
+          className="bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold text-sm h-12 rounded-xl flex gap-2"
         >
-          <Paperclip size={14} /> Anexos
+          <Paperclip size={16} /> Anexos
         </Button>
       </div>
 

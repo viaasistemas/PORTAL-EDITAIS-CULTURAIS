@@ -88,6 +88,13 @@ const AdminEditalDetalhes = () => {
     return matchesSearch && matchesDate;
   });
 
+  const getEmptyMessage = () => {
+    if (activeView === 'inscricoes') return "Nenhum Inscrito";
+    if (activeView === 'recursos') return "Nenhum Recurso";
+    if (activeView === 'documentacao') return "Nenhum Documento";
+    return "Nenhum registro encontrado";
+  };
+
   if (loading || !session) return null;
 
   return (
@@ -228,7 +235,7 @@ const AdminEditalDetalhes = () => {
                     ) : filteredData.length === 0 ? (
                       <TableRow>
                         <TableCell colSpan={6} className="text-center py-20 text-slate-400 font-medium">
-                          Nenhum registro encontrado.
+                          {getEmptyMessage()}
                         </TableCell>
                       </TableRow>
                     ) : (

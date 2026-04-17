@@ -7,9 +7,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from "@/components/ui/dialog";
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
+} from "@/ui/dialog";
+import { Button } from '@/ui/button';
 import { Upload, FileText, Trash2, Loader2, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -72,7 +71,7 @@ const AdminFileUploadDialog = ({ title, type, open, onOpenChange, editalTitle }:
                 <Upload size={24} />
               </div>
               <DialogTitle className="text-2xl font-bold text-slate-900">{title}</DialogTitle>
-              <p className="text-slate-500 text-sm font-medium mt-1">Edital: {editalTitle}</p>
+              <p className="text-slate-500 text-sm font-medium mt-1 truncate">Edital: {editalTitle}</p>
             </DialogHeader>
 
             <div className="space-y-6">
@@ -95,15 +94,15 @@ const AdminFileUploadDialog = ({ title, type, open, onOpenChange, editalTitle }:
               {files.length > 0 && (
                 <div className="space-y-2 max-h-40 overflow-y-auto pr-2">
                   {files.map((file, i) => (
-                    <div key={i} className="flex items-center justify-between p-3 bg-slate-50 rounded-xl border border-slate-100">
-                      <div className="flex items-center gap-3 overflow-hidden">
+                    <div key={i} className="flex items-center justify-between p-3 bg-slate-50 rounded-xl border border-slate-100 gap-3">
+                      <div className="flex items-center gap-3 min-w-0 flex-1">
                         <FileText size={18} className="text-blue-600 shrink-0" />
-                        <div className="overflow-hidden">
-                          <p className="text-xs font-bold text-slate-900 truncate">{file.name}</p>
+                        <div className="min-w-0 flex-1">
+                          <p className="text-xs font-bold text-slate-900 truncate break-all" title={file.name}>{file.name}</p>
                           <p className="text-[10px] text-slate-400">{file.size}</p>
                         </div>
                       </div>
-                      <button onClick={(e) => { e.stopPropagation(); removeFile(i); }} className="text-slate-400 hover:text-red-500 transition-colors">
+                      <button onClick={(e) => { e.stopPropagation(); removeFile(i); }} className="text-slate-400 hover:text-red-500 transition-colors shrink-0">
                         <Trash2 size={16} />
                       </button>
                     </div>

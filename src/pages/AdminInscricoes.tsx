@@ -43,8 +43,10 @@ const AdminInscricoes = () => {
                          (statusFilter === 'aberto' && edital.status === 'Aberto') ||
                          (statusFilter === 'encerrado' && edital.status === 'Encerrado');
 
-    const matchesSearch = edital.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         edital.number.includes(searchTerm);
+    // Busca por título ou número (com ou sem #)
+    const cleanSearch = searchTerm.toLowerCase().replace('#', '');
+    const matchesSearch = edital.title.toLowerCase().includes(cleanSearch) ||
+                         edital.number.includes(cleanSearch);
 
     return matchesTab && matchesStatus && matchesSearch;
   });
@@ -85,7 +87,7 @@ const AdminInscricoes = () => {
               <div className="relative flex-grow md:w-64">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
                 <Input 
-                  placeholder="Buscar edital..." 
+                  placeholder="Buscar edital (ex: #012026)..." 
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-10 h-11 rounded-xl border-slate-200 bg-white"
