@@ -38,7 +38,7 @@ const Index = () => {
       <section className="relative h-[90vh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img 
-            src="/src/assets/hero-bg.png" 
+            src="https://images.unsplash.com/photo-1459749411177-042180ce673c?q=80&w=1600&auto=format&fit=crop" 
             alt="Cultura Extremoz" 
             className="w-full h-full object-cover brightness-[0.45] scale-105"
           />

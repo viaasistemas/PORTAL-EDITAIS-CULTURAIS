@@ -42,15 +42,12 @@ const AdminEditalCard = ({ edital }: AdminEditalCardProps) => {
   const [attachmentsOpen, setAttachmentsOpen] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   
+  // Estados Reais (Persistidos)
   const [isVisible, setIsVisible] = useState(true);
-  const [isFinalized, setIsFinalized] = useState(true); // Ligado = Ativo, Desligado = Finalizado
+  const [isFinalized, setIsFinalized] = useState(true);
   const [isProrrogacao, setIsProrrogacao] = useState(false);
   const [isRecurso, setIsRecurso] = useState(false);
   const [isDocumentacao, setIsDocumentacao] = useState(false);
-  
-  const [showVisibilityAlert, setShowVisibilityAlert] = useState(false);
-  const [showFinalizeAlert, setShowFinalizeAlert] = useState(false);
-
   const [dates, setDates] = useState({
     abertura: edital.dataAbertura?.split('T')[0] || '',
     horaAbertura: edital.dataAbertura?.split('T')[1]?.substring(0, 5) || '08:00',
@@ -70,32 +67,55 @@ const AdminEditalCard = ({ edital }: AdminEditalCardProps) => {
     docHoraFim: '23:59',
   });
 
+  // Estados de Rascunho (Draft)
+  const [draft, setDraft] = useState({
+    isVisible,
+    isFinalized,
+    isProrrogacao,
+    isRecurso,
+    isDocumentacao,
+    dates: { ...dates }
+  });
+
+  const [showVisibilityAlert, setShowVisibilityAlert] = useState(false);
+  const [showFinalizeAlert, setShowFinalizeAlert] = useState(false);
+
+  const handleOpenSchedule = () => {
+    setDraft({
+      isVisible,
+      isFinalized,
+      isProrrogacao,
+      isRecurso,
+      isDocumentacao,
+      dates: { ...dates }
+    });
+    setScheduleOpen(true);
+  };
+
   const handleVisibilityToggle = (checked: boolean) => {
-    if (!checked) {
+    if (!checked && draft.isVisible) {
       setShowVisibilityAlert(true);
     } else {
-      setIsVisible(true);
+      setDraft(prev => ({ ...prev, isVisible: checked }));
     }
   };
 
   const handleFinalizeToggle = (checked: boolean) => {
-    if (!checked) {
+    if (!checked && draft.isFinalized) {
       setShowFinalizeAlert(true);
     } else {
-      setIsFinalized(true);
+      setDraft(prev => ({ ...prev, isFinalized: checked }));
     }
   };
 
   const confirmVisibilityOff = () => {
-    setIsVisible(false);
+    setDraft(prev => ({ ...prev, isVisible: false }));
     setShowVisibilityAlert(false);
-    toast.info("Visibilidade desativada. O edital não aparecerá no portal.");
   };
 
   const confirmFinalize = () => {
-    setIsFinalized(false);
+    setDraft(prev => ({ ...prev, isFinalized: false }));
     setShowFinalizeAlert(false);
-    toast.success("Edital finalizado com sucesso!");
   };
 
   const handleSaveClick = () => {
@@ -103,7 +123,15 @@ const AdminEditalCard = ({ edital }: AdminEditalCardProps) => {
   };
 
   const handleFinalConfirm = () => {
-    toast.success("Configurações do edital atualizadas!");
+    // Persistir rascunho nos estados reais
+    setIsVisible(draft.isVisible);
+    setIsFinalized(draft.isFinalized);
+    setIsProrrogacao(draft.isProrrogacao);
+    setIsRecurso(draft.isRecurso);
+    setIsDocumentacao(draft.isDocumentacao);
+    setDates(draft.dates);
+
+    toast.success("Configurações do edital atualizadas com sucesso!");
     setShowConfirm(false);
     setScheduleOpen(false);
   };
@@ -138,7 +166,7 @@ const AdminEditalCard = ({ edital }: AdminEditalCardProps) => {
         </div>
         <div 
           className="flex items-center gap-2.5 cursor-pointer hover:text-blue-600 transition-colors group" 
-          onClick={() => setScheduleOpen(true)}
+          onClick={handleOpenSchedule}
         >
           <Calendar size={22} className="text-blue-600" />
           <span className="text-lg">Programar</span>
@@ -200,7 +228,7 @@ const AdminEditalCard = ({ edital }: AdminEditalCardProps) => {
                 <div className="space-y-4">
                   <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100">
                     <div className="flex items-center gap-3">
-                      <div className={`p-2 rounded-lg ${isVisible ? 'bg-blue-100 text-blue-600' : 'bg-slate-200 text-slate-400'}`}>
+                      <div className={`p-2 rounded-lg ${draft.isVisible ? 'bg-blue-100 text-blue-600' : 'bg-slate-200 text-slate-400'}`}>
                         <Globe size={18} />
                       </div>
                       <div>
@@ -208,12 +236,12 @@ const AdminEditalCard = ({ edital }: AdminEditalCardProps) => {
                         <p className="text-[10px] text-slate-500 font-medium">Define se o edital aparece para o público</p>
                       </div>
                     </div>
-                    <Switch checked={isVisible} onCheckedChange={handleVisibilityToggle} />
+                    <Switch checked={draft.isVisible} onCheckedChange={handleVisibilityToggle} />
                   </div>
 
                   <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100">
                     <div className="flex items-center gap-3">
-                      <div className={`p-2 rounded-lg ${isFinalized ? 'bg-emerald-100 text-emerald-600' : 'bg-purple-100 text-purple-600'}`}>
+                      <div className={`p-2 rounded-lg ${draft.isFinalized ? 'bg-emerald-100 text-emerald-600' : 'bg-purple-100 text-purple-600'}`}>
                         <Power size={18} />
                       </div>
                       <div>
@@ -221,7 +249,7 @@ const AdminEditalCard = ({ edital }: AdminEditalCardProps) => {
                         <p className="text-[10px] text-slate-500 font-medium">Desligue para finalizar o edital permanentemente</p>
                       </div>
                     </div>
-                    <Switch checked={isFinalized} onCheckedChange={handleFinalizeToggle} />
+                    <Switch checked={draft.isFinalized} onCheckedChange={handleFinalizeToggle} />
                   </div>
                 </div>
 
@@ -229,15 +257,15 @@ const AdminEditalCard = ({ edital }: AdminEditalCardProps) => {
                   <div className="space-y-3">
                     <Label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Abertura</Label>
                     <div className="flex flex-col gap-2">
-                      <Input type="date" value={dates.abertura} onChange={(e) => setDates({...dates, abertura: e.target.value})} className="rounded-xl h-11" />
-                      <Input type="time" value={dates.horaAbertura} onChange={(e) => setDates({...dates, horaAbertura: e.target.value})} className="rounded-xl h-11" />
+                      <Input type="date" value={draft.dates.abertura} onChange={(e) => setDraft({...draft, dates: {...draft.dates, abertura: e.target.value}})} className="rounded-xl h-11" />
+                      <Input type="time" value={draft.dates.horaAbertura} onChange={(e) => setDraft({...draft, dates: {...draft.dates, horaAbertura: e.target.value}})} className="rounded-xl h-11" />
                     </div>
                   </div>
                   <div className="space-y-3">
                     <Label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Encerramento</Label>
                     <div className="flex flex-col gap-2">
-                      <Input type="date" value={dates.encerramento} onChange={(e) => setDates({...dates, encerramento: e.target.value})} className="rounded-xl h-11" />
-                      <Input type="time" value={dates.horaEncerramento} onChange={(e) => setDates({...dates, horaEncerramento: e.target.value})} className="rounded-xl h-11" />
+                      <Input type="date" value={draft.dates.encerramento} onChange={(e) => setDraft({...draft, dates: {...draft.dates, encerramento: e.target.value}})} className="rounded-xl h-11" />
+                      <Input type="time" value={draft.dates.horaEncerramento} onChange={(e) => setDraft({...draft, dates: {...draft.dates, horaEncerramento: e.target.value}})} className="rounded-xl h-11" />
                     </div>
                   </div>
                 </div>
@@ -246,19 +274,19 @@ const AdminEditalCard = ({ edital }: AdminEditalCardProps) => {
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
                       <Label className="text-sm font-bold text-slate-900">Prorrogação</Label>
-                      <Switch checked={isProrrogacao} onCheckedChange={setIsProrrogacao} />
+                      <Switch checked={draft.isProrrogacao} onCheckedChange={(val) => setDraft({...draft, isProrrogacao: val})} />
                     </div>
-                    {isProrrogacao && (
+                    {draft.isProrrogacao && (
                       <div className="grid grid-cols-2 gap-4 p-4 bg-blue-50/50 rounded-xl border border-blue-100 animate-in fade-in slide-in-from-top-2">
                         <div className="space-y-2">
                           <Label className="text-[10px] font-bold text-blue-600 uppercase">Início</Label>
-                          <Input type="date" value={dates.prorrogacaoInicio} onChange={(e) => setDates({...dates, prorrogacaoInicio: e.target.value})} className="h-10 rounded-lg" />
-                          <Input type="time" value={dates.prorrogacaoHoraInicio} onChange={(e) => setDates({...dates, prorrogacaoHoraInicio: e.target.value})} className="h-10 rounded-lg" />
+                          <Input type="date" value={draft.dates.prorrogacaoInicio} onChange={(e) => setDraft({...draft, dates: {...draft.dates, prorrogacaoInicio: e.target.value}})} className="h-10 rounded-lg" />
+                          <Input type="time" value={draft.dates.prorrogacaoHoraInicio} onChange={(e) => setDraft({...draft, dates: {...draft.dates, prorrogacaoHoraInicio: e.target.value}})} className="h-10 rounded-lg" />
                         </div>
                         <div className="space-y-2">
                           <Label className="text-[10px] font-bold text-blue-600 uppercase">Fim</Label>
-                          <Input type="date" value={dates.prorrogacaoFim} onChange={(e) => setDates({...dates, prorrogacaoFim: e.target.value})} className="h-10 rounded-lg" />
-                          <Input type="time" value={dates.prorrogacaoHoraFim} onChange={(e) => setDates({...dates, prorrogacaoHoraFim: e.target.value})} className="h-10 rounded-lg" />
+                          <Input type="date" value={draft.dates.prorrogacaoFim} onChange={(e) => setDraft({...draft, dates: {...draft.dates, prorrogacaoFim: e.target.value}})} className="h-10 rounded-lg" />
+                          <Input type="time" value={draft.dates.prorrogacaoHoraFim} onChange={(e) => setDraft({...draft, dates: {...draft.dates, prorrogacaoHoraFim: e.target.value}})} className="h-10 rounded-lg" />
                         </div>
                       </div>
                     )}
@@ -267,19 +295,19 @@ const AdminEditalCard = ({ edital }: AdminEditalCardProps) => {
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
                       <Label className="text-sm font-bold text-slate-900">Recurso</Label>
-                      <Switch checked={isRecurso} onCheckedChange={setIsRecurso} />
+                      <Switch checked={draft.isRecurso} onCheckedChange={(val) => setDraft({...draft, isRecurso: val})} />
                     </div>
-                    {isRecurso && (
+                    {draft.isRecurso && (
                       <div className="grid grid-cols-2 gap-4 p-4 bg-red-50/50 rounded-xl border border-red-100 animate-in fade-in slide-in-from-top-2">
                         <div className="space-y-2">
                           <Label className="text-[10px] font-bold text-red-600 uppercase">Início</Label>
-                          <Input type="date" value={dates.recursoInicio} onChange={(e) => setDates({...dates, recursoInicio: e.target.value})} className="h-10 rounded-lg" />
-                          <Input type="time" value={dates.recursoHoraInicio} onChange={(e) => setDates({...dates, recursoHoraInicio: e.target.value})} className="h-10 rounded-lg" />
+                          <Input type="date" value={draft.dates.recursoInicio} onChange={(e) => setDraft({...draft, dates: {...draft.dates, recursoInicio: e.target.value}})} className="h-10 rounded-lg" />
+                          <Input type="time" value={draft.dates.recursoHoraInicio} onChange={(e) => setDraft({...draft, dates: {...draft.dates, recursoHoraInicio: e.target.value}})} className="h-10 rounded-lg" />
                         </div>
                         <div className="space-y-2">
                           <Label className="text-[10px] font-bold text-red-600 uppercase">Fim</Label>
-                          <Input type="date" value={dates.recursoFim} onChange={(e) => setDates({...dates, recursoFim: e.target.value})} className="h-10 rounded-lg" />
-                          <Input type="time" value={dates.recursoHoraFim} onChange={(e) => setDates({...dates, recursoHoraFim: e.target.value})} className="h-10 rounded-lg" />
+                          <Input type="date" value={draft.dates.recursoFim} onChange={(e) => setDraft({...draft, dates: {...draft.dates, recursoFim: e.target.value}})} className="h-10 rounded-lg" />
+                          <Input type="time" value={draft.dates.recursoHoraFim} onChange={(e) => setDraft({...draft, dates: {...draft.dates, recursoHoraFim: e.target.value}})} className="h-10 rounded-lg" />
                         </div>
                       </div>
                     )}
@@ -288,19 +316,19 @@ const AdminEditalCard = ({ edital }: AdminEditalCardProps) => {
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
                       <Label className="text-sm font-bold text-slate-900">Documentação</Label>
-                      <Switch checked={isDocumentacao} onCheckedChange={setIsDocumentacao} />
+                      <Switch checked={draft.isDocumentacao} onCheckedChange={(val) => setDraft({...draft, isDocumentacao: val})} />
                     </div>
-                    {isDocumentacao && (
+                    {draft.isDocumentacao && (
                       <div className="grid grid-cols-2 gap-4 p-4 bg-emerald-50/50 rounded-xl border border-emerald-100 animate-in fade-in slide-in-from-top-2">
                         <div className="space-y-2">
                           <Label className="text-[10px] font-bold text-emerald-600 uppercase">Início</Label>
-                          <Input type="date" value={dates.docInicio} onChange={(e) => setDates({...dates, docInicio: e.target.value})} className="h-10 rounded-lg" />
-                          <Input type="time" value={dates.docHoraInicio} onChange={(e) => setDates({...dates, docHoraInicio: e.target.value})} className="h-10 rounded-lg" />
+                          <Input type="date" value={draft.dates.docInicio} onChange={(e) => setDraft({...draft, dates: {...draft.dates, docInicio: e.target.value}})} className="h-10 rounded-lg" />
+                          <Input type="time" value={draft.dates.docHoraInicio} onChange={(e) => setDraft({...draft, dates: {...draft.dates, docHoraInicio: e.target.value}})} className="h-10 rounded-lg" />
                         </div>
                         <div className="space-y-2">
                           <Label className="text-[10px] font-bold text-emerald-600 uppercase">Fim</Label>
-                          <Input type="date" value={dates.docFim} onChange={(e) => setDates({...dates, docFim: e.target.value})} className="h-10 rounded-lg" />
-                          <Input type="time" value={dates.docHoraFim} onChange={(e) => setDates({...dates, docHoraFim: e.target.value})} className="h-10 rounded-lg" />
+                          <Input type="date" value={draft.dates.docFim} onChange={(e) => setDraft({...draft, dates: {...draft.dates, docFim: e.target.value}})} className="h-10 rounded-lg" />
+                          <Input type="time" value={draft.dates.docHoraFim} onChange={(e) => setDraft({...draft, dates: {...draft.dates, docHoraFim: e.target.value}})} className="h-10 rounded-lg" />
                         </div>
                       </div>
                     )}
@@ -333,7 +361,7 @@ const AdminEditalCard = ({ edital }: AdminEditalCardProps) => {
         </DialogContent>
       </Dialog>
 
-      {/* Alertas de Confirmação */}
+      {/* Alertas de Confirmação de Rascunho */}
       <AlertDialog open={showVisibilityAlert} onOpenChange={setShowVisibilityAlert}>
         <AlertDialogContent className="rounded-xl">
           <AlertDialogHeader>
