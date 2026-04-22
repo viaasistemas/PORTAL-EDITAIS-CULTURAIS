@@ -162,7 +162,7 @@ const EditaisPNAB = () => {
                   onClick={() => setCategoryFilter(cat)}
                   className={`px-6 py-3 rounded-xl font-bold text-sm transition-all ${
                     categoryFilter === cat
-                      ? 'bg-blue-600 text-white shadow-lg shadow-blue-100' 
+                      ? 'bg-[#2b59c3] text-white shadow-lg shadow-blue-100' 
                       : 'text-slate-400 hover:text-slate-600 hover:bg-slate-50'
                   }`}
                 >
@@ -227,7 +227,7 @@ const EditaisPNAB = () => {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-y-8 gap-x-12 mb-12">
                     <div className="space-y-2">
-                      <div className="flex items-center gap-2.5 text-blue-600">
+                      <div className="flex items-center gap-2.5 text-[#2b59c3]">
                         <Info size={18} />
                         <p className="text-xs font-bold uppercase tracking-wider">Inicio das Inscrições</p>
                       </div>
@@ -235,7 +235,7 @@ const EditaisPNAB = () => {
                     </div>
                     
                     <div className="space-y-2">
-                      <div className="flex items-center gap-2.5 text-blue-600">
+                      <div className="flex items-center gap-2.5 text-[#2b59c3]">
                         <Calendar size={18} />
                         <p className="text-xs font-bold uppercase tracking-wider">Encerramento das Inscrições</p>
                       </div>
@@ -243,7 +243,7 @@ const EditaisPNAB = () => {
                     </div>
 
                     <div className="space-y-2">
-                      <div className="flex items-center gap-2.5 text-blue-600">
+                      <div className="flex items-center gap-2.5 text-[#2b59c3]">
                         <Users size={18} />
                         <p className="text-xs font-bold uppercase tracking-wider">Vagas</p>
                       </div>
@@ -251,7 +251,7 @@ const EditaisPNAB = () => {
                     </div>
 
                     <div className="space-y-2">
-                      <div className="flex items-center gap-2.5 text-blue-600">
+                      <div className="flex items-center gap-2.5 text-[#2b59c3]">
                         <Filter size={18} />
                         <p className="text-xs font-bold uppercase tracking-wider">Categoria</p>
                       </div>
@@ -280,7 +280,7 @@ const EditaisPNAB = () => {
                     {isFinalized ? (
                       <Button 
                         onClick={() => setViewResultados(edital)}
-                        className="w-full h-16 bg-[#1e3a8a] hover:bg-blue-900 text-white font-bold rounded-xl text-base shadow-lg shadow-blue-100"
+                        className="w-full h-16 bg-[#2b59c3] hover:bg-[#1e44a3] text-white font-bold rounded-xl text-base shadow-lg shadow-blue-100"
                       >
                         Resultados
                       </Button>
@@ -289,7 +289,7 @@ const EditaisPNAB = () => {
                         {isAberto && (
                           <Button 
                             onClick={() => setInscricaoEdital(edital)}
-                            className="w-full h-16 bg-[#1e3a8a] hover:bg-blue-900 text-white font-bold rounded-xl text-base shadow-lg shadow-blue-100"
+                            className="w-full h-16 bg-[#2b59c3] hover:bg-[#1e44a3] text-white font-bold rounded-xl text-base shadow-lg shadow-blue-100"
                           >
                             Inscrever-se
                           </Button>
@@ -340,7 +340,7 @@ const EditaisPNAB = () => {
                             )}
                             <Button 
                               onClick={() => setViewResultados(edital)}
-                              className="w-full h-16 bg-[#1e3a8a] hover:bg-blue-900 text-white font-bold rounded-xl text-base shadow-lg shadow-blue-100"
+                              className="w-full h-16 bg-[#2b59c3] hover:bg-[#1e44a3] text-white font-bold rounded-xl text-base shadow-lg shadow-blue-100"
                             >
                               Resultados
                             </Button>
