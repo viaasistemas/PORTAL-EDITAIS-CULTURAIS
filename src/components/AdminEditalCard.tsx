@@ -80,8 +80,23 @@ const AdminEditalCard = ({ edital }: AdminEditalCardProps) => {
     return () => clearInterval(timer);
   }, []);
 
+  const isPhaseActive = (phase: 'prorrogacao') => {
+    const now = currentTime;
+    const startStr = `${settings.dates.prorrogacaoInicio}T${settings.dates.prorrogacaoHoraInicio}`;
+    const endStr = `${settings.dates.prorrogacaoFim}T${settings.dates.prorrogacaoHoraFim}`;
+
+    if (!settings.isProrrogacao || !settings.dates.prorrogacaoInicio) return false;
+
+    const start = new Date(startStr);
+    const end = new Date(endStr);
+
+    return now >= start && now <= end;
+  };
+
   const getDynamicStatus = () => {
     if (settings.isFinalized) return 'Encerrado';
+    if (isPhaseActive('prorrogacao')) return 'Prorrogado';
+
     const now = currentTime;
     const start = new Date(`${settings.dates.abertura}T${settings.dates.horaAbertura}`);
     const end = new Date(`${settings.dates.encerramento}T${settings.dates.horaEncerramento}`);
@@ -147,7 +162,7 @@ const AdminEditalCard = ({ edital }: AdminEditalCardProps) => {
         <h3 className="text-xl font-bold text-slate-900 leading-tight">{edital.title}</h3>
         <div className="flex flex-col items-end gap-2">
           <span className={`shrink-0 px-3 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider ${
-            currentStatus === 'Aberto' ? 'bg-emerald-50 text-emerald-600' : 
+            currentStatus === 'Aberto' || currentStatus === 'Prorrogado' ? 'bg-emerald-50 text-emerald-600' : 
             currentStatus === 'Em breve' ? 'bg-blue-50 text-blue-600' : 'bg-rose-50 text-rose-600'
           }`}>
             {currentStatus}

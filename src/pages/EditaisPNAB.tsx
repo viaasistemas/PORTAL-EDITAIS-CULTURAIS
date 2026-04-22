@@ -47,37 +47,13 @@ const EditaisPNAB = () => {
 
     loadSettings();
     window.addEventListener('storage', loadSettings);
-    const timer = setInterval(() => setCurrentTime(new Date()), 1000); // Atualiza a cada segundo para precisão
+    const timer = setInterval(() => setCurrentTime(new Date()), 1000);
     
     return () => {
       window.removeEventListener('storage', loadSettings);
       clearInterval(timer);
     };
   }, []);
-
-  const getDynamicStatus = (edital: EditalDetail) => {
-    const settings = editalSettings[edital.id];
-    if (settings?.isFinalized) return 'Encerrado';
-
-    const now = currentTime;
-    
-    const aberturaStr = settings?.dates?.abertura && settings?.dates?.horaAbertura 
-      ? `${settings.dates.abertura}T${settings.dates.horaAbertura}` 
-      : edital.dataAbertura;
-      
-    const encerramentoStr = settings?.dates?.encerramento && settings?.dates?.horaEncerramento 
-      ? `${settings.dates.encerramento}T${settings.dates.horaEncerramento}` 
-      : edital.dataEncerramento;
-
-    const start = aberturaStr ? new Date(aberturaStr) : null;
-    const end = encerramentoStr ? new Date(encerramentoStr) : null;
-
-    if (start && now < start) return 'Em breve';
-    if (start && end && now >= start && now <= end) return 'Aberto';
-    if (end && now > end) return 'Encerrado';
-    
-    return edital.status;
-  };
 
   const isPhaseActive = (editalId: string, phase: 'recurso' | 'documentacao' | 'prorrogacao') => {
     const settings = editalSettings[editalId];
@@ -108,6 +84,33 @@ const EditaisPNAB = () => {
     return now >= start && now <= end;
   };
 
+  const getDynamicStatus = (edital: EditalDetail) => {
+    const settings = editalSettings[edital.id];
+    if (settings?.isFinalized) return 'Encerrado';
+
+    // Se a prorrogação estiver ativa, o status é "Prorrogado"
+    if (isPhaseActive(edital.id, 'prorrogacao')) return 'Prorrogado';
+
+    const now = currentTime;
+    
+    const aberturaStr = settings?.dates?.abertura && settings?.dates?.horaAbertura 
+      ? `${settings.dates.abertura}T${settings.dates.horaAbertura}` 
+      : edital.dataAbertura;
+      
+    const encerramentoStr = settings?.dates?.encerramento && settings?.dates?.horaEncerramento 
+      ? `${settings.dates.encerramento}T${settings.dates.horaEncerramento}` 
+      : edital.dataEncerramento;
+
+    const start = aberturaStr ? new Date(aberturaStr) : null;
+    const end = encerramentoStr ? new Date(encerramentoStr) : null;
+
+    if (start && now < start) return 'Em breve';
+    if (start && end && now >= start && now <= end) return 'Aberto';
+    if (end && now > end) return 'Encerrado';
+    
+    return edital.status;
+  };
+
   const formatDateTime = (dateStr: string | undefined, timeStr?: string) => {
     if (!dateStr) return "Não definida";
     const date = timeStr ? new Date(`${dateStr}T${timeStr}`) : new Date(dateStr);
@@ -126,7 +129,7 @@ const EditaisPNAB = () => {
 
     const status = getDynamicStatus(e);
     if (filter === 'Todos') return true;
-    if (filter === 'Aberto') return status === 'Aberto';
+    if (filter === 'Aberto') return status === 'Aberto' || status === 'Prorrogado';
     if (filter === 'Encerrado') return status === 'Encerrado';
     return true;
   });
@@ -182,7 +185,7 @@ const EditaisPNAB = () => {
             {filteredEditais.map((edital) => {
               const settings = editalSettings[edital.id];
               const status = getDynamicStatus(edital);
-              const isAberto = status === 'Aberto';
+              const isAberto = status === 'Aberto' || status === 'Prorrogado';
               const isEmBreve = status === 'Em breve';
               const isEncerrado = status === 'Encerrado';
               const isFinalized = settings?.isFinalized;
