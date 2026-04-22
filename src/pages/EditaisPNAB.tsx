@@ -33,7 +33,6 @@ const EditaisPNAB = () => {
   const [viewResultados, setViewResultados] = useState<EditalDetail | null>(null);
   const [currentTime, setCurrentTime] = useState(new Date());
 
-  // Estado para armazenar configurações do admin para cada edital
   const [editalSettings, setEditalSettings] = useState<Record<string, any>>({});
 
   useEffect(() => {
@@ -48,7 +47,7 @@ const EditaisPNAB = () => {
 
     loadSettings();
     window.addEventListener('storage', loadSettings);
-    const timer = setInterval(() => setCurrentTime(new Date()), 60000);
+    const timer = setInterval(() => setCurrentTime(new Date()), 1000); // Atualiza a cada segundo para precisão
     
     return () => {
       window.removeEventListener('storage', loadSettings);
@@ -62,7 +61,6 @@ const EditaisPNAB = () => {
 
     const now = currentTime;
     
-    // Usar datas do admin se existirem, senão usar as do arquivo estático
     const aberturaStr = settings?.dates?.abertura && settings?.dates?.horaAbertura 
       ? `${settings.dates.abertura}T${settings.dates.horaAbertura}` 
       : edital.dataAbertura;
@@ -110,9 +108,20 @@ const EditaisPNAB = () => {
     return now >= start && now <= end;
   };
 
+  const formatDateTime = (dateStr: string | undefined, timeStr?: string) => {
+    if (!dateStr) return "Não definida";
+    const date = timeStr ? new Date(`${dateStr}T${timeStr}`) : new Date(dateStr);
+    return date.toLocaleString('pt-BR', { 
+      day: '2-digit', 
+      month: '2-digit', 
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    }).replace(',', ' às');
+  };
+
   const filteredEditais = editaisData.filter(e => {
     const settings = editalSettings[e.id];
-    // Se o admin marcou como invisível, não mostrar no portal
     if (settings && settings.isVisible === false) return false;
 
     const status = getDynamicStatus(e);
@@ -178,13 +187,13 @@ const EditaisPNAB = () => {
               const isEncerrado = status === 'Encerrado';
               const isFinalized = settings?.isFinalized;
 
-              // Formatar datas para exibição (priorizando admin)
               const displayInicio = settings?.dates?.abertura 
-                ? new Date(settings.dates.abertura).toLocaleDateString('pt-BR') 
-                : edital.inicioInscricao;
+                ? formatDateTime(settings.dates.abertura, settings.dates.horaAbertura)
+                : formatDateTime(edital.dataAbertura);
+                
               const displayFim = settings?.dates?.encerramento 
-                ? new Date(settings.dates.encerramento).toLocaleDateString('pt-BR') 
-                : edital.terminoInscricao;
+                ? formatDateTime(settings.dates.encerramento, settings.dates.horaEncerramento)
+                : formatDateTime(edital.dataEncerramento);
 
               return (
                 <div key={edital.id} className="bg-white rounded-2xl border border-slate-100 shadow-sm p-8 flex flex-col">
@@ -245,7 +254,6 @@ const EditaisPNAB = () => {
                       </Button>
                     </div>
 
-                    {/* Se estiver finalizado, só mostra consulta */}
                     {isFinalized ? (
                       <Button 
                         onClick={() => setViewResultados(edital)}

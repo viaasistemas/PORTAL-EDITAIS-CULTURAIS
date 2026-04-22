@@ -41,8 +41,8 @@ const AdminEditalCard = ({ edital }: AdminEditalCardProps) => {
   const [resultsOpen, setResultsOpen] = useState(false);
   const [attachmentsOpen, setAttachmentsOpen] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [currentTime, setCurrentTime] = useState(new Date());
   
-  // Carregar configurações salvas ou usar padrões
   const storageKey = `edital_settings_${edital.id}`;
   
   const [settings, setSettings] = useState(() => {
@@ -74,6 +74,22 @@ const AdminEditalCard = ({ edital }: AdminEditalCardProps) => {
       }
     };
   });
+
+  useEffect(() => {
+    const timer = setInterval(() => setCurrentTime(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const getDynamicStatus = () => {
+    if (settings.isFinalized) return 'Encerrado';
+    const now = currentTime;
+    const start = new Date(`${settings.dates.abertura}T${settings.dates.horaAbertura}`);
+    const end = new Date(`${settings.dates.encerramento}T${settings.dates.horaEncerramento}`);
+
+    if (now < start) return 'Em breve';
+    if (now >= start && now <= end) return 'Aberto';
+    return 'Encerrado';
+  };
 
   const [draft, setDraft] = useState(settings);
   const [showVisibilityAlert, setShowVisibilityAlert] = useState(false);
@@ -116,9 +132,10 @@ const AdminEditalCard = ({ edital }: AdminEditalCardProps) => {
     toast.success("Configurações do edital atualizadas com sucesso!");
     setShowConfirm(false);
     setScheduleOpen(false);
-    // Disparar evento para atualizar outras abas/páginas se necessário
     window.dispatchEvent(new Event('storage'));
   };
+
+  const currentStatus = getDynamicStatus();
 
   return (
     <div className="bg-white rounded-xl border border-slate-100 p-8 shadow-sm hover:shadow-md transition-all flex flex-col h-full relative">
@@ -130,9 +147,10 @@ const AdminEditalCard = ({ edital }: AdminEditalCardProps) => {
         <h3 className="text-xl font-bold text-slate-900 leading-tight">{edital.title}</h3>
         <div className="flex flex-col items-end gap-2">
           <span className={`shrink-0 px-3 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider ${
-            edital.status === 'Aberto' ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'
+            currentStatus === 'Aberto' ? 'bg-emerald-50 text-emerald-600' : 
+            currentStatus === 'Em breve' ? 'bg-blue-50 text-blue-600' : 'bg-rose-50 text-rose-600'
           }`}>
-            {edital.status}
+            {currentStatus}
           </span>
           {!settings.isVisible && (
             <span className="px-2 py-0.5 bg-slate-100 text-slate-400 text-[9px] font-bold rounded-lg uppercase">Invisível</span>
