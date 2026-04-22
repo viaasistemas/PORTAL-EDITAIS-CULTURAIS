@@ -3,14 +3,14 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
-  ArrowLeft, 
   Calendar, 
   Users, 
   Paperclip, 
   AlertTriangle, 
   CheckCircle2,
   Info,
-  Clock
+  Clock,
+  Filter
 } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -25,6 +25,7 @@ import PublicFileUploadDialog from '@/components/PublicFileUploadDialog';
 const EditaisPNAB = () => {
   const navigate = useNavigate();
   const [filter, setFilter] = useState('Todos');
+  const [categoryFilter, setCategoryFilter] = useState('Todas');
   const [selectedEdital, setSelectedEdital] = useState<EditalDetail | null>(null);
   const [inscricaoEdital, setInscricaoEdital] = useState<EditalDetail | null>(null);
   const [recursoEdital, setRecursoEdital] = useState<EditalDetail | null>(null);
@@ -87,16 +88,12 @@ const EditaisPNAB = () => {
   const getDynamicStatus = (edital: EditalDetail) => {
     const settings = editalSettings[edital.id];
     if (settings?.isFinalized) return 'Encerrado';
-
-    // Se a prorrogação estiver ativa, o status é "Prorrogado"
     if (isPhaseActive(edital.id, 'prorrogacao')) return 'Prorrogado';
 
     const now = currentTime;
-    
     const aberturaStr = settings?.dates?.abertura && settings?.dates?.horaAbertura 
       ? `${settings.dates.abertura}T${settings.dates.horaAbertura}` 
       : edital.dataAbertura;
-      
     const encerramentoStr = settings?.dates?.encerramento && settings?.dates?.horaEncerramento 
       ? `${settings.dates.encerramento}T${settings.dates.horaEncerramento}` 
       : edital.dataEncerramento;
@@ -128,11 +125,16 @@ const EditaisPNAB = () => {
     if (settings && settings.isVisible === false) return false;
 
     const status = getDynamicStatus(e);
-    if (filter === 'Todos') return true;
-    if (filter === 'Aberto') return status === 'Aberto' || status === 'Prorrogado';
-    if (filter === 'Encerrado') return status === 'Encerrado';
-    return true;
+    const matchesStatus = filter === 'Todos' || 
+                         (filter === 'Aberto' && (status === 'Aberto' || status === 'Prorrogado')) || 
+                         (filter === 'Encerrado' && status === 'Encerrado');
+    
+    const matchesCategory = categoryFilter === 'Todas' || e.categories.includes(categoryFilter);
+
+    return matchesStatus && matchesCategory;
   });
+
+  const categories = ["Todas", "Cultura Popular", "Música", "Dança"];
 
   return (
     <div className="min-h-screen bg-[#f8fafc] flex flex-col">
@@ -151,16 +153,26 @@ const EditaisPNAB = () => {
         </section>
 
         <section className="py-8 container mx-auto px-4">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-            <Button 
-              variant="outline" 
-              onClick={() => navigate('/editais')}
-              className="bg-white border-slate-200 rounded-xl px-6 h-12 font-bold text-slate-600 flex gap-2 hover:bg-slate-50"
-            >
-              <ArrowLeft size={18} /> Voltar
-            </Button>
+          <div className="flex flex-col lg:flex-row justify-between items-center gap-8 max-w-7xl mx-auto">
+            {/* Category Filters */}
+            <div className="flex flex-wrap justify-center gap-2 bg-white p-1.5 rounded-2xl border border-slate-100 shadow-sm">
+              {categories.map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => setCategoryFilter(cat)}
+                  className={`px-6 py-3 rounded-xl font-bold text-sm transition-all ${
+                    categoryFilter === cat
+                      ? 'bg-blue-600 text-white shadow-lg shadow-blue-100' 
+                      : 'text-slate-400 hover:text-slate-600 hover:bg-slate-50'
+                  }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
 
-            <div className="flex bg-white p-1 rounded-2xl border border-slate-100 shadow-sm">
+            {/* Status Filters */}
+            <div className="flex bg-white p-1.5 rounded-2xl border border-slate-100 shadow-sm">
               {['Todos', 'Abertos', 'Encerrados'].map((tab) => (
                 <button
                   key={tab}
@@ -170,7 +182,7 @@ const EditaisPNAB = () => {
                     (filter === 'Aberto' && tab === 'Abertos') || 
                     (filter === 'Encerrado' && tab === 'Encerrados')
                       ? 'bg-[#0a0f1c] text-white shadow-lg' 
-                      : 'text-slate-400 hover:text-slate-600'
+                      : 'text-slate-400 hover:text-slate-600 hover:bg-slate-50'
                   }`}
                 >
                   {tab}
@@ -204,63 +216,71 @@ const EditaisPNAB = () => {
                     <h3 className="text-xl font-bold text-slate-900 max-w-[70%] leading-tight">
                       {edital.title}
                     </h3>
-                    <span className={`px-3 py-1 rounded-full text-[10px] font-bold flex items-center gap-1.5 ${
+                    <span className={`px-4 py-1.5 rounded-full text-xs font-bold flex items-center gap-2 ${
                       isAberto ? 'bg-emerald-50 text-emerald-600' : 
                       isEmBreve ? 'bg-blue-50 text-blue-600' : 'bg-rose-50 text-rose-600'
                     }`}>
-                      <div className={`w-2 h-2 rounded-full ${isAberto ? 'bg-emerald-500' : isEmBreve ? 'bg-blue-500' : 'bg-rose-500'}`} />
+                      <div className={`w-2.5 h-2.5 rounded-full ${isAberto ? 'bg-emerald-500' : isEmBreve ? 'bg-blue-500' : 'bg-rose-500'}`} />
                       {status}
                     </span>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-12 mb-10">
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2 text-blue-600">
-                        <Info size={16} />
-                        <p className="text-[10px] font-bold uppercase tracking-wider">Inicio das Inscrições</p>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-y-8 gap-x-12 mb-12">
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2.5 text-blue-600">
+                        <Info size={18} />
+                        <p className="text-xs font-bold uppercase tracking-wider">Inicio das Inscrições</p>
                       </div>
-                      <p className="text-sm font-bold text-slate-500">{displayInicio}</p>
+                      <p className="text-base font-bold text-slate-500">{displayInicio}</p>
                     </div>
                     
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2 text-blue-600">
-                        <Calendar size={16} />
-                        <p className="text-[10px] font-bold uppercase tracking-wider">Encerramento das Inscrições</p>
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2.5 text-blue-600">
+                        <Calendar size={18} />
+                        <p className="text-xs font-bold uppercase tracking-wider">Encerramento das Inscrições</p>
                       </div>
-                      <p className="text-sm font-bold text-slate-700">{displayFim}</p>
+                      <p className="text-base font-bold text-slate-700">{displayFim}</p>
                     </div>
 
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2 text-blue-600">
-                        <Users size={16} />
-                        <p className="text-[10px] font-bold uppercase tracking-wider">Vagas</p>
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2.5 text-blue-600">
+                        <Users size={18} />
+                        <p className="text-xs font-bold uppercase tracking-wider">Vagas</p>
                       </div>
-                      <p className="text-sm font-bold text-slate-500">{edital.vagas}</p>
+                      <p className="text-base font-bold text-slate-500">{edital.vagas}</p>
+                    </div>
+
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2.5 text-blue-600">
+                        <Filter size={18} />
+                        <p className="text-xs font-bold uppercase tracking-wider">Categoria</p>
+                      </div>
+                      <p className="text-base font-bold text-slate-500">{edital.categories[0]}</p>
                     </div>
                   </div>
 
-                  <div className="space-y-3 mt-auto">
-                    <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-4 mt-auto">
+                    <div className="grid grid-cols-2 gap-4">
                       <Button 
                         variant="outline" 
                         onClick={() => setSelectedEdital(edital)}
-                        className="h-12 rounded-xl border-slate-100 text-slate-600 font-bold text-xs hover:bg-slate-50"
+                        className="h-14 rounded-xl border-slate-100 text-slate-600 font-bold text-sm hover:bg-slate-50"
                       >
                         Ver Detalhes
                       </Button>
                       <Button 
                         variant="outline" 
                         onClick={() => setViewAnexos(edital)}
-                        className="h-12 rounded-xl border-slate-100 text-slate-600 font-bold text-xs flex gap-2 hover:bg-slate-50"
+                        className="h-14 rounded-xl border-slate-100 text-slate-600 font-bold text-sm flex gap-2 hover:bg-slate-50"
                       >
-                        <Paperclip size={16} /> Anexos
+                        <Paperclip size={18} /> Anexos
                       </Button>
                     </div>
 
                     {isFinalized ? (
                       <Button 
                         onClick={() => setViewResultados(edital)}
-                        className="w-full h-14 bg-[#3b82f6] hover:bg-blue-600 text-white font-bold rounded-xl"
+                        className="w-full h-16 bg-[#1e3a8a] hover:bg-blue-900 text-white font-bold rounded-xl text-base shadow-lg shadow-blue-100"
                       >
                         Resultados
                       </Button>
@@ -269,7 +289,7 @@ const EditaisPNAB = () => {
                         {isAberto && (
                           <Button 
                             onClick={() => setInscricaoEdital(edital)}
-                            className="w-full h-14 bg-[#3b82f6] hover:bg-blue-600 text-white font-bold rounded-xl shadow-lg shadow-blue-100"
+                            className="w-full h-16 bg-[#1e3a8a] hover:bg-blue-900 text-white font-bold rounded-xl text-base shadow-lg shadow-blue-100"
                           >
                             Inscrever-se
                           </Button>
@@ -278,35 +298,51 @@ const EditaisPNAB = () => {
                         {isEmBreve && (
                           <Button 
                             disabled
-                            className="w-full h-14 bg-slate-100 text-slate-400 font-bold rounded-xl flex gap-2 cursor-not-allowed"
+                            className="w-full h-16 bg-slate-100 text-slate-400 font-bold rounded-xl flex gap-2 cursor-not-allowed text-base"
                           >
-                            <Clock size={18} /> Aguardando Abertura
+                            <Clock size={20} /> Aguardando Abertura
                           </Button>
                         )}
 
                         {isEncerrado && (
-                          <div className="space-y-3">
-                            <div className="grid grid-cols-2 gap-3">
+                          <div className="space-y-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                               {isPhaseActive(edital.id, 'recurso') && (
-                                <Button 
-                                  onClick={() => setRecursoEdital(edital)}
-                                  className="h-14 bg-[#ef4444] hover:bg-red-600 text-white font-bold rounded-xl flex gap-2"
-                                >
-                                  <AlertTriangle size={18} /> Recursos
-                                </Button>
+                                <div className="space-y-2">
+                                  <div className="bg-red-50 p-3 rounded-xl border border-red-100 text-center">
+                                    <p className="text-[10px] font-bold text-red-600 uppercase tracking-wider mb-1">Período de Recurso</p>
+                                    <p className="text-[11px] font-bold text-red-800">
+                                      {formatDateTime(settings.dates.recursoInicio, settings.dates.recursoHoraInicio)} até {formatDateTime(settings.dates.recursoFim, settings.dates.recursoHoraFim)}
+                                    </p>
+                                  </div>
+                                  <Button 
+                                    onClick={() => setRecursoEdital(edital)}
+                                    className="w-full h-16 bg-[#ef4444] hover:bg-red-600 text-white font-bold rounded-xl flex gap-2 text-base"
+                                  >
+                                    <AlertTriangle size={20} /> Recursos
+                                  </Button>
+                                </div>
                               )}
                               {isPhaseActive(edital.id, 'documentacao') && (
-                                <Button 
-                                  onClick={() => setDocEdital(edital)}
-                                  className="h-14 bg-[#10b981] hover:bg-emerald-600 text-white font-bold rounded-xl flex gap-2"
-                                >
-                                  <CheckCircle2 size={18} /> Documentação
-                                </Button>
+                                <div className="space-y-2">
+                                  <div className="bg-emerald-50 p-3 rounded-xl border border-emerald-100 text-center">
+                                    <p className="text-[10px] font-bold text-emerald-600 uppercase tracking-wider mb-1">Período de Documentação</p>
+                                    <p className="text-[11px] font-bold text-emerald-800">
+                                      {formatDateTime(settings.dates.docInicio, settings.dates.docHoraInicio)} até {formatDateTime(settings.dates.docFim, settings.dates.docHoraFim)}
+                                    </p>
+                                  </div>
+                                  <Button 
+                                    onClick={() => setDocEdital(edital)}
+                                    className="w-full h-16 bg-[#10b981] hover:bg-emerald-600 text-white font-bold rounded-xl flex gap-2 text-base"
+                                  >
+                                    <CheckCircle2 size={20} /> Documentação
+                                  </Button>
+                                </div>
                               )}
                             </div>
                             <Button 
                               onClick={() => setViewResultados(edital)}
-                              className="w-full h-14 bg-[#3b82f6] hover:bg-blue-600 text-white font-bold rounded-xl"
+                              className="w-full h-16 bg-[#1e3a8a] hover:bg-blue-900 text-white font-bold rounded-xl text-base shadow-lg shadow-blue-100"
                             >
                               Resultados
                             </Button>
