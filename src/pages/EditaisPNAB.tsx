@@ -19,6 +19,7 @@ import EditalDetailsDialog from '@/components/EditalDetailsDialog';
 import InscricaoDialog from '@/components/InscricaoDialog';
 import RecursoDialog from '@/components/RecursoDialog';
 import DocumentacaoDialog from '@/components/DocumentacaoDialog';
+import PublicFileUploadDialog from '@/components/PublicFileUploadDialog';
 
 const EditaisPNAB = () => {
   const navigate = useNavigate();
@@ -27,6 +28,10 @@ const EditaisPNAB = () => {
   const [inscricaoEdital, setInscricaoEdital] = useState<EditalDetail | null>(null);
   const [recursoEdital, setRecursoEdital] = useState<EditalDetail | null>(null);
   const [docEdital, setDocEdital] = useState<EditalDetail | null>(null);
+  
+  // Estados para Anexos e Resultados
+  const [viewAnexos, setViewAnexos] = useState<EditalDetail | null>(null);
+  const [viewResultados, setViewResultados] = useState<EditalDetail | null>(null);
 
   const filteredEditais = editaisData.filter(e => {
     if (filter === 'Todos') return true;
@@ -101,15 +106,15 @@ const EditaisPNAB = () => {
                   <div className="space-y-1">
                     <div className="flex items-center gap-2 text-blue-600">
                       <Info size={16} />
-                      <p className="text-[10px] font-bold uppercase tracking-wider">Prazo Atual</p>
+                      <p className="text-[10px] font-bold uppercase tracking-wider">Inicio das Inscrições</p>
                     </div>
-                    <p className="text-sm font-bold text-slate-500">{edital.prazoAtual}</p>
+                    <p className="text-sm font-bold text-slate-500">{edital.inicioInscricao}</p>
                   </div>
                   
                   <div className="space-y-1">
                     <div className="flex items-center gap-2 text-blue-600">
                       <Calendar size={16} />
-                      <p className="text-[10px] font-bold uppercase tracking-wider">Prazo Final</p>
+                      <p className="text-[10px] font-bold uppercase tracking-wider">Encerramento das Inscrições</p>
                     </div>
                     <p className="text-sm font-bold text-slate-700">{edital.terminoInscricao}</p>
                   </div>
@@ -132,7 +137,11 @@ const EditaisPNAB = () => {
                     >
                       Ver Detalhes
                     </Button>
-                    <Button variant="outline" className="h-12 rounded-xl border-slate-100 text-slate-600 font-bold text-xs flex gap-2 hover:bg-slate-50">
+                    <Button 
+                      variant="outline" 
+                      onClick={() => setViewAnexos(edital)}
+                      className="h-12 rounded-xl border-slate-100 text-slate-600 font-bold text-xs flex gap-2 hover:bg-slate-50"
+                    >
                       <Paperclip size={16} /> Anexos
                     </Button>
                   </div>
@@ -160,7 +169,10 @@ const EditaisPNAB = () => {
                           <CheckCircle2 size={18} /> Documentação
                         </Button>
                       </div>
-                      <Button className="w-full h-14 bg-[#3b82f6] hover:bg-blue-600 text-white font-bold rounded-xl">
+                      <Button 
+                        onClick={() => setViewResultados(edital)}
+                        className="w-full h-14 bg-[#3b82f6] hover:bg-blue-600 text-white font-bold rounded-xl"
+                      >
                         Resultados
                       </Button>
                     </div>
@@ -201,6 +213,29 @@ const EditaisPNAB = () => {
           edital={docEdital} 
           open={!!docEdital} 
           onOpenChange={(open) => !open && setDocEdital(null)} 
+        />
+      )}
+
+      {/* Diálogos Públicos de Arquivos */}
+      {viewAnexos && (
+        <PublicFileUploadDialog
+          title="Anexos do Edital"
+          type="Anexos"
+          open={!!viewAnexos}
+          onOpenChange={(open) => !open && setViewAnexos(null)}
+          editalTitle={viewAnexos.title}
+          files={[]} // Aqui seriam carregados os arquivos reais do banco
+        />
+      )}
+
+      {viewResultados && (
+        <PublicFileUploadDialog
+          title="Resultados do Edital"
+          type="Resultados"
+          open={!!viewResultados}
+          onOpenChange={(open) => !open && setViewResultados(null)}
+          editalTitle={viewResultados.title}
+          files={[]} // Aqui seriam carregados os arquivos reais do banco
         />
       )}
 
