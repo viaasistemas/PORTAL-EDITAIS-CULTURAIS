@@ -306,40 +306,38 @@ const EditaisPNAB = () => {
 
                         {isEncerrado && (
                           <div className="space-y-4">
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                              {isPhaseActive(edital.id, 'recurso') && (
-                                <div className="space-y-2">
-                                  <div className="bg-red-50 p-3 rounded-xl border border-red-100 text-center">
-                                    <p className="text-[10px] font-bold text-red-600 uppercase tracking-wider mb-1">Período de Recurso</p>
-                                    <p className="text-[11px] font-bold text-red-800">
-                                      {formatDateTime(settings.dates.recursoInicio, settings.dates.recursoHoraInicio)} até {formatDateTime(settings.dates.recursoFim, settings.dates.recursoHoraFim)}
-                                    </p>
-                                  </div>
-                                  <Button 
-                                    onClick={() => setRecursoEdital(edital)}
-                                    className="w-full h-16 bg-[#ef4444] hover:bg-red-600 text-white font-bold rounded-xl flex gap-2 text-base"
-                                  >
-                                    <AlertTriangle size={20} /> Recursos
-                                  </Button>
+                            {isPhaseActive(edital.id, 'recurso') && (
+                              <div className="space-y-2">
+                                <div className="bg-red-50 p-3 rounded-xl border border-red-100 text-center">
+                                  <p className="text-[10px] font-bold text-red-600 uppercase tracking-wider mb-1">Período de Envio de Recurso</p>
+                                  <p className="text-[11px] font-bold text-red-800">
+                                    {formatDateTime(settings.dates.recursoInicio, settings.dates.recursoHoraInicio)} até {formatDateTime(settings.dates.recursoFim, settings.dates.recursoHoraFim)}
+                                  </p>
                                 </div>
-                              )}
-                              {isPhaseActive(edital.id, 'documentacao') && (
-                                <div className="space-y-2">
-                                  <div className="bg-emerald-50 p-3 rounded-xl border border-emerald-100 text-center">
-                                    <p className="text-[10px] font-bold text-emerald-600 uppercase tracking-wider mb-1">Período de Documentação</p>
-                                    <p className="text-[11px] font-bold text-emerald-800">
-                                      {formatDateTime(settings.dates.docInicio, settings.dates.docHoraInicio)} até {formatDateTime(settings.dates.docFim, settings.dates.docHoraFim)}
-                                    </p>
-                                  </div>
-                                  <Button 
-                                    onClick={() => setDocEdital(edital)}
-                                    className="w-full h-16 bg-[#10b981] hover:bg-emerald-600 text-white font-bold rounded-xl flex gap-2 text-base"
-                                  >
-                                    <CheckCircle2 size={20} /> Documentação
-                                  </Button>
+                                <Button 
+                                  onClick={() => setRecursoEdital(edital)}
+                                  className="w-full h-16 bg-[#ef4444] hover:bg-red-600 text-white font-bold rounded-xl flex gap-2 text-base"
+                                >
+                                  <AlertTriangle size={20} /> Recursos
+                                </Button>
+                              </div>
+                            )}
+                            {isPhaseActive(edital.id, 'documentacao') && (
+                              <div className="space-y-2">
+                                <div className="bg-emerald-50 p-3 rounded-xl border border-emerald-100 text-center">
+                                  <p className="text-[10px] font-bold text-emerald-600 uppercase tracking-wider mb-1">Período de Envio de Documentação</p>
+                                  <p className="text-[11px] font-bold text-emerald-800">
+                                    {formatDateTime(settings.dates.docInicio, settings.dates.docHoraInicio)} até {formatDateTime(settings.dates.docFim, settings.dates.docHoraFim)}
+                                  </p>
                                 </div>
-                              )}
-                            </div>
+                                <Button 
+                                  onClick={() => setDocEdital(edital)}
+                                  className="w-full h-16 bg-[#10b981] hover:bg-emerald-600 text-white font-bold rounded-xl flex gap-2 text-base"
+                                >
+                                  <CheckCircle2 size={20} /> Documentação
+                                </Button>
+                              </div>
+                            )}
                             <Button 
                               onClick={() => setViewResultados(edital)}
                               className="w-full h-16 bg-[#1e3a8a] hover:bg-blue-900 text-white font-bold rounded-xl text-base shadow-lg shadow-blue-100"

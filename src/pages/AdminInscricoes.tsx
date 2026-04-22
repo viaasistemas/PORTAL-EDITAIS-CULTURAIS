@@ -23,6 +23,7 @@ const AdminInscricoes = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('Todos');
   const [statusFilter, setStatusFilter] = useState('todos');
+  const [categoryFilter, setCategoryFilter] = useState('todas');
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
@@ -43,11 +44,14 @@ const AdminInscricoes = () => {
                          (statusFilter === 'aberto' && edital.status === 'Aberto') ||
                          (statusFilter === 'encerrado' && edital.status === 'Encerrado');
 
+    const matchesCategory = categoryFilter === 'todas' || 
+                           edital.categories.includes(categoryFilter);
+
     const cleanSearch = searchTerm.toLowerCase().replace('#', '');
     const matchesSearch = edital.title.toLowerCase().includes(cleanSearch) ||
                          edital.number.includes(cleanSearch);
 
-    return matchesTab && matchesStatus && matchesSearch;
+    return matchesTab && matchesStatus && matchesSearch && matchesCategory;
   });
 
   return (
@@ -64,7 +68,7 @@ const AdminInscricoes = () => {
               <p className="text-slate-500 text-sm font-medium">Visualizar e gerenciar as inscrições recebidas por edital</p>
             </div>
             
-            <div className="flex items-center gap-3 w-full md:w-auto">
+            <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
               <div className="relative flex-grow md:w-64">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
                 <Input 
@@ -74,6 +78,21 @@ const AdminInscricoes = () => {
                   className="pl-10 h-11 rounded-xl border-slate-200 bg-white"
                 />
               </div>
+              
+              {activeTab === 'PNAB' && (
+                <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                  <SelectTrigger className="w-[180px] bg-white border-slate-200 rounded-xl h-11">
+                    <SelectValue placeholder="Categoria" />
+                  </SelectTrigger>
+                  <SelectContent className="rounded-xl">
+                    <SelectItem value="todas">Todas Categorias</SelectItem>
+                    <SelectItem value="Cultura Popular">Cultura Popular</SelectItem>
+                    <SelectItem value="Música">Música</SelectItem>
+                    <SelectItem value="Dança">Dança</SelectItem>
+                  </SelectContent>
+                </Select>
+              )}
+
               <Select value={statusFilter} onValueChange={setStatusFilter}>
                 <SelectTrigger className="w-[180px] bg-white border-slate-200 rounded-xl h-11">
                   <SelectValue placeholder="Status" />
@@ -91,7 +110,10 @@ const AdminInscricoes = () => {
             {tabs.map((tab) => (
               <Button
                 key={tab}
-                onClick={() => setActiveTab(tab)}
+                onClick={() => {
+                  setActiveTab(tab);
+                  if (tab !== 'PNAB') setCategoryFilter('todas');
+                }}
                 className={`rounded-xl px-6 h-11 font-bold text-sm transition-all shrink-0 ${
                   activeTab === tab 
                     ? 'bg-blue-600 text-white shadow-lg shadow-blue-100' 
