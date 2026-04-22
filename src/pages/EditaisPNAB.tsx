@@ -309,7 +309,7 @@ const EditaisPNAB = () => {
                             {isPhaseActive(edital.id, 'recurso') && (
                               <div className="space-y-2">
                                 <div className="bg-red-50 p-3 rounded-xl border border-red-100 text-center">
-                                  <p className="text-[10px] font-bold text-red-600 uppercase tracking-wider mb-1">Período de Envio de Recurso</p>
+                                  <p className="text-[10px] font-bold text-red-600 uppercase tracking-wider mb-1">Período de Enviou de Recurso</p>
                                   <p className="text-[11px] font-bold text-red-800">
                                     {formatDateTime(settings.dates.recursoInicio, settings.dates.recursoHoraInicio)} até {formatDateTime(settings.dates.recursoFim, settings.dates.recursoHoraFim)}
                                   </p>
@@ -325,7 +325,7 @@ const EditaisPNAB = () => {
                             {isPhaseActive(edital.id, 'documentacao') && (
                               <div className="space-y-2">
                                 <div className="bg-emerald-50 p-3 rounded-xl border border-emerald-100 text-center">
-                                  <p className="text-[10px] font-bold text-emerald-600 uppercase tracking-wider mb-1">Período de Envio de Documentação</p>
+                                  <p className="text-[10px] font-bold text-emerald-600 uppercase tracking-wider mb-1">Período de Enviou de Documentação</p>
                                   <p className="text-[11px] font-bold text-emerald-800">
                                     {formatDateTime(settings.dates.docInicio, settings.dates.docHoraInicio)} até {formatDateTime(settings.dates.docFim, settings.dates.docHoraFim)}
                                   </p>
