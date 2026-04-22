@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Eye, FileText, Cloud, Paperclip, Users, Calendar, Clock, Save, AlertCircle, Globe, Power } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
@@ -42,53 +42,45 @@ const AdminEditalCard = ({ edital }: AdminEditalCardProps) => {
   const [attachmentsOpen, setAttachmentsOpen] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   
-  // Estados Reais (Persistidos)
-  const [isVisible, setIsVisible] = useState(true);
-  const [isFinalized, setIsFinalized] = useState(false); // Começa desativado (Não finalizado)
-  const [isProrrogacao, setIsProrrogacao] = useState(false);
-  const [isRecurso, setIsRecurso] = useState(false);
-  const [isDocumentacao, setIsDocumentacao] = useState(false);
-  const [dates, setDates] = useState({
-    abertura: edital.dataAbertura?.split('T')[0] || '',
-    horaAbertura: edital.dataAbertura?.split('T')[1]?.substring(0, 5) || '08:00',
-    encerramento: edital.dataEncerramento?.split('T')[0] || '',
-    horaEncerramento: edital.dataEncerramento?.split('T')[1]?.substring(0, 5) || '23:59',
-    prorrogacaoInicio: '',
-    prorrogacaoHoraInicio: '08:00',
-    prorrogacaoFim: '',
-    prorrogacaoHoraFim: '23:59',
-    recursoInicio: '',
-    recursoHoraInicio: '08:00',
-    recursoFim: '',
-    recursoHoraFim: '23:59',
-    docInicio: '',
-    docHoraInicio: '08:00',
-    docFim: '',
-    docHoraFim: '23:59',
+  // Carregar configurações salvas ou usar padrões
+  const storageKey = `edital_settings_${edital.id}`;
+  
+  const [settings, setSettings] = useState(() => {
+    const saved = localStorage.getItem(storageKey);
+    if (saved) return JSON.parse(saved);
+    return {
+      isVisible: true,
+      isFinalized: false,
+      isProrrogacao: false,
+      isRecurso: false,
+      isDocumentacao: false,
+      dates: {
+        abertura: edital.dataAbertura?.split('T')[0] || '',
+        horaAbertura: edital.dataAbertura?.split('T')[1]?.substring(0, 5) || '08:00',
+        encerramento: edital.dataEncerramento?.split('T')[0] || '',
+        horaEncerramento: edital.dataEncerramento?.split('T')[1]?.substring(0, 5) || '23:59',
+        prorrogacaoInicio: '',
+        prorrogacaoHoraInicio: '08:00',
+        prorrogacaoFim: '',
+        prorrogacaoHoraFim: '23:59',
+        recursoInicio: '',
+        recursoHoraInicio: '08:00',
+        recursoFim: '',
+        recursoHoraFim: '23:59',
+        docInicio: '',
+        docHoraInicio: '08:00',
+        docFim: '',
+        docHoraFim: '23:59',
+      }
+    };
   });
 
-  // Estados de Rascunho (Draft)
-  const [draft, setDraft] = useState({
-    isVisible,
-    isFinalized,
-    isProrrogacao,
-    isRecurso,
-    isDocumentacao,
-    dates: { ...dates }
-  });
-
+  const [draft, setDraft] = useState(settings);
   const [showVisibilityAlert, setShowVisibilityAlert] = useState(false);
   const [showFinalizeAlert, setShowFinalizeAlert] = useState(false);
 
   const handleOpenSchedule = () => {
-    setDraft({
-      isVisible,
-      isFinalized,
-      isProrrogacao,
-      isRecurso,
-      isDocumentacao,
-      dates: { ...dates }
-    });
+    setDraft(settings);
     setScheduleOpen(true);
   };
 
@@ -118,21 +110,14 @@ const AdminEditalCard = ({ edital }: AdminEditalCardProps) => {
     setShowFinalizeAlert(false);
   };
 
-  const handleSaveClick = () => {
-    setShowConfirm(true);
-  };
-
   const handleFinalConfirm = () => {
-    setIsVisible(draft.isVisible);
-    setIsFinalized(draft.isFinalized);
-    setIsProrrogacao(draft.isProrrogacao);
-    setIsRecurso(draft.isRecurso);
-    setIsDocumentacao(draft.isDocumentacao);
-    setDates(draft.dates);
-
+    setSettings(draft);
+    localStorage.setItem(storageKey, JSON.stringify(draft));
     toast.success("Configurações do edital atualizadas com sucesso!");
     setShowConfirm(false);
     setScheduleOpen(false);
+    // Disparar evento para atualizar outras abas/páginas se necessário
+    window.dispatchEvent(new Event('storage'));
   };
 
   return (
@@ -149,10 +134,10 @@ const AdminEditalCard = ({ edital }: AdminEditalCardProps) => {
           }`}>
             {edital.status}
           </span>
-          {!isVisible && (
+          {!settings.isVisible && (
             <span className="px-2 py-0.5 bg-slate-100 text-slate-400 text-[9px] font-bold rounded-lg uppercase">Invisível</span>
           )}
-          {isFinalized && (
+          {settings.isFinalized && (
             <span className="px-2 py-0.5 bg-purple-100 text-purple-600 text-[9px] font-bold rounded-lg uppercase">Finalizado</span>
           )}
         </div>
@@ -337,7 +322,7 @@ const AdminEditalCard = ({ edital }: AdminEditalCardProps) => {
 
               <DialogFooter className="mt-10 gap-3">
                 <Button variant="ghost" onClick={() => setScheduleOpen(false)} className="rounded-xl font-bold text-slate-500">Cancelar</Button>
-                <Button onClick={handleSaveClick} className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl px-8 font-bold flex gap-2 shadow-lg shadow-blue-100">
+                <Button onClick={() => setShowConfirm(true)} className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl px-8 font-bold flex gap-2 shadow-lg shadow-blue-100">
                   <Save size={18} /> Salvar Alteração
                 </Button>
               </DialogFooter>

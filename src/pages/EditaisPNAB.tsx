@@ -33,20 +33,46 @@ const EditaisPNAB = () => {
   const [viewResultados, setViewResultados] = useState<EditalDetail | null>(null);
   const [currentTime, setCurrentTime] = useState(new Date());
 
-  // Atualiza o tempo a cada minuto para checagem de status
+  // Estado para armazenar configurações do admin para cada edital
+  const [editalSettings, setEditalSettings] = useState<Record<string, any>>({});
+
   useEffect(() => {
+    const loadSettings = () => {
+      const settings: Record<string, any> = {};
+      editaisData.forEach(e => {
+        const saved = localStorage.getItem(`edital_settings_${e.id}`);
+        if (saved) settings[e.id] = JSON.parse(saved);
+      });
+      setEditalSettings(settings);
+    };
+
+    loadSettings();
+    window.addEventListener('storage', loadSettings);
     const timer = setInterval(() => setCurrentTime(new Date()), 60000);
-    return () => clearInterval(timer);
+    
+    return () => {
+      window.removeEventListener('storage', loadSettings);
+      clearInterval(timer);
+    };
   }, []);
 
   const getDynamicStatus = (edital: EditalDetail) => {
-    // Se o edital estiver marcado como finalizado no admin (simulado aqui)
-    // No mundo real, isso viria de um campo 'is_finalized' no banco
-    if (edital.status === 'Encerrado') return 'Encerrado';
+    const settings = editalSettings[edital.id];
+    if (settings?.isFinalized) return 'Encerrado';
 
     const now = currentTime;
-    const start = edital.dataAbertura ? new Date(edital.dataAbertura) : null;
-    const end = edital.dataEncerramento ? new Date(edital.dataEncerramento) : null;
+    
+    // Usar datas do admin se existirem, senão usar as do arquivo estático
+    const aberturaStr = settings?.dates?.abertura && settings?.dates?.horaAbertura 
+      ? `${settings.dates.abertura}T${settings.dates.horaAbertura}` 
+      : edital.dataAbertura;
+      
+    const encerramentoStr = settings?.dates?.encerramento && settings?.dates?.horaEncerramento 
+      ? `${settings.dates.encerramento}T${settings.dates.horaEncerramento}` 
+      : edital.dataEncerramento;
+
+    const start = aberturaStr ? new Date(aberturaStr) : null;
+    const end = encerramentoStr ? new Date(encerramentoStr) : null;
 
     if (start && now < start) return 'Em breve';
     if (start && end && now >= start && now <= end) return 'Aberto';
@@ -55,14 +81,40 @@ const EditaisPNAB = () => {
     return edital.status;
   };
 
-  // Lógica de visibilidade de fases (Simulada com base em datas se existirem)
-  const isPhaseActive = (edital: EditalDetail, phase: 'recurso' | 'documentacao') => {
-    // Aqui checaríamos se a fase está ativa no admin e se está no prazo
-    // Para demonstração, vamos assumir que se o edital está encerrado, as fases podem aparecer
-    return getDynamicStatus(edital) === 'Encerrado';
+  const isPhaseActive = (editalId: string, phase: 'recurso' | 'documentacao' | 'prorrogacao') => {
+    const settings = editalSettings[editalId];
+    if (!settings) return false;
+
+    const now = currentTime;
+    let startStr, endStr, isActive;
+
+    if (phase === 'recurso') {
+      isActive = settings.isRecurso;
+      startStr = `${settings.dates.recursoInicio}T${settings.dates.recursoHoraInicio}`;
+      endStr = `${settings.dates.recursoFim}T${settings.dates.recursoHoraFim}`;
+    } else if (phase === 'documentacao') {
+      isActive = settings.isDocumentacao;
+      startStr = `${settings.dates.docInicio}T${settings.dates.docHoraInicio}`;
+      endStr = `${settings.dates.docFim}T${settings.dates.docHoraFim}`;
+    } else {
+      isActive = settings.isProrrogacao;
+      startStr = `${settings.dates.prorrogacaoInicio}T${settings.dates.prorrogacaoHoraInicio}`;
+      endStr = `${settings.dates.prorrogacaoFim}T${settings.dates.prorrogacaoHoraFim}`;
+    }
+
+    if (!isActive || !settings.dates[`${phase === 'prorrogacao' ? 'prorrogacao' : phase === 'recurso' ? 'recurso' : 'doc'}Inicio`]) return false;
+
+    const start = new Date(startStr);
+    const end = new Date(endStr);
+
+    return now >= start && now <= end;
   };
 
   const filteredEditais = editaisData.filter(e => {
+    const settings = editalSettings[e.id];
+    // Se o admin marcou como invisível, não mostrar no portal
+    if (settings && settings.isVisible === false) return false;
+
     const status = getDynamicStatus(e);
     if (filter === 'Todos') return true;
     if (filter === 'Aberto') return status === 'Aberto';
@@ -119,10 +171,20 @@ const EditaisPNAB = () => {
         <section className="pb-24 container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-7xl mx-auto">
             {filteredEditais.map((edital) => {
+              const settings = editalSettings[edital.id];
               const status = getDynamicStatus(edital);
               const isAberto = status === 'Aberto';
               const isEmBreve = status === 'Em breve';
               const isEncerrado = status === 'Encerrado';
+              const isFinalized = settings?.isFinalized;
+
+              // Formatar datas para exibição (priorizando admin)
+              const displayInicio = settings?.dates?.abertura 
+                ? new Date(settings.dates.abertura).toLocaleDateString('pt-BR') 
+                : edital.inicioInscricao;
+              const displayFim = settings?.dates?.encerramento 
+                ? new Date(settings.dates.encerramento).toLocaleDateString('pt-BR') 
+                : edital.terminoInscricao;
 
               return (
                 <div key={edital.id} className="bg-white rounded-2xl border border-slate-100 shadow-sm p-8 flex flex-col">
@@ -145,7 +207,7 @@ const EditaisPNAB = () => {
                         <Info size={16} />
                         <p className="text-[10px] font-bold uppercase tracking-wider">Inicio das Inscrições</p>
                       </div>
-                      <p className="text-sm font-bold text-slate-500">{edital.inicioInscricao}</p>
+                      <p className="text-sm font-bold text-slate-500">{displayInicio}</p>
                     </div>
                     
                     <div className="space-y-1">
@@ -153,7 +215,7 @@ const EditaisPNAB = () => {
                         <Calendar size={16} />
                         <p className="text-[10px] font-bold uppercase tracking-wider">Encerramento das Inscrições</p>
                       </div>
-                      <p className="text-sm font-bold text-slate-700">{edital.terminoInscricao}</p>
+                      <p className="text-sm font-bold text-slate-700">{displayFim}</p>
                     </div>
 
                     <div className="space-y-1">
@@ -183,43 +245,63 @@ const EditaisPNAB = () => {
                       </Button>
                     </div>
 
-                    {isAberto ? (
+                    {/* Se estiver finalizado, só mostra consulta */}
+                    {isFinalized ? (
                       <Button 
-                        onClick={() => setInscricaoEdital(edital)}
-                        className="w-full h-14 bg-[#3b82f6] hover:bg-blue-600 text-white font-bold rounded-xl shadow-lg shadow-blue-100"
+                        onClick={() => setViewResultados(edital)}
+                        className="w-full h-14 bg-[#3b82f6] hover:bg-blue-600 text-white font-bold rounded-xl"
                       >
-                        Inscrever-se
-                      </Button>
-                    ) : isEmBreve ? (
-                      <Button 
-                        disabled
-                        className="w-full h-14 bg-slate-100 text-slate-400 font-bold rounded-xl flex gap-2 cursor-not-allowed"
-                      >
-                        <Clock size={18} /> Aguardando Abertura
+                        Resultados
                       </Button>
                     ) : (
-                      <div className="space-y-3">
-                        <div className="grid grid-cols-2 gap-3">
+                      <>
+                        {isAberto && (
                           <Button 
-                            onClick={() => setRecursoEdital(edital)}
-                            className="h-14 bg-[#ef4444] hover:bg-red-600 text-white font-bold rounded-xl flex gap-2"
+                            onClick={() => setInscricaoEdital(edital)}
+                            className="w-full h-14 bg-[#3b82f6] hover:bg-blue-600 text-white font-bold rounded-xl shadow-lg shadow-blue-100"
                           >
-                            <AlertTriangle size={18} /> Recursos
+                            Inscrever-se
                           </Button>
+                        )}
+
+                        {isEmBreve && (
                           <Button 
-                            onClick={() => setDocEdital(edital)}
-                            className="h-14 bg-[#10b981] hover:bg-emerald-600 text-white font-bold rounded-xl flex gap-2"
+                            disabled
+                            className="w-full h-14 bg-slate-100 text-slate-400 font-bold rounded-xl flex gap-2 cursor-not-allowed"
                           >
-                            <CheckCircle2 size={18} /> Documentação
+                            <Clock size={18} /> Aguardando Abertura
                           </Button>
-                        </div>
-                        <Button 
-                          onClick={() => setViewResultados(edital)}
-                          className="w-full h-14 bg-[#3b82f6] hover:bg-blue-600 text-white font-bold rounded-xl"
-                        >
-                          Resultados
-                        </Button>
-                      </div>
+                        )}
+
+                        {isEncerrado && (
+                          <div className="space-y-3">
+                            <div className="grid grid-cols-2 gap-3">
+                              {isPhaseActive(edital.id, 'recurso') && (
+                                <Button 
+                                  onClick={() => setRecursoEdital(edital)}
+                                  className="h-14 bg-[#ef4444] hover:bg-red-600 text-white font-bold rounded-xl flex gap-2"
+                                >
+                                  <AlertTriangle size={18} /> Recursos
+                                </Button>
+                              )}
+                              {isPhaseActive(edital.id, 'documentacao') && (
+                                <Button 
+                                  onClick={() => setDocEdital(edital)}
+                                  className="h-14 bg-[#10b981] hover:bg-emerald-600 text-white font-bold rounded-xl flex gap-2"
+                                >
+                                  <CheckCircle2 size={18} /> Documentação
+                                </Button>
+                              )}
+                            </div>
+                            <Button 
+                              onClick={() => setViewResultados(edital)}
+                              className="w-full h-14 bg-[#3b82f6] hover:bg-blue-600 text-white font-bold rounded-xl"
+                            >
+                              Resultados
+                            </Button>
+                          </div>
+                        )}
+                      </>
                     )}
                   </div>
                 </div>
