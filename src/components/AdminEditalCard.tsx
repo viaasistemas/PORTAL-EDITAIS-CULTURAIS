@@ -44,7 +44,7 @@ const AdminEditalCard = ({ edital }: AdminEditalCardProps) => {
   
   // Estados Reais (Persistidos)
   const [isVisible, setIsVisible] = useState(true);
-  const [isFinalized, setIsFinalized] = useState(true);
+  const [isFinalized, setIsFinalized] = useState(false); // Começa desativado (Não finalizado)
   const [isProrrogacao, setIsProrrogacao] = useState(false);
   const [isRecurso, setIsRecurso] = useState(false);
   const [isDocumentacao, setIsDocumentacao] = useState(false);
@@ -101,7 +101,7 @@ const AdminEditalCard = ({ edital }: AdminEditalCardProps) => {
   };
 
   const handleFinalizeToggle = (checked: boolean) => {
-    if (!checked && draft.isFinalized) {
+    if (checked && !draft.isFinalized) {
       setShowFinalizeAlert(true);
     } else {
       setDraft(prev => ({ ...prev, isFinalized: checked }));
@@ -114,7 +114,7 @@ const AdminEditalCard = ({ edital }: AdminEditalCardProps) => {
   };
 
   const confirmFinalize = () => {
-    setDraft(prev => ({ ...prev, isFinalized: false }));
+    setDraft(prev => ({ ...prev, isFinalized: true }));
     setShowFinalizeAlert(false);
   };
 
@@ -123,7 +123,6 @@ const AdminEditalCard = ({ edital }: AdminEditalCardProps) => {
   };
 
   const handleFinalConfirm = () => {
-    // Persistir rascunho nos estados reais
     setIsVisible(draft.isVisible);
     setIsFinalized(draft.isFinalized);
     setIsProrrogacao(draft.isProrrogacao);
@@ -153,7 +152,7 @@ const AdminEditalCard = ({ edital }: AdminEditalCardProps) => {
           {!isVisible && (
             <span className="px-2 py-0.5 bg-slate-100 text-slate-400 text-[9px] font-bold rounded-lg uppercase">Invisível</span>
           )}
-          {!isFinalized && (
+          {isFinalized && (
             <span className="px-2 py-0.5 bg-purple-100 text-purple-600 text-[9px] font-bold rounded-lg uppercase">Finalizado</span>
           )}
         </div>
@@ -219,8 +218,8 @@ const AdminEditalCard = ({ edital }: AdminEditalCardProps) => {
                   <Clock size={24} />
                 </div>
                 <DialogTitle className="text-2xl font-bold text-slate-900">Programar Data/Hora</DialogTitle>
-                <DialogDescription className="text-slate-500 font-medium">
-                  Configure a visibilidade e os prazos do edital.
+                <DialogDescription className="text-slate-500 font-bold text-sm mt-1">
+                  Edital: {edital.title}
                 </DialogDescription>
               </DialogHeader>
 
@@ -241,12 +240,12 @@ const AdminEditalCard = ({ edital }: AdminEditalCardProps) => {
 
                   <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100">
                     <div className="flex items-center gap-3">
-                      <div className={`p-2 rounded-lg ${draft.isFinalized ? 'bg-emerald-100 text-emerald-600' : 'bg-purple-100 text-purple-600'}`}>
+                      <div className={`p-2 rounded-lg ${draft.isFinalized ? 'bg-purple-100 text-purple-600' : 'bg-emerald-100 text-emerald-600'}`}>
                         <Power size={18} />
                       </div>
                       <div>
                         <Label className="text-sm font-bold text-slate-900">Finalizar Edital</Label>
-                        <p className="text-[10px] text-slate-500 font-medium">Desligue para finalizar o edital permanentemente</p>
+                        <p className="text-[10px] text-slate-500 font-medium">Ao ativar, o edital é encerrado permanentemente</p>
                       </div>
                     </div>
                     <Switch checked={draft.isFinalized} onCheckedChange={handleFinalizeToggle} />
@@ -361,7 +360,6 @@ const AdminEditalCard = ({ edital }: AdminEditalCardProps) => {
         </DialogContent>
       </Dialog>
 
-      {/* Alertas de Confirmação de Rascunho */}
       <AlertDialog open={showVisibilityAlert} onOpenChange={setShowVisibilityAlert}>
         <AlertDialogContent className="rounded-xl">
           <AlertDialogHeader>
