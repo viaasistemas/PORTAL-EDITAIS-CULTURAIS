@@ -82,7 +82,7 @@ const EditaisPNAB = () => {
         <section className="pb-24 container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-7xl mx-auto">
             {filteredEditais.map((edital) => (
-              <div key={edital.id} className="bg-white rounded-[2rem] border border-slate-100 shadow-sm p-8 flex flex-col">
+              <div key={edital.id} className="bg-white rounded-2xl border border-slate-100 shadow-sm p-8 flex flex-col">
                 <div className="flex justify-between items-start mb-8">
                   <h3 className="text-xl font-bold text-slate-900 max-w-[70%] leading-tight">
                     {edital.title}

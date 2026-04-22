@@ -85,7 +85,7 @@ const Inscricoes = () => {
         {/* Search Section */}
         <section className="relative -mt-16 px-4 pb-24">
           <div className="container mx-auto max-w-3xl">
-            <div className="bg-white rounded-[2rem] shadow-2xl shadow-blue-900/10 border border-gray-100 p-8 md:p-12">
+            <div className="bg-white rounded-2xl shadow-2xl shadow-blue-900/10 border border-gray-100 p-8 md:p-12">
               <h2 className="text-2xl font-bold text-gray-900 mb-8">Consultar Protocolo</h2>
               
               <form onSubmit={handleSearch} className="flex flex-col md:flex-row gap-4">
