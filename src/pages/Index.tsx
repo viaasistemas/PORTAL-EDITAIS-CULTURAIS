@@ -53,7 +53,7 @@ const Index = () => {
             O Portal de Editais Culturais de Extremoz-RN é a sua ponte para oportunidades, fomento e reconhecimento.
           </p>
           <Link to="/editais">
-            <Button className="bg-yellow-400 hover:bg-yellow-500 text-blue-950 font-bold px-12 py-8 text-lg rounded-2xl shadow-2xl shadow-yellow-400/30 transition-all hover:scale-105 active:scale-95">
+            <Button className="bg-yellow-400 hover:bg-yellow-500 text-blue-950 font-bold px-12 py-8 text-lg rounded-xl shadow-2xl shadow-yellow-400/30 transition-all hover:scale-105 active:scale-95">
               EDITAIS ABERTOS
             </Button>
           </Link>
@@ -99,7 +99,7 @@ const Index = () => {
       {/* Tracking Section */}
       <section className="py-32 bg-white">
         <div className="container mx-auto px-4 text-center max-w-3xl">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-50 rounded-full mb-8">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-50 rounded-xl mb-8">
             <Users className="text-blue-600" size={32} />
           </div>
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6 tracking-tight">Acompanhe sua Inscrição</h2>
@@ -107,7 +107,7 @@ const Index = () => {
             Utilize o número de protocolo para acompanhar a sua inscrição e ver o status do seu projeto em tempo real.
           </p>
           <Link to="/inscricoes">
-            <Button className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-12 py-8 text-lg rounded-2xl shadow-xl shadow-blue-600/20 transition-all flex items-center gap-3 mx-auto hover:scale-105 active:scale-95">
+            <Button className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-12 py-8 text-lg rounded-xl shadow-xl shadow-blue-600/20 transition-all flex items-center gap-3 mx-auto hover:scale-105 active:scale-95">
               VER INSCRIÇÕES
               <ArrowRight size={22} />
             </Button>

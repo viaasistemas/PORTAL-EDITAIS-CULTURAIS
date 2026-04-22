@@ -13,7 +13,6 @@ interface EditalCardProps {
 const EditalCard = ({ edital }: EditalCardProps) => {
   const navigate = useNavigate();
 
-  // Verificação de segurança para evitar erro de undefined
   if (!edital) return null;
 
   const now = new Date();
@@ -33,7 +32,7 @@ const EditalCard = ({ edital }: EditalCardProps) => {
           <span className="text-[10px] font-bold text-blue-600 uppercase tracking-[0.2em] mb-1">{edital.tipo}</span>
           <h3 className="text-xl font-bold text-slate-900 leading-tight group-hover:text-blue-600 transition-colors">{edital.title}</h3>
         </div>
-        <div className="w-10 h-10 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-400 font-bold text-xs border border-slate-100">
+        <div className="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center text-slate-400 font-bold text-xs border border-slate-100">
           {edital.number}
         </div>
       </div>
@@ -44,7 +43,7 @@ const EditalCard = ({ edital }: EditalCardProps) => {
 
       <div className="space-y-3 mb-8">
         <div className="flex items-center gap-3 text-slate-400">
-          <div className="w-8 h-8 bg-slate-50 rounded-xl flex items-center justify-center text-slate-400">
+          <div className="w-8 h-8 bg-slate-50 rounded-lg flex items-center justify-center text-slate-400">
             <Calendar size={14} />
           </div>
           <div className="flex flex-col">
@@ -53,7 +52,7 @@ const EditalCard = ({ edital }: EditalCardProps) => {
           </div>
         </div>
         <div className="flex items-center gap-3 text-slate-400">
-          <div className="w-8 h-8 bg-slate-50 rounded-xl flex items-center justify-center text-slate-400">
+          <div className="w-8 h-8 bg-slate-50 rounded-lg flex items-center justify-center text-slate-400">
             <Clock size={14} />
           </div>
           <div className="flex flex-col">
@@ -69,21 +68,21 @@ const EditalCard = ({ edital }: EditalCardProps) => {
         {isRegistrationOpen ? (
           <Button 
             onClick={() => navigate(`/inscricao/${edital.id}`)}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold h-12 rounded-2xl flex gap-2 shadow-lg shadow-blue-100 transition-all active:scale-95"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold h-12 rounded-xl flex gap-2 shadow-lg shadow-blue-100 transition-all active:scale-95"
           >
             Inscrever-se <ArrowRight size={16} />
           </Button>
         ) : isUpcoming ? (
           <Button 
             disabled
-            className="w-full bg-slate-100 text-slate-400 font-bold h-12 rounded-2xl flex gap-2 cursor-not-allowed"
+            className="w-full bg-slate-100 text-slate-400 font-bold h-12 rounded-xl flex gap-2 cursor-not-allowed"
           >
             Aguardando Abertura <Clock size={16} />
           </Button>
         ) : (
           <Button 
             disabled
-            className="w-full bg-rose-50 text-rose-400 font-bold h-12 rounded-2xl flex gap-2 cursor-not-allowed"
+            className="w-full bg-rose-50 text-rose-400 font-bold h-12 rounded-xl flex gap-2 cursor-not-allowed"
           >
             Inscrições Encerradas
           </Button>
@@ -92,7 +91,7 @@ const EditalCard = ({ edital }: EditalCardProps) => {
         <Button 
           variant="outline" 
           onClick={() => navigate(`/editais/${edital.id}`)}
-          className="w-full border-slate-100 text-slate-600 font-bold h-12 rounded-2xl flex gap-2 hover:bg-slate-50 transition-all"
+          className="w-full border-slate-100 text-slate-600 font-bold h-12 rounded-xl flex gap-2 hover:bg-slate-50 transition-all"
         >
           <FileText size={16} /> Ver Edital Completo
         </Button>

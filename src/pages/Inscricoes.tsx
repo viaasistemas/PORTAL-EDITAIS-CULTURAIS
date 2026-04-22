@@ -56,12 +56,12 @@ const Inscricoes = () => {
   const getStatusBadge = (status: string) => {
     switch (status.toLowerCase()) {
       case 'aprovado':
-        return <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-100 text-green-700 text-xs font-bold uppercase"><CheckCircle2 size={14} /> Aprovado</span>;
+        return <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-green-100 text-green-700 text-xs font-bold uppercase"><CheckCircle2 size={14} /> Aprovado</span>;
       case 'reprovado':
-        return <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-100 text-red-700 text-xs font-bold uppercase"><AlertCircle size={14} /> Reprovado</span>;
+        return <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-red-100 text-red-700 text-xs font-bold uppercase"><AlertCircle size={14} /> Reprovado</span>;
       case 'pendente':
       default:
-        return <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-yellow-100 text-yellow-700 text-xs font-bold uppercase"><Clock size={14} /> Em Análise</span>;
+        return <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-yellow-100 text-yellow-700 text-xs font-bold uppercase"><Clock size={14} /> Em Análise</span>;
     }
   };
 
@@ -94,7 +94,7 @@ const Inscricoes = () => {
                   <Input 
                     type="text" 
                     placeholder="Ex: 2026123456" 
-                    className="pl-12 h-14 rounded-2xl border-gray-200 focus:ring-blue-500 focus:border-blue-500 text-lg"
+                    className="pl-12 h-14 rounded-xl border-gray-200 focus:ring-blue-500 focus:border-blue-500 text-lg"
                     value={protocol}
                     onChange={(e) => setProtocol(e.target.value)}
                   />
@@ -102,7 +102,7 @@ const Inscricoes = () => {
                 <Button 
                   type="submit" 
                   disabled={loading}
-                  className="h-14 px-10 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-2xl transition-all shadow-lg shadow-blue-600/20"
+                  className="h-14 px-10 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition-all shadow-lg shadow-blue-600/20"
                 >
                   {loading ? <Loader2 className="animate-spin" /> : "Buscar"}
                 </Button>
@@ -123,7 +123,7 @@ const Inscricoes = () => {
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                    <div className="bg-slate-50 p-6 rounded-xl border border-slate-100">
                       <div className="flex items-center gap-3 mb-4 text-blue-600">
                         <FileText size={20} />
                         <h3 className="font-bold">Detalhes do Edital</h3>
@@ -131,7 +131,7 @@ const Inscricoes = () => {
                       <p className="text-gray-900 font-semibold">{result.editais?.title || 'Edital não identificado'}</p>
                     </div>
 
-                    <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                    <div className="bg-slate-50 p-6 rounded-xl border border-slate-100">
                       <div className="flex items-center gap-3 mb-4 text-blue-600">
                         <Calendar size={20} />
                         <h3 className="font-bold">Data de Envio</h3>

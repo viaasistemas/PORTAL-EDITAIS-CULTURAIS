@@ -29,7 +29,7 @@ const Navbar = () => {
 
         {session ? (
           <div className="flex items-center gap-4">
-            <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white text-[10px] font-bold">
+            <div className="w-8 h-8 bg-blue-600 rounded-xl flex items-center justify-center text-white text-[10px] font-bold">
               {session.user.email?.substring(0, 2).toUpperCase()}
             </div>
             <Button 
@@ -42,7 +42,7 @@ const Navbar = () => {
           </div>
         ) : (
           <Link to="/login">
-            <Button className="bg-blue-600 hover:bg-blue-700 text-white px-6 rounded-full font-semibold uppercase text-[11px] tracking-wider shadow-sm">
+            <Button className="bg-blue-600 hover:bg-blue-700 text-white px-6 rounded-xl font-semibold uppercase text-[11px] tracking-wider shadow-sm">
               Entrar
             </Button>
           </Link>
