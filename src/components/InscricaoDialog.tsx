@@ -6,12 +6,18 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { CheckCircle2, Copy, Printer, Upload, Loader2, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
@@ -23,16 +29,19 @@ interface InscricaoDialogProps {
 }
 
 type Step = 'form' | 'confirm' | 'success';
+type TipoInscricao = 'PF' | 'PJ' | 'GC';
 
 const InscricaoDialog = ({ edital, open, onOpenChange }: InscricaoDialogProps) => {
   const [step, setStep] = useState<Step>('form');
   const [loading, setLoading] = useState(false);
   const [protocol, setProtocol] = useState('');
+  const [tipoInscricao, setTipoInscricao] = useState<TipoInscricao>('PF');
   
   const [formData, setFormData] = useState({
     fullName: '',
+    razaoSocial: '',
     cpf: '',
-    birthDate: '',
+    cnpj: '',
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -42,7 +51,12 @@ const InscricaoDialog = ({ edital, open, onOpenChange }: InscricaoDialogProps) =
 
   const handleNext = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.fullName || !formData.cpf || !formData.birthDate) {
+    
+    const isPJ = tipoInscricao === 'PJ';
+    const nameField = isPJ ? formData.razaoSocial : formData.fullName;
+    const idField = isPJ ? formData.cnpj : formData.cpf;
+
+    if (!nameField || !idField) {
       toast.error("Por favor, preencha todos os campos obrigatórios.");
       return;
     }
@@ -51,30 +65,26 @@ const InscricaoDialog = ({ edital, open, onOpenChange }: InscricaoDialogProps) =
 
   const handleConfirm = async () => {
     setLoading(true);
-    // Gera um protocolo de 10 dígitos
     const generatedProtocol = Math.floor(1000000000 + Math.random() * 9000000000).toString();
     
     try {
+      const isPJ = tipoInscricao === 'PJ';
       const { error } = await supabase.from('inscricoes').insert({
         edital_id: edital.id,
         protocol: generatedProtocol,
-        full_name: formData.fullName,
-        cpf: formData.cpf,
-        birth_date: formData.birthDate,
+        full_name: isPJ ? formData.razaoSocial : formData.fullName,
+        cpf: isPJ ? formData.cnpj : formData.cpf,
         status: 'Pendente'
       });
 
-      if (error) {
-        console.error("Erro Supabase:", error);
-        throw error;
-      }
+      if (error) throw error;
 
       setProtocol(generatedProtocol);
       setStep('success');
       toast.success("Inscrição realizada com sucesso!");
     } catch (error: any) {
       console.error("Erro ao salvar inscrição:", error);
-      toast.error(`Erro ao processar inscrição: ${error.message || 'Tente novamente.'}`);
+      toast.error(`Erro ao processar inscrição. Tente novamente.`);
     } finally {
       setLoading(false);
     }
@@ -88,10 +98,10 @@ const InscricaoDialog = ({ edital, open, onOpenChange }: InscricaoDialogProps) =
   return (
     <Dialog open={open} onOpenChange={(val) => {
       if (!val) {
-        // Resetar ao fechar
         setTimeout(() => {
           setStep('form');
-          setFormData({ fullName: '', cpf: '', birthDate: '' });
+          setFormData({ fullName: '', razaoSocial: '', cpf: '', cnpj: '' });
+          setTipoInscricao('PF');
         }, 300);
       }
       onOpenChange(val);
@@ -100,62 +110,113 @@ const InscricaoDialog = ({ edital, open, onOpenChange }: InscricaoDialogProps) =
         {step === 'form' && (
           <>
             <DialogHeader className="mb-6">
-              <p className="text-[10px] font-bold text-blue-600 uppercase tracking-widest mb-2">Inscrição no Edital</p>
+              <p className="text-[10px] font-bold text-[#2b59c3] uppercase tracking-widest mb-2">Inscrição no Edital</p>
               <DialogTitle className="text-2xl font-bold text-slate-900">Edital: {edital.title}</DialogTitle>
             </DialogHeader>
 
             <form onSubmit={handleNext} className="space-y-6">
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label className="text-xs font-bold text-slate-500 uppercase">Nome Completo *</Label>
-                  <Input 
-                    name="fullName"
-                    value={formData.fullName}
-                    onChange={handleInputChange}
-                    placeholder="Seu nome completo" 
-                    className="rounded-xl border-slate-200 h-12" 
-                    required 
-                  />
+                  <Label className="text-xs font-bold text-slate-500 uppercase">Tipo de Proponente *</Label>
+                  <Select 
+                    value={tipoInscricao} 
+                    onValueChange={(val: TipoInscricao) => setTipoInscricao(val)}
+                  >
+                    <SelectTrigger className="h-12 rounded-xl border-slate-200">
+                      <SelectValue placeholder="Selecione o tipo" />
+                    </SelectTrigger>
+                    <SelectContent className="rounded-xl">
+                      <SelectItem value="PF">Pessoa Física</SelectItem>
+                      <SelectItem value="PJ">Pessoa Jurídica</SelectItem>
+                      <SelectItem value="GC">Grupo/Coletivo</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label className="text-xs font-bold text-slate-500 uppercase">CPF *</Label>
-                    <Input 
-                      name="cpf"
-                      value={formData.cpf}
-                      onChange={handleInputChange}
-                      placeholder="000.000.000-00" 
-                      className="rounded-xl border-slate-200 h-12" 
-                      required 
-                    />
+
+                {tipoInscricao === 'PJ' ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2 md:col-span-2">
+                      <Label className="text-xs font-bold text-slate-500 uppercase">Razão Social *</Label>
+                      <Input 
+                        name="razaoSocial"
+                        value={formData.razaoSocial}
+                        onChange={handleInputChange}
+                        placeholder="Nome da empresa" 
+                        className="rounded-xl border-slate-200 h-12" 
+                        required 
+                      />
+                    </div>
+                    <div className="space-y-2 md:col-span-2">
+                      <Label className="text-xs font-bold text-slate-500 uppercase">CNPJ *</Label>
+                      <Input 
+                        name="cnpj"
+                        value={formData.cnpj}
+                        onChange={handleInputChange}
+                        placeholder="00.000.000/0000-00" 
+                        className="rounded-xl border-slate-200 h-12" 
+                        required 
+                      />
+                    </div>
                   </div>
-                  <div className="space-y-2">
-                    <Label className="text-xs font-bold text-slate-500 uppercase">Data de Nascimento *</Label>
-                    <Input 
-                      name="birthDate"
-                      type="date"
-                      value={formData.birthDate}
-                      onChange={handleInputChange}
-                      className="rounded-xl border-slate-200 h-12" 
-                      required 
-                    />
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2 md:col-span-2">
+                      <Label className="text-xs font-bold text-slate-500 uppercase">Nome Completo *</Label>
+                      <Input 
+                        name="fullName"
+                        value={formData.fullName}
+                        onChange={handleInputChange}
+                        placeholder="Seu nome completo" 
+                        className="rounded-xl border-slate-200 h-12" 
+                        required 
+                      />
+                    </div>
+                    <div className="space-y-2 md:col-span-2">
+                      <Label className="text-xs font-bold text-slate-500 uppercase">CPF *</Label>
+                      <Input 
+                        name="cpf"
+                        value={formData.cpf}
+                        onChange={handleInputChange}
+                        placeholder="000.000.000-00" 
+                        className="rounded-xl border-slate-200 h-12" 
+                        required 
+                      />
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
 
               <div className="grid grid-cols-2 gap-4">
-                {[1, 2, 3].map((i) => (
-                  <div key={i} className="space-y-2">
-                    <Label className="text-xs font-bold text-slate-500 uppercase">Anexo {i} *</Label>
-                    <div className="relative">
-                      <Input type="file" className="hidden" id={`anexo-${i}`} />
-                      <label htmlFor={`anexo-${i}`} className="flex items-center justify-between px-4 h-12 rounded-xl border border-slate-200 bg-slate-50 cursor-pointer hover:bg-slate-100 transition-colors">
-                        <span className="text-xs text-slate-400">Selecionar</span>
-                        <Upload size={14} className="text-slate-400" />
-                      </label>
-                    </div>
+                <div className="space-y-2">
+                  <Label className="text-xs font-bold text-slate-500 uppercase">Anexo 1 *</Label>
+                  <div className="relative">
+                    <Input type="file" className="hidden" id="anexo-1" required />
+                    <label htmlFor="anexo-1" className="flex items-center justify-between px-4 h-12 rounded-xl border border-slate-200 bg-slate-50 cursor-pointer hover:bg-slate-100 transition-colors">
+                      <span className="text-xs text-slate-400">Selecionar</span>
+                      <Upload size={14} className="text-slate-400" />
+                    </label>
                   </div>
-                ))}
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-xs font-bold text-slate-500 uppercase">Anexo 2 *</Label>
+                  <div className="relative">
+                    <Input type="file" className="hidden" id="anexo-2" required />
+                    <label htmlFor="anexo-2" className="flex items-center justify-between px-4 h-12 rounded-xl border border-slate-200 bg-slate-50 cursor-pointer hover:bg-slate-100 transition-colors">
+                      <span className="text-xs text-slate-400">Selecionar</span>
+                      <Upload size={14} className="text-slate-400" />
+                    </label>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-xs font-bold text-slate-500 uppercase">Anexo 3</Label>
+                  <div className="relative">
+                    <Input type="file" className="hidden" id="anexo-3" />
+                    <label htmlFor="anexo-3" className="flex items-center justify-between px-4 h-12 rounded-xl border border-slate-200 bg-slate-50 cursor-pointer hover:bg-slate-100 transition-colors">
+                      <span className="text-xs text-slate-400">Selecionar</span>
+                      <Upload size={14} className="text-slate-400" />
+                    </label>
+                  </div>
+                </div>
                 <div className="space-y-2">
                   <Label className="text-xs font-bold text-slate-500 uppercase">Portfolio</Label>
                   <div className="relative">
@@ -170,7 +231,7 @@ const InscricaoDialog = ({ edital, open, onOpenChange }: InscricaoDialogProps) =
 
               <DialogFooter className="gap-3 pt-4">
                 <Button type="button" variant="ghost" onClick={() => onOpenChange(false)} className="rounded-xl font-bold text-slate-500">Cancelar</Button>
-                <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl px-8 font-bold shadow-lg shadow-blue-100">Enviar Documentação</Button>
+                <Button type="submit" className="bg-[#2b59c3] hover:bg-[#1e44a3] text-white rounded-xl px-8 font-bold shadow-lg shadow-blue-100">Enviar Documentação</Button>
               </DialogFooter>
             </form>
           </>
@@ -188,7 +249,7 @@ const InscricaoDialog = ({ edital, open, onOpenChange }: InscricaoDialogProps) =
               <Button 
                 onClick={handleConfirm} 
                 disabled={loading}
-                className="w-full h-14 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl font-bold text-lg shadow-xl shadow-blue-100"
+                className="w-full h-14 bg-[#2b59c3] hover:bg-[#1e44a3] text-white rounded-2xl font-bold text-lg shadow-xl shadow-blue-100"
               >
                 {loading ? <Loader2 className="animate-spin" /> : "Confirmar Envio"}
               </Button>
@@ -212,7 +273,7 @@ const InscricaoDialog = ({ edital, open, onOpenChange }: InscricaoDialogProps) =
             <p className="text-slate-400 font-bold text-[10px] uppercase tracking-widest mb-6">Número do Protocolo</p>
             
             <div className="bg-slate-50 p-6 rounded-3xl border border-slate-100 mb-10">
-              <p className="text-4xl font-mono font-bold text-blue-600 tracking-tighter">{protocol}</p>
+              <p className="text-4xl font-mono font-bold text-[#2b59c3] tracking-tighter">{protocol}</p>
             </div>
 
             <div className="grid grid-cols-2 gap-4 mb-4">
