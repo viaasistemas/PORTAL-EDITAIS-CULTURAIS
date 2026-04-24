@@ -18,7 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { CheckCircle2, Copy, Printer, Upload, Loader2, AlertCircle } from 'lucide-react';
+import { CheckCircle2, Copy, Printer, Upload, Loader2, AlertCircle, FileCheck } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -44,9 +44,22 @@ const InscricaoDialog = ({ edital, open, onOpenChange }: InscricaoDialogProps) =
     cnpj: '',
   });
 
+  const [files, setFiles] = useState<Record<string, string>>({
+    anexo1: '',
+    anexo2: '',
+    anexo3: '',
+    portfolio: ''
+  });
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, field: string) => {
+    if (e.target.files && e.target.files[0]) {
+      setFiles(prev => ({ ...prev, [field]: e.target.files![0].name }));
+    }
   };
 
   const handleNext = (e: React.FormEvent) => {
@@ -101,6 +114,7 @@ const InscricaoDialog = ({ edital, open, onOpenChange }: InscricaoDialogProps) =
         setTimeout(() => {
           setStep('form');
           setFormData({ fullName: '', razaoSocial: '', cpf: '', cnpj: '' });
+          setFiles({ anexo1: '', anexo2: '', anexo3: '', portfolio: '' });
           setTipoInscricao('PF');
         }, 300);
       }
@@ -187,46 +201,42 @@ const InscricaoDialog = ({ edital, open, onOpenChange }: InscricaoDialogProps) =
               </div>
 
               <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label className="text-xs font-bold text-slate-500 uppercase">Anexo 1 *</Label>
-                  <div className="relative">
-                    <Input type="file" className="hidden" id="anexo-1" required />
-                    <label htmlFor="anexo-1" className="flex items-center justify-between px-4 h-12 rounded-xl border border-slate-200 bg-slate-50 cursor-pointer hover:bg-slate-100 transition-colors">
-                      <span className="text-xs text-slate-400">Selecionar</span>
-                      <Upload size={14} className="text-slate-400" />
-                    </label>
+                {[
+                  { id: 'anexo1', label: 'Anexo 1 *', required: true },
+                  { id: 'anexo2', label: 'Anexo 2 *', required: true },
+                  { id: 'anexo3', label: 'Anexo 3', required: false },
+                  { id: 'portfolio', label: 'Portfolio', required: false },
+                ].map((field) => (
+                  <div key={field.id} className="space-y-2">
+                    <Label className="text-xs font-bold text-slate-500 uppercase">{field.label}</Label>
+                    <div className="relative">
+                      <Input 
+                        type="file" 
+                        className="hidden" 
+                        id={field.id} 
+                        required={field.required}
+                        onChange={(e) => handleFileChange(e, field.id)}
+                      />
+                      <label 
+                        htmlFor={field.id} 
+                        className={`flex items-center justify-between px-4 h-12 rounded-xl border transition-all cursor-pointer ${
+                          files[field.id] 
+                            ? 'border-emerald-200 bg-emerald-50' 
+                            : 'border-slate-200 bg-slate-50 hover:bg-slate-100'
+                        }`}
+                      >
+                        <span className={`text-xs truncate max-w-[120px] ${files[field.id] ? 'text-emerald-700 font-bold' : 'text-slate-400'}`}>
+                          {files[field.id] || "Selecionar"}
+                        </span>
+                        {files[field.id] ? (
+                          <FileCheck size={14} className="text-emerald-500" />
+                        ) : (
+                          <Upload size={14} className="text-slate-400" />
+                        )}
+                      </label>
+                    </div>
                   </div>
-                </div>
-                <div className="space-y-2">
-                  <Label className="text-xs font-bold text-slate-500 uppercase">Anexo 2 *</Label>
-                  <div className="relative">
-                    <Input type="file" className="hidden" id="anexo-2" required />
-                    <label htmlFor="anexo-2" className="flex items-center justify-between px-4 h-12 rounded-xl border border-slate-200 bg-slate-50 cursor-pointer hover:bg-slate-100 transition-colors">
-                      <span className="text-xs text-slate-400">Selecionar</span>
-                      <Upload size={14} className="text-slate-400" />
-                    </label>
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <Label className="text-xs font-bold text-slate-500 uppercase">Anexo 3</Label>
-                  <div className="relative">
-                    <Input type="file" className="hidden" id="anexo-3" />
-                    <label htmlFor="anexo-3" className="flex items-center justify-between px-4 h-12 rounded-xl border border-slate-200 bg-slate-50 cursor-pointer hover:bg-slate-100 transition-colors">
-                      <span className="text-xs text-slate-400">Selecionar</span>
-                      <Upload size={14} className="text-slate-400" />
-                    </label>
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <Label className="text-xs font-bold text-slate-500 uppercase">Portfolio</Label>
-                  <div className="relative">
-                    <Input type="file" className="hidden" id="portfolio" />
-                    <label htmlFor="portfolio" className="flex items-center justify-between px-4 h-12 rounded-xl border border-slate-200 bg-slate-50 cursor-pointer hover:bg-slate-100 transition-colors">
-                      <span className="text-xs text-slate-400">Selecionar</span>
-                      <Upload size={14} className="text-slate-400" />
-                    </label>
-                  </div>
-                </div>
+                ))}
               </div>
 
               <DialogFooter className="gap-3 pt-4">
@@ -237,6 +247,7 @@ const InscricaoDialog = ({ edital, open, onOpenChange }: InscricaoDialogProps) =
           </>
         )}
 
+        {/* ... rest of the component (confirm and success steps) remains the same */}
         {step === 'confirm' && (
           <div className="text-center py-6">
             <div className="w-16 h-16 bg-amber-50 rounded-full flex items-center justify-center mx-auto mb-6">

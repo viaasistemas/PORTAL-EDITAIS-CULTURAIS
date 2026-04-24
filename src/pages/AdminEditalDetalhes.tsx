@@ -13,7 +13,8 @@ import {
   Folder, 
   ArrowLeft, 
   Search, 
-  Calendar as CalendarIcon
+  Calendar as CalendarIcon,
+  Download
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import {
@@ -94,6 +95,9 @@ const AdminEditalDetalhes = () => {
     if (activeView === 'documentacao') return "Nenhum Documento";
     return "Nenhum registro encontrado";
   };
+
+  // Helper to determine if a value is likely a CNPJ (more than 11 digits or formatted)
+  const isCNPJ = (val: string) => val.replace(/\D/g, '').length > 11;
 
   if (loading || !session) return null;
 
@@ -213,10 +217,10 @@ const AdminEditalDetalhes = () => {
                     <TableRow>
                       <TableHead className="font-bold text-slate-900">Proponente</TableHead>
                       <TableHead className="font-bold text-slate-900">CPF</TableHead>
+                      <TableHead className="font-bold text-slate-900">CNPJ</TableHead>
                       <TableHead className="font-bold text-slate-900">Protocolo</TableHead>
                       <TableHead className="font-bold text-slate-900">Data e Hora de Envio</TableHead>
-                      <TableHead className="font-bold text-slate-900">Arquivo</TableHead>
-                      <TableHead className="font-bold text-slate-900">Status</TableHead>
+                      <TableHead className="font-bold text-slate-900">Arquivos</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -236,7 +240,12 @@ const AdminEditalDetalhes = () => {
                       filteredData.map((item) => (
                         <TableRow key={item.id} className="hover:bg-slate-50/50 transition-colors">
                           <TableCell className="font-bold text-slate-900">{item.full_name}</TableCell>
-                          <TableCell className="text-sm text-slate-600">{item.cpf}</TableCell>
+                          <TableCell className="text-sm text-slate-600">
+                            {!isCNPJ(item.cpf) ? item.cpf : '-'}
+                          </TableCell>
+                          <TableCell className="text-sm text-slate-600">
+                            {isCNPJ(item.cpf) ? item.cpf : '-'}
+                          </TableCell>
                           <TableCell className="text-sm font-mono text-blue-600">{item.protocol}</TableCell>
                           <TableCell className="text-sm text-slate-600">
                             <div className="flex flex-col">
@@ -245,16 +254,11 @@ const AdminEditalDetalhes = () => {
                             </div>
                           </TableCell>
                           <TableCell>
-                            <Button variant="ghost" size="sm" className="rounded-xl bg-slate-100 text-slate-500 hover:bg-blue-50 hover:text-blue-600 flex gap-2">
-                              <FileText size={14} /> {item.file_name || 'Ver Arquivo'}
-                            </Button>
-                          </TableCell>
-                          <TableCell>
-                            <span className={`px-3 py-1 rounded-lg text-[10px] font-bold uppercase ${
-                              item.status === 'Aprovado' ? 'bg-emerald-50 text-emerald-600' : 'bg-yellow-50 text-yellow-600'
-                            }`}>
-                              {item.status || 'Pendente'}
-                            </span>
+                            <div className="flex flex-wrap gap-2">
+                              <Button variant="ghost" size="sm" className="rounded-lg bg-slate-100 text-slate-500 hover:bg-blue-50 hover:text-blue-600 flex gap-2 h-8 px-2">
+                                <Download size={14} /> <span className="text-[10px]">Ver Arquivos</span>
+                              </Button>
+                            </div>
                           </TableCell>
                         </TableRow>
                       ))
