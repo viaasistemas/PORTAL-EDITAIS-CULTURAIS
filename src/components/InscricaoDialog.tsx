@@ -73,6 +73,12 @@ const InscricaoDialog = ({ edital, open, onOpenChange }: InscricaoDialogProps) =
       toast.error("Por favor, preencha todos os campos obrigatórios.");
       return;
     }
+
+    if (!files.anexo1 || !files.anexo2) {
+      toast.error("Os anexos 1 e 2 são obrigatórios.");
+      return;
+    }
+
     setStep('confirm');
   };
 
@@ -247,14 +253,35 @@ const InscricaoDialog = ({ edital, open, onOpenChange }: InscricaoDialogProps) =
           </>
         )}
 
-        {/* ... rest of the component (confirm and success steps) remains the same */}
         {step === 'confirm' && (
-          <div className="text-center py-6">
-            <div className="w-16 h-16 bg-amber-50 rounded-full flex items-center justify-center mx-auto mb-6">
-              <AlertCircle size={32} className="text-amber-500" />
+          <div className="py-4">
+            <DialogHeader className="mb-6">
+              <DialogTitle className="text-2xl font-bold text-slate-900">Confirmar o Envio</DialogTitle>
+            </DialogHeader>
+            
+            <div className="space-y-4 mb-8 bg-slate-50 p-6 rounded-2xl border border-slate-100">
+              <div className="grid grid-cols-1 gap-4">
+                <div>
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Proponente</p>
+                  <p className="text-sm font-bold text-slate-900">{tipoInscricao === 'PJ' ? formData.razaoSocial : formData.fullName}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{tipoInscricao === 'PJ' ? 'CNPJ' : 'CPF'}</p>
+                  <p className="text-sm font-bold text-slate-900">{tipoInscricao === 'PJ' ? formData.cnpj : formData.cpf}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Arquivos Anexados</p>
+                  <ul className="mt-1 space-y-1">
+                    {Object.entries(files).map(([key, name]) => name && (
+                      <li key={key} className="text-xs text-slate-600 flex items-center gap-2">
+                        <FileCheck size={12} className="text-emerald-500" /> {name}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+              <p className="text-xs text-slate-500 italic mt-4">Ao confirmar, sua inscrição será enviada para análise e um protocolo será gerado.</p>
             </div>
-            <h2 className="text-2xl font-bold text-slate-900 mb-2">Confirmar Envio?</h2>
-            <p className="text-slate-500 font-medium mb-10">Certifique-se de que todos os dados estão corretos.</p>
             
             <div className="flex flex-col gap-3">
               <Button 
@@ -262,14 +289,14 @@ const InscricaoDialog = ({ edital, open, onOpenChange }: InscricaoDialogProps) =
                 disabled={loading}
                 className="w-full h-14 bg-[#2b59c3] hover:bg-[#1e44a3] text-white rounded-2xl font-bold text-lg shadow-xl shadow-blue-100"
               >
-                {loading ? <Loader2 className="animate-spin" /> : "Confirmar Envio"}
+                {loading ? <Loader2 className="animate-spin" /> : "Confirmar e Enviar"}
               </Button>
               <Button 
                 variant="ghost" 
                 onClick={() => setStep('form')} 
                 className="w-full h-12 rounded-xl font-bold text-slate-500"
               >
-                Cancelar
+                Voltar e Editar
               </Button>
             </div>
           </div>
