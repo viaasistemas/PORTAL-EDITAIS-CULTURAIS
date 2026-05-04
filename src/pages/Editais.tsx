@@ -33,7 +33,7 @@ const Editais = () => {
       <Navbar />
       
       <main className="flex-grow">
-        <section className="relative pt-32 pb-24 bg-blue-600 overflow-hidden">
+        <section className="relative pt-40 pb-32 bg-blue-600 overflow-hidden">
           <div className="absolute inset-0 opacity-20">
             <img 
               src="https://images.unsplash.com/photo-1459749411177-042180ce673c?q=80&w=1600&auto=format&fit=crop" 
@@ -53,7 +53,7 @@ const Editais = () => {
           </div>
         </section>
 
-        <section className="relative z-20 -mt-32 pb-24 container mx-auto px-4">
+        <section className="relative z-20 -mt-20 pb-24 container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {categories.map((cat, index) => (
               <Link 
@@ -69,6 +69,7 @@ const Editais = () => {
                   </div>
                 </div>
                 <div className="p-8">
+                  <h4 className="text-lg font-bold text-slate-900 mb-1">{cat.title}</h4>
                   <p className="text-slate-500 font-medium mb-6">{cat.description}</p>
                   <div className="flex items-center gap-2 text-blue-600 font-bold text-sm group-hover:gap-4 transition-all">
                     Ver Editais <ArrowRight size={18} />
