@@ -21,7 +21,7 @@ import { editaisData } from '@/data/editais';
 const AdminInscricoes = () => {
   const { session, loading } = useSession();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('Todos');
+  const [activeTab, setTab] = useState('Todos');
   const [statusFilter, setStatusFilter] = useState('todos');
   const [categoryFilter, setCategoryFilter] = useState('todas');
   const [searchTerm, setSearchTerm] = useState('');
@@ -61,7 +61,7 @@ const AdminInscricoes = () => {
       <main className="flex-grow flex flex-col">
         <AdminHeader title="Gestão de Editais" />
 
-        <div className="p-4 md:p-8 max-w-[1600px] mx-auto w-full space-y-8">
+        <div className="p-4 md:px-8 lg:px-12 w-full space-y-8 py-8">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
               <h2 className="text-2xl font-bold text-slate-900">Gestão de Inscrições</h2>
@@ -111,7 +111,7 @@ const AdminInscricoes = () => {
               <Button
                 key={tab}
                 onClick={() => {
-                  setActiveTab(tab);
+                  setTab(tab);
                   if (tab !== 'PNAB') setCategoryFilter('todas');
                 }}
                 className={`rounded-xl px-6 h-11 font-bold text-sm transition-all shrink-0 ${
@@ -125,7 +125,7 @@ const AdminInscricoes = () => {
             ))}
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredEditais.length > 0 ? (
               filteredEditais.map((edital) => (
                 <AdminEditalCard key={edital.id} edital={edital} />
