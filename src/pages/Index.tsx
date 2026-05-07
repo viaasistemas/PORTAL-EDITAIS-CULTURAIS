@@ -95,8 +95,8 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Categories Section */}
-      <section className="pt-20 pb-32 bg-white">
+      {/* Categories Section - Reduced top padding to be closer to the button */}
+      <section className="pt-12 pb-32 bg-white">
         <div className="container mx-auto px-4 max-w-7xl">
           <div className="text-center mb-20">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6 tracking-tight">Oportunidades para Todos os Artistas</h2>
@@ -113,9 +113,12 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Stats Section */}
+      {/* Stats Section with "Investimento" title */}
       <section className="py-24 bg-slate-50 border-y border-slate-100">
         <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 tracking-tight">Investimento</h2>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-16 text-center">
             <div className="space-y-3">
               <p className="text-5xl font-bold text-blue-600 tracking-tighter">R$ 1.5M+</p>
