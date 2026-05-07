@@ -4,17 +4,22 @@ import React from 'react';
 import { LucideIcon } from 'lucide-react';
 
 interface CategoryCardProps {
-  icon: LucideIcon;
+  icon?: LucideIcon;
+  imageIcon?: string;
   title: string;
   description: string;
 }
 
-const CategoryCard = ({ icon: Icon, title, description }: CategoryCardProps) => {
+const CategoryCard = ({ icon: Icon, imageIcon, title, description }: CategoryCardProps) => {
   return (
-    <div className="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group flex flex-col text-left">
+    <div className="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group flex flex-col text-left h-full">
       <div className="flex items-center gap-6 mb-8">
-        <div className="w-20 h-20 bg-slate-50 rounded-2xl flex items-center justify-center shrink-0 group-hover:bg-blue-50 transition-colors duration-300">
-          <Icon className="text-slate-400 group-hover:text-blue-600 transition-colors duration-300" size={32} />
+        <div className="w-20 h-20 bg-slate-50 rounded-2xl flex items-center justify-center shrink-0 group-hover:bg-blue-50 transition-colors duration-300 overflow-hidden p-4">
+          {imageIcon ? (
+            <img src={imageIcon} alt={title} className="w-full h-full object-contain grayscale group-hover:grayscale-0 transition-all duration-300" />
+          ) : Icon ? (
+            <Icon className="text-slate-400 group-hover:text-blue-600 transition-colors duration-300" size={32} />
+          ) : null}
         </div>
         <div className="flex flex-col">
           <h3 className="text-xl font-bold text-slate-900 leading-tight">{title}</h3>
