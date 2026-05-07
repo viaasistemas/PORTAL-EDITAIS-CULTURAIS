@@ -95,8 +95,8 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Categories Section - Using negative margin to rise much more */}
-      <section className="relative z-20 -mt-32 pb-32">
+      {/* Categories Section - Adjusted negative margin to avoid overlap */}
+      <section className="relative z-20 -mt-20 pb-32">
         <div className="container mx-auto px-4 max-w-7xl">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6 tracking-tight">Oportunidades para Todos os Artistas</h2>
