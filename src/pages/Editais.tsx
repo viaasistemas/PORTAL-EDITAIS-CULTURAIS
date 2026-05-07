@@ -33,17 +33,18 @@ const Editais = () => {
       <Navbar />
       
       <main className="flex-grow">
-        <section className="relative pt-40 pb-32 bg-blue-600 overflow-hidden">
-          <div className="absolute inset-0 opacity-20">
+        <section className="relative h-[65vh] flex items-center justify-center overflow-hidden">
+          <div className="absolute inset-0 z-0">
             <img 
               src="https://images.unsplash.com/photo-1459749411177-042180ce673c?q=80&w=1600&auto=format&fit=crop" 
               alt="Background" 
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover brightness-[0.4]"
             />
+            {/* Degradê para o branco consistente com a Home */}
+            <div className="absolute inset-0 bg-gradient-to-b from-blue-800/80 via-blue-700/40 to-white" />
           </div>
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-700/80 to-blue-600/80" />
           
-          <div className="container mx-auto px-4 relative z-10 text-center text-white">
+          <div className="container mx-auto px-4 relative z-10 text-center text-white pb-10">
             <h1 className="text-4xl md:text-6xl font-extrabold mb-6 tracking-tight">
               Editais Culturais
             </h1>

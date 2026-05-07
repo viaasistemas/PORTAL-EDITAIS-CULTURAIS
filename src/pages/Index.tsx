@@ -70,17 +70,18 @@ const Index = () => {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="relative h-[85vh] flex items-center justify-center overflow-hidden">
+      <section className="relative h-[80vh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img 
             src="https://images.unsplash.com/photo-1459749411177-042180ce673c?q=80&w=1600&auto=format&fit=crop" 
             alt="Cultura Extremoz" 
-            className="w-full h-full object-cover brightness-[0.45] scale-105"
+            className="w-full h-full object-cover brightness-[0.4] scale-105"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-blue-950/30 via-transparent to-white" />
+          {/* Degradê para o branco no rodapé da seção */}
+          <div className="absolute inset-0 bg-gradient-to-b from-blue-950/60 via-blue-950/20 to-white" />
         </div>
         
-        <div className="container mx-auto px-4 relative z-10 text-center text-white max-w-4xl">
+        <div className="container mx-auto px-4 relative z-10 text-center text-white max-w-4xl pb-20">
           <h1 className="text-5xl md:text-7xl font-extrabold mb-8 tracking-tight leading-[1.1]">
             Transforme sua ideia em <span className="text-blue-400">Realidade</span>
           </h1>
