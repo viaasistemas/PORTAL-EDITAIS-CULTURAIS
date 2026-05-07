@@ -3,7 +3,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { 
-  Users, 
   ArrowRight
 } from 'lucide-react';
 import Navbar from '@/components/Navbar';
@@ -20,6 +19,7 @@ import iconLiteratura from '@/assets/icon-literatura.png';
 import iconArtesanato from '@/assets/icon-artesanato.png';
 import iconPopular from '@/assets/icon-popular.png';
 import iconProdutor from '@/assets/icon-produtor.png';
+import iconLupa from '@/assets/icon-search-lupa.png';
 
 const Index = () => {
   const categories = [
@@ -113,7 +113,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Stats Section - Reduced padding to move it up */}
+      {/* Stats Section */}
       <section className="py-16 bg-slate-50 border-y border-slate-100">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
@@ -136,11 +136,11 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Tracking Section - Reduced padding to move it up */}
+      {/* Tracking Section */}
       <section className="py-20 bg-white">
         <div className="container mx-auto px-4 text-center max-w-3xl">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-50 rounded-xl mb-8">
-            <Users className="text-blue-600" size={32} />
+          <div className="inline-flex items-center justify-center w-24 h-24 bg-blue-50 rounded-2xl mb-8 p-4">
+            <img src={iconLupa} alt="Acompanhar Inscrição" className="w-full h-full object-contain" />
           </div>
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6 tracking-tight">Acompanhe sua Inscrição</h2>
           <p className="text-gray-500 mb-10 text-lg font-medium leading-relaxed">
