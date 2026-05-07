@@ -95,10 +95,10 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Categories Section - Reduced top padding to be closer to the button */}
-      <section className="pt-12 pb-32 bg-white">
+      {/* Categories Section - Using negative margin to rise much more */}
+      <section className="relative z-20 -mt-32 pb-32">
         <div className="container mx-auto px-4 max-w-7xl">
-          <div className="text-center mb-20">
+          <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6 tracking-tight">Oportunidades para Todos os Artistas</h2>
             <p className="text-gray-500 max-w-2xl mx-auto text-lg font-medium">Encontre editais em diversas áreas e impulsione sua carreira cultural.</p>
           </div>
