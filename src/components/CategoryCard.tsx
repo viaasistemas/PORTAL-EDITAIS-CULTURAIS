@@ -23,7 +23,7 @@ const CategoryCard = ({ icon: Icon, imageIcon, title, description }: CategoryCar
         </div>
         <div className="flex flex-col">
           <h3 className="text-xl font-bold text-slate-900 leading-tight">{title}</h3>
-          <div className="w-8 h-1 bg-yellow-400 mt-3 rounded-full" />
+          <div className="w-8 h-1 bg-blue-600 mt-3 rounded-full" />
         </div>
       </div>
       <p className="text-slate-500 text-sm leading-relaxed font-medium">

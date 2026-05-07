@@ -82,21 +82,21 @@ const Index = () => {
         
         <div className="container mx-auto px-4 relative z-10 text-center text-white max-w-4xl">
           <h1 className="text-5xl md:text-7xl font-extrabold mb-8 tracking-tight leading-[1.1]">
-            Transforme sua ideia em <span className="text-yellow-400">Realidade</span>
+            Transforme sua ideia em <span className="text-blue-400">Realidade</span>
           </h1>
           <p className="text-lg md:text-xl text-gray-100/90 mb-12 leading-relaxed max-w-2xl mx-auto font-medium">
             O Portal de Editais Culturais de Extremoz-RN é a sua ponte para oportunidades, fomento e reconhecimento.
           </p>
           <Link to="/editais">
-            <Button className="bg-yellow-400 hover:bg-yellow-500 text-blue-950 font-bold px-12 py-8 text-lg rounded-xl shadow-2xl shadow-yellow-400/30 transition-all hover:scale-105 active:scale-95">
+            <Button className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-12 py-8 text-lg rounded-xl shadow-2xl shadow-blue-600/30 transition-all hover:scale-105 active:scale-95">
               EDITAIS ABERTOS
             </Button>
           </Link>
         </div>
       </section>
 
-      {/* Categories Section - Adjusted negative margin to avoid overlap */}
-      <section className="relative z-20 -mt-20 pb-32">
+      {/* Categories Section */}
+      <section className="relative z-20 -mt-20 pb-20">
         <div className="container mx-auto px-4 max-w-7xl">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6 tracking-tight">Oportunidades para Todos os Artistas</h2>
@@ -113,13 +113,13 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Stats Section with "Investimento" title */}
-      <section className="py-24 bg-slate-50 border-y border-slate-100">
+      {/* Stats Section - Reduced padding to move it up */}
+      <section className="py-16 bg-slate-50 border-y border-slate-100">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
+          <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 tracking-tight">Investimento</h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-16 text-center">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
             <div className="space-y-3">
               <p className="text-5xl font-bold text-blue-600 tracking-tighter">R$ 1.5M+</p>
               <p className="text-slate-500 font-semibold uppercase tracking-widest text-xs">Em recursos distribuídos</p>
@@ -136,14 +136,14 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Tracking Section */}
-      <section className="py-32 bg-white">
+      {/* Tracking Section - Reduced padding to move it up */}
+      <section className="py-20 bg-white">
         <div className="container mx-auto px-4 text-center max-w-3xl">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-50 rounded-xl mb-8">
             <Users className="text-blue-600" size={32} />
           </div>
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6 tracking-tight">Acompanhe sua Inscrição</h2>
-          <p className="text-gray-500 mb-12 text-lg font-medium leading-relaxed">
+          <p className="text-gray-500 mb-10 text-lg font-medium leading-relaxed">
             Utilize o número de protocolo para acompanhar a sua inscrição e ver o status do seu projeto em tempo real.
           </p>
           <Link to="/inscricoes">
