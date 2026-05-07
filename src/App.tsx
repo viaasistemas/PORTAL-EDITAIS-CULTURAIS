@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { SessionContextProvider } from "./components/SessionContextProvider";
+import ScrollToTop from "./components/ScrollToTop";
 import Index from "./pages/Index";
 import Editais from "./pages/Editais";
 import EditaisPNAB from "./pages/EditaisPNAB";
@@ -28,6 +29,7 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
+          <ScrollToTop />
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/editais" element={<Editais />} />
