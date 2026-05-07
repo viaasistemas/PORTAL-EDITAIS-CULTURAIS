@@ -33,7 +33,7 @@ const Editais = () => {
       <Navbar />
       
       <main className="flex-grow">
-        <section className="relative h-[65vh] flex items-center justify-center overflow-hidden">
+        <section className="relative h-[75vh] flex items-center justify-center overflow-hidden">
           <div className="absolute inset-0 z-0">
             <img 
               src="https://images.unsplash.com/photo-1459749411177-042180ce673c?q=80&w=1600&auto=format&fit=crop" 
@@ -44,7 +44,7 @@ const Editais = () => {
             <div className="absolute inset-0 bg-gradient-to-b from-blue-800/80 via-blue-700/40 to-white" />
           </div>
           
-          <div className="container mx-auto px-4 relative z-10 text-center text-white pb-10">
+          <div className="container mx-auto px-4 relative z-10 text-center text-white pt-24 pb-10">
             <h1 className="text-4xl md:text-6xl font-extrabold mb-6 tracking-tight">
               Editais Culturais
             </h1>
