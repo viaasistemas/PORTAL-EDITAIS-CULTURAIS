@@ -68,9 +68,11 @@ const Index = () => {
             <p className="text-gray-500 max-w-2xl mx-auto text-lg font-medium">Encontre editais em diversas áreas e impulsione sua carreira cultural.</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="flex flex-wrap justify-center gap-8">
             {categories.map((cat, index) => (
-              <CategoryCard key={index} {...cat} />
+              <div key={index} className="w-full md:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.5rem)] flex">
+                <CategoryCard {...cat} />
+              </div>
             ))}
           </div>
         </div>
