@@ -139,7 +139,7 @@ const Index = () => {
       {/* Tracking Section */}
       <section className="py-20 bg-white">
         <div className="container mx-auto px-4 text-center max-w-3xl">
-          <div className="inline-flex items-center justify-center w-24 h-24 mb-8">
+          <div className="inline-flex items-center justify-center w-16 h-16 mb-8">
             <img src={iconLupa} alt="Acompanhar Inscrição" className="w-full h-full object-contain" />
           </div>
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6 tracking-tight">Acompanhe sua Inscrição</h2>
