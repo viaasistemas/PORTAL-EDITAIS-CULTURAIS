@@ -4,8 +4,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { 
   Users, 
-  Hammer, 
-  Briefcase,
   ArrowRight
 } from 'lucide-react';
 import Navbar from '@/components/Navbar';
@@ -13,12 +11,15 @@ import Footer from '@/components/Footer';
 import CategoryCard from '@/components/CategoryCard';
 import { Button } from '@/components/ui/button';
 
-// Importando os ícones atualizados
+// Importando os ícones de imagem
 import iconMusica from '@/assets/icon-musica.png';
 import iconVisuais from '@/assets/icon-visuais.png';
 import iconCenicas from '@/assets/icon-cenicas.png';
 import iconAudiovisual from '@/assets/icon-audiovisual.png';
 import iconLiteratura from '@/assets/icon-literatura.png';
+import iconArtesanato from '@/assets/icon-artesanato.png';
+import iconPopular from '@/assets/icon-popular.png';
+import iconProdutor from '@/assets/icon-produtor.png';
 
 const Index = () => {
   const categories = [
@@ -48,17 +49,17 @@ const Index = () => {
       description: "Publicação, contação de histórias e poesia. Incentivo à leitura e à produção literária local e regional." 
     },
     { 
-      icon: Users, 
+      imageIcon: iconPopular, 
       title: "Cultura Popular", 
       description: "Folclore, tradições e manifestações populares que valorizam a identidade e a história da nossa gente." 
     },
     { 
-      icon: Hammer, 
+      imageIcon: iconArtesanato, 
       title: "Artesanato", 
       description: "Produção e comercialização de arte manual. Apoio aos artesãos locais e preservação de técnicas tradicionais." 
     },
     { 
-      icon: Briefcase, 
+      imageIcon: iconProdutor, 
       title: "Produtor Cultural", 
       description: "Gestão, produção e curadoria de eventos. Capacitação e suporte para profissionais da cadeia produtiva da cultura." 
     },
