@@ -11,12 +11,19 @@ interface CategoryCardProps {
 
 const CategoryCard = ({ icon: Icon, title, description }: CategoryCardProps) => {
   return (
-    <div className="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group text-center">
-      <div className="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:bg-blue-600 transition-colors duration-300">
-        <Icon className="text-blue-600 group-hover:text-white transition-colors duration-300" size={28} />
+    <div className="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group flex flex-col text-left">
+      <div className="flex items-center gap-6 mb-8">
+        <div className="w-20 h-20 bg-slate-50 rounded-2xl flex items-center justify-center shrink-0 group-hover:bg-blue-50 transition-colors duration-300">
+          <Icon className="text-slate-400 group-hover:text-blue-600 transition-colors duration-300" size={32} />
+        </div>
+        <div className="flex flex-col">
+          <h3 className="text-xl font-bold text-slate-900 leading-tight">{title}</h3>
+          <div className="w-8 h-1 bg-yellow-400 mt-3 rounded-full" />
+        </div>
       </div>
-      <h3 className="text-lg font-bold text-gray-800 mb-3">{title}</h3>
-      <p className="text-gray-500 text-sm leading-relaxed font-medium">{description}</p>
+      <p className="text-slate-500 text-sm leading-relaxed font-medium">
+        {description}
+      </p>
     </div>
   );
 };

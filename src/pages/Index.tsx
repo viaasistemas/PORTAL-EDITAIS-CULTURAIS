@@ -20,14 +20,14 @@ import { Button } from '@/components/ui/button';
 
 const Index = () => {
   const categories = [
-    { icon: Music, title: "Música", description: "Produção, shows e formação musical." },
-    { icon: Palette, title: "Artes Visuais", description: "Exposições, murais e arte digital." },
-    { icon: Theater, title: "Artes Cênicas", description: "Teatro, dança, circo e performance." },
-    { icon: Film, title: "Audiovisual", description: "Cinema, documentários e web séries." },
-    { icon: Book, title: "Literatura", description: "Publicação, contação de histórias e poesia." },
-    { icon: Users, title: "Cultura Popular", description: "Folclore, tradições e manifestações populares." },
-    { icon: Hammer, title: "Artesanato", description: "Produção e comercialização de arte manual." },
-    { icon: Briefcase, title: "Produtor Cultural", description: "Gestão, produção e curadoria de eventos." },
+    { icon: Music, title: "Música", description: "Produção, shows e formação musical. Estímulo à produção cultural brasileira em seus diferentes segmentos e à circulação de projetos." },
+    { icon: Palette, title: "Artes Visuais", description: "Exposições, murais e arte digital. Projetos que mobilizam grande público e realizadores de todo o país valorizando a cultura regional." },
+    { icon: Theater, title: "Artes Cênicas", description: "Teatro, dança, circo e performance. Abrange a criação, produção e apresentação de projetos culturais para os mais diversos públicos." },
+    { icon: Film, title: "Audiovisual", description: "Cinema, documentários e web séries. Fomento à produção de conteúdo audiovisual e novas mídias digitais." },
+    { icon: Book, title: "Literatura", description: "Publicação, contação de histórias e poesia. Incentivo à leitura e à produção literária local e regional." },
+    { icon: Users, title: "Cultura Popular", description: "Folclore, tradições e manifestações populares que valorizam a identidade e a história da nossa gente." },
+    { icon: Hammer, title: "Artesanato", description: "Produção e comercialização de arte manual. Apoio aos artesãos locais e preservação de técnicas tradicionais." },
+    { icon: Briefcase, title: "Produtor Cultural", description: "Gestão, produção e curadoria de eventos. Capacitação e suporte para profissionais da cadeia produtiva da cultura." },
   ];
 
   return (
@@ -62,13 +62,13 @@ const Index = () => {
 
       {/* Categories Section */}
       <section className="pt-20 pb-32 bg-white">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-4 max-w-7xl">
           <div className="text-center mb-20">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6 tracking-tight">Oportunidades para Todos os Artistas</h2>
             <p className="text-gray-500 max-w-2xl mx-auto text-lg font-medium">Encontre editais em diversas áreas e impulsione sua carreira cultural.</p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {categories.map((cat, index) => (
               <CategoryCard key={index} {...cat} />
             ))}
