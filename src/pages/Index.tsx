@@ -13,7 +13,7 @@ import Footer from '@/components/Footer';
 import CategoryCard from '@/components/CategoryCard';
 import { Button } from '@/components/ui/button';
 
-// Importando os novos ícones
+// Importando os ícones atualizados
 import iconMusica from '@/assets/icon-musica.png';
 import iconVisuais from '@/assets/icon-visuais.png';
 import iconCenicas from '@/assets/icon-cenicas.png';
