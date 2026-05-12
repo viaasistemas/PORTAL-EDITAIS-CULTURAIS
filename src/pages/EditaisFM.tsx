@@ -16,12 +16,12 @@ const EditaisFM = () => {
       
       <main className="flex-grow">
         {/* Header Section */}
-        <section className="pt-32 pb-20 bg-[#2b59c3] text-center text-white relative overflow-hidden">
+        <section className="pt-24 pb-12 md:pt-32 md:pb-20 bg-[#2b59c3] text-center text-white relative overflow-hidden">
           <div className="container mx-auto px-4 relative z-10">
-            <h1 className="text-4xl md:text-6xl font-extrabold mb-4 tracking-tight">
+            <h1 className="text-3xl md:text-6xl font-extrabold mb-4 tracking-tight">
               Editais: Fomento Municipal
             </h1>
-            <p className="text-lg md:text-xl opacity-90 font-medium">
+            <p className="text-base md:text-xl opacity-90 font-medium">
               Editais de Extremoz-RN
             </p>
           </div>

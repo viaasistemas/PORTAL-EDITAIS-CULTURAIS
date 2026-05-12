@@ -141,12 +141,12 @@ const EditaisPNAB = () => {
       <Navbar />
       
       <main className="flex-grow">
-        <section className="pt-32 pb-20 bg-[#2b59c3] text-center text-white relative overflow-hidden">
+        <section className="pt-24 pb-12 md:pt-32 md:pb-20 bg-[#2b59c3] text-center text-white relative overflow-hidden">
           <div className="container mx-auto px-4 relative z-10">
-            <h1 className="text-4xl md:text-6xl font-extrabold mb-4 tracking-tight">
+            <h1 className="text-3xl md:text-6xl font-extrabold mb-4 tracking-tight">
               Editais: PNAB
             </h1>
-            <p className="text-lg md:text-xl opacity-90 font-medium">
+            <p className="text-base md:text-xl opacity-90 font-medium">
               Política Nacional Aldir Blanc
             </p>
           </div>
@@ -178,7 +178,7 @@ const EditaisPNAB = () => {
                   key={tab}
                   onClick={() => setFilter(tab === 'Abertos' ? 'Aberto' : tab === 'Encerrados' ? 'Encerrado' : 'Todos')}
                   className={`px-8 py-3 rounded-xl font-bold text-sm transition-all ${
-                    (filter === 'Todos' && tab === 'Todos') || 
+                    (filter === 'Todos'&& tab === 'Todos') || 
                     (filter === 'Aberto' && tab === 'Abertos') || 
                     (filter === 'Encerrado' && tab === 'Encerrados')
                       ? 'bg-[#0a0f1c] text-white shadow-lg' 
