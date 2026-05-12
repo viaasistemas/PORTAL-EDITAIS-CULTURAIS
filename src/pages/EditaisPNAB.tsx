@@ -141,12 +141,12 @@ const EditaisPNAB = () => {
       <Navbar />
       
       <main className="flex-grow">
-        <section className="pt-32 pb-16 md:pt-48 md:pb-24 bg-[#2b59c3] text-center text-white relative overflow-hidden">
-          <div className="container mx-auto px-4 relative z-10 flex flex-col items-center justify-center">
-            <h1 className="text-3xl md:text-6xl font-extrabold mb-4 tracking-tight text-center">
+        <section className="pt-24 pb-12 md:pt-32 md:pb-20 bg-[#2b59c3] text-center text-white relative overflow-hidden">
+          <div className="container mx-auto px-4 relative z-10">
+            <h1 className="text-3xl md:text-6xl font-extrabold mb-4 tracking-tight">
               Editais: PNAB
             </h1>
-            <p className="text-base md:text-xl opacity-90 font-medium text-center max-w-2xl">
+            <p className="text-base md:text-xl opacity-90 font-medium">
               Política Nacional Aldir Blanc
             </p>
           </div>
