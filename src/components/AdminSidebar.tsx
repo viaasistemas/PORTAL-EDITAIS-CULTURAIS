@@ -7,7 +7,7 @@ import {
   LogOut,
   FileText,
   LayoutDashboard,
-  Book,
+  Library,
   X
 } from 'lucide-react';
 import { useSession } from './SessionContextProvider';
@@ -33,7 +33,6 @@ const AdminSidebar = () => {
     return () => window.removeEventListener('toggle-admin-sidebar', handleToggle);
   }, [isMobile]);
 
-  // Close on mobile when route changes
   useEffect(() => {
     if (isMobile) setIsOpen(false);
   }, [location.pathname, isMobile]);
@@ -41,7 +40,7 @@ const AdminSidebar = () => {
   const menuItems = [
     { icon: LayoutDashboard, label: "Painel", path: "/admin" },
     { icon: FileText, label: "Inscrições", path: "/admin/inscricoes" },
-    { icon: Book, label: "Conteúdo", path: "/admin/conteudo" },
+    { icon: Library, label: "Biblioteca", path: "/admin/conteudo" },
   ];
 
   const sidebarClasses = isMobile
