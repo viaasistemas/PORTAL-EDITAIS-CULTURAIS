@@ -3,12 +3,12 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import { FileText, Download, BookOpen, Scale, FileCheck, Loader2, ExternalLink } from 'lucide-react';
+import { FileText, Download, BookOpen, Scale, FileCheck, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
 const Biblioteca = () => {
-  const [loading, setLoading] = useState(true);
   const [data, setData] = useState<any[]>([]);
 
   const categories = [
@@ -19,7 +19,6 @@ const Biblioteca = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true);
       const { data: items, error } = await supabase
         .from('biblioteca')
         .select('*')
@@ -28,7 +27,6 @@ const Biblioteca = () => {
       if (!error && items) {
         setData(items);
       }
-      setLoading(false);
     };
 
     fetchData();
@@ -53,63 +51,56 @@ const Biblioteca = () => {
         </section>
 
         <section className="py-16 container mx-auto px-4">
-          {loading ? (
-            <div className="flex flex-col items-center justify-center py-20 gap-4">
-              <Loader2 className="animate-spin text-blue-600" size={40} />
-              <p className="text-slate-500 font-bold">Carregando biblioteca...</p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-              {categories.map((cat, idx) => {
-                const items = getItemsByCategory(cat.title);
-                return (
-                  <div key={idx} className="space-y-6">
-                    <div className="flex items-center gap-4 mb-8">
-                      <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${cat.color}`}>
-                        <cat.icon size={24} />
-                      </div>
-                      <h2 className="text-2xl font-bold text-slate-900">{cat.title}</h2>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+            {categories.map((cat, idx) => {
+              const items = getItemsByCategory(cat.title);
+              return (
+                <div key={idx} className="space-y-6">
+                  <div className="flex items-center gap-4 mb-8">
+                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${cat.color}`}>
+                      <cat.icon size={24} />
                     </div>
-
-                    <div className="space-y-3">
-                      {items.length > 0 ? (
-                        items.map((doc, dIdx) => (
-                          <div key={dIdx} className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all group flex items-center justify-between">
-                            <div className="flex items-center gap-4 min-w-0">
-                              <div className="w-10 h-10 rounded-lg bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-blue-50 group-hover:text-blue-600 transition-colors">
-                                {doc.link_url ? <ExternalLink size={20} /> : <FileText size={20} />}
-                              </div>
-                              <div className="min-w-0">
-                                <p className="text-sm font-bold text-slate-900 truncate leading-tight">{doc.title}</p>
-                                <p className="text-[10px] text-slate-400 mt-1 font-bold uppercase tracking-wider">
-                                  {doc.link_url ? 'Link Externo' : doc.file_name || 'Arquivo'}
-                                </p>
-                              </div>
-                            </div>
-                            <Button 
-                              variant="ghost" 
-                              size="icon" 
-                              className="rounded-lg text-slate-400 hover:text-blue-600 hover:bg-blue-50"
-                              onClick={() => {
-                                if (doc.link_url) window.open(doc.link_url, '_blank');
-                                else toast.info("Download do arquivo iniciado.");
-                              }}
-                            >
-                              {doc.link_url ? <ExternalLink size={18} /> : <Download size={18} />}
-                            </Button>
-                          </div>
-                        ))
-                      ) : (
-                        <div className="py-12 text-center bg-slate-50/50 border border-dashed border-slate-200 rounded-2xl">
-                          <p className="text-slate-400 text-sm font-medium">Nenhum item disponível</p>
-                        </div>
-                      )}
-                    </div>
+                    <h2 className="text-2xl font-bold text-slate-900">{cat.title}</h2>
                   </div>
-                );
-              })}
-            </div>
-          )}
+
+                  <div className="space-y-3">
+                    {items.length > 0 ? (
+                      items.map((doc, dIdx) => (
+                        <div key={dIdx} className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all group flex items-center justify-between">
+                          <div className="flex items-center gap-4 min-w-0">
+                            <div className="w-10 h-10 rounded-lg bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-blue-50 group-hover:text-blue-600 transition-colors">
+                              {doc.link_url ? <ExternalLink size={20} /> : <FileText size={20} />}
+                            </div>
+                            <div className="min-w-0">
+                              <p className="text-sm font-bold text-slate-900 truncate leading-tight">{doc.title}</p>
+                              <p className="text-[10px] text-slate-400 mt-1 font-bold uppercase tracking-wider">
+                                {doc.link_url ? 'Link Externo' : doc.file_name || 'Arquivo'}
+                              </p>
+                            </div>
+                          </div>
+                          <Button 
+                            variant="ghost" 
+                            size="icon" 
+                            className="rounded-lg text-slate-400 hover:text-blue-600 hover:bg-blue-50"
+                            onClick={() => {
+                              if (doc.link_url) window.open(doc.link_url, '_blank');
+                              else toast.info("Download do arquivo iniciado.");
+                            }}
+                          >
+                            {doc.link_url ? <ExternalLink size={18} /> : <Download size={18} />}
+                          </Button>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="py-12 text-center bg-slate-50/50 border border-dashed border-slate-200 rounded-2xl">
+                        <p className="text-slate-400 text-sm font-medium">Nenhum item disponível</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </section>
 
         <section className="pb-24 container mx-auto px-4">
