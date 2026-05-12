@@ -177,17 +177,16 @@ const AdminBibliotecaDialog = ({ category, open, onOpenChange }: AdminBiblioteca
 
           {view === 'list' && (
             <div className="space-y-4 min-h-[300px]">
-              {loading ? (
-                <div className="flex flex-col items-center justify-center py-20 gap-3">
+              {loading && items.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-20">
                   <Loader2 className="animate-spin text-blue-600" size={32} />
-                  <p className="text-slate-400 font-medium">Carregando itens...</p>
                 </div>
               ) : items.length === 0 ? (
                 <div className="py-20 text-center border-2 border-dashed border-slate-100 rounded-[2rem] flex flex-col items-center gap-4">
                   <div className="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-200">
                     <FileText size={32} />
                   </div>
-                  <p className="text-slate-400 font-bold">Nenhum arquivo ou link nesta categoria.</p>
+                  <p className="text-slate-400 font-bold">Nenhum item publicado</p>
                 </div>
               ) : (
                 <div className="grid grid-cols-1 gap-3">
