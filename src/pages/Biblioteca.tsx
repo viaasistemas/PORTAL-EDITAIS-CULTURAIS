@@ -17,19 +17,35 @@ const Biblioteca = () => {
     { title: "Modelos de Documentos", icon: FileCheck, color: "bg-emerald-50 text-emerald-600" }
   ];
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const { data: items, error } = await supabase
-        .from('biblioteca')
-        .select('*')
-        .order('created_at', { ascending: false });
-      
-      if (!error && items) {
-        setData(items);
-      }
-    };
+  const fetchData = async () => {
+    const { data: items, error } = await supabase
+      .from('biblioteca')
+      .select('*')
+      .order('created_at', { ascending: false });
+    
+    if (!error && items) {
+      setData(items);
+    }
+  };
 
+  useEffect(() => {
     fetchData();
+
+    // Inscrição em tempo real para atualizações automáticas
+    const channel = supabase
+      .channel('biblioteca-changes')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'biblioteca' },
+        () => {
+          fetchData();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   const getItemsByCategory = (catTitle: string) => {
