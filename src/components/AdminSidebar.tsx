@@ -18,15 +18,24 @@ const AdminSidebar = () => {
   const navigate = useNavigate();
   const isMobile = useIsMobile();
   const { logoutFake } = useSession();
+  
+  // Inicializa o estado a partir do localStorage para persistência entre páginas
   const [isOpen, setIsOpen] = useState(!isMobile);
-  const [isCompact, setIsCompact] = useState(false);
+  const [isCompact, setIsCompact] = useState(() => {
+    const saved = localStorage.getItem('admin_sidebar_compact');
+    return saved === 'true';
+  });
 
   useEffect(() => {
     const handleToggle = () => {
       if (isMobile) {
         setIsOpen(prev => !prev);
       } else {
-        setIsCompact(prev => !prev);
+        setIsCompact(prev => {
+          const newState = !prev;
+          localStorage.setItem('admin_sidebar_compact', String(newState));
+          return newState;
+        });
       }
     };
     window.addEventListener('toggle-admin-sidebar', handleToggle);
