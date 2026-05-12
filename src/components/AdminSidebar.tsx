@@ -40,7 +40,7 @@ const AdminSidebar = () => {
   const menuItems = [
     { icon: LayoutDashboard, label: "Painel", path: "/admin" },
     { icon: FileText, label: "Inscrições", path: "/admin/inscricoes" },
-    { icon: Library, label: "Biblioteca", path: "/admin/conteudo" },
+    { icon: Library, label: "Biblioteca", path: "/admin/biblioteca" },
   ];
 
   const sidebarClasses = isMobile

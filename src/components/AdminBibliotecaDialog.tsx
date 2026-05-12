@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -20,7 +21,7 @@ import {
   Loader2, 
   X,
   ArrowLeft,
-  FileCheck
+  AlertCircle
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -34,13 +35,14 @@ interface AdminBibliotecaDialogProps {
 const AdminBibliotecaDialog = ({ category, open, onOpenChange }: AdminBibliotecaDialogProps) => {
   const [items, setItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
-  const [view, setView] = useState<'list' | 'form'>('list');
+  const [view, setView] = useState<'list' | 'form' | 'confirm'>('list');
   const [editingId, setEditingId] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     title: '',
     link_url: '',
     file_name: ''
   });
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const fetchItems = async () => {
     setLoading(true);
@@ -61,12 +63,21 @@ const AdminBibliotecaDialog = ({ category, open, onOpenChange }: AdminBiblioteca
     }
   }, [open, category]);
 
-  const handleSave = async () => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setFormData(prev => ({ ...prev, file_name: e.target.files![0].name }));
+    }
+  };
+
+  const handlePreSave = () => {
     if (!formData.title) {
       toast.error("O título é obrigatório.");
       return;
     }
+    setView('confirm');
+  };
 
+  const handleFinalSave = async () => {
     setLoading(true);
     try {
       const payload = {
@@ -88,7 +99,7 @@ const AdminBibliotecaDialog = ({ category, open, onOpenChange }: AdminBiblioteca
           .from('biblioteca')
           .insert(payload);
         if (error) throw error;
-        toast.success("Item adicionado à biblioteca!");
+        toast.success("Item publicado com sucesso!");
       }
       
       resetForm();
@@ -138,18 +149,20 @@ const AdminBibliotecaDialog = ({ category, open, onOpenChange }: AdminBiblioteca
         <div className="bg-white p-8">
           <DialogHeader className="mb-8 flex flex-row items-center justify-between space-y-0">
             <div className="flex items-center gap-4">
-              {view === 'form' && (
+              {(view === 'form' || view === 'confirm') && (
                 <Button 
                   variant="ghost" 
                   size="icon" 
-                  onClick={() => setView('list')}
+                  onClick={() => setView(view === 'confirm' ? 'form' : 'list')}
                   className="rounded-full hover:bg-slate-100"
                 >
                   <ArrowLeft size={20} />
                 </Button>
               )}
               <DialogTitle className="text-2xl font-bold text-slate-900">
-                {view === 'list' ? `Gerenciar: ${category}` : editingId ? 'Editar Item' : 'Adicionar Novo Item'}
+                {view === 'list' ? `Gerenciar: ${category}` : 
+                 view === 'confirm' ? 'Confirmar Publicação' :
+                 editingId ? 'Editar Item' : 'Adicionar Novo Item'}
               </DialogTitle>
             </div>
             {view === 'list' && (
@@ -162,7 +175,7 @@ const AdminBibliotecaDialog = ({ category, open, onOpenChange }: AdminBiblioteca
             )}
           </DialogHeader>
 
-          {view === 'list' ? (
+          {view === 'list' && (
             <div className="space-y-4 min-h-[300px]">
               {loading ? (
                 <div className="flex flex-col items-center justify-center py-20 gap-3">
@@ -192,20 +205,10 @@ const AdminBibliotecaDialog = ({ category, open, onOpenChange }: AdminBiblioteca
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Button 
-                          variant="ghost" 
-                          size="icon" 
-                          onClick={() => startEdit(item)} 
-                          className="h-10 w-10 rounded-xl text-slate-400 hover:text-blue-600 hover:bg-white shadow-sm"
-                        >
+                        <Button variant="ghost" size="icon" onClick={() => startEdit(item)} className="h-10 w-10 rounded-xl text-slate-400 hover:text-blue-600 hover:bg-white shadow-sm">
                           <Pencil size={18} />
                         </Button>
-                        <Button 
-                          variant="ghost" 
-                          size="icon" 
-                          onClick={() => handleDelete(item.id)} 
-                          className="h-10 w-10 rounded-xl text-slate-400 hover:text-red-600 hover:bg-white shadow-sm"
-                        >
+                        <Button variant="ghost" size="icon" onClick={() => handleDelete(item.id)} className="h-10 w-10 rounded-xl text-slate-400 hover:text-red-600 hover:bg-white shadow-sm">
                           <Trash2 size={18} />
                         </Button>
                       </div>
@@ -214,7 +217,9 @@ const AdminBibliotecaDialog = ({ category, open, onOpenChange }: AdminBiblioteca
                 </div>
               )}
             </div>
-          ) : (
+          )}
+
+          {view === 'form' && (
             <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-300">
               <div className="space-y-6">
                 <div className="space-y-2">
@@ -223,7 +228,7 @@ const AdminBibliotecaDialog = ({ category, open, onOpenChange }: AdminBiblioteca
                     value={formData.title} 
                     onChange={(e) => setFormData({...formData, title: e.target.value})}
                     placeholder="Ex: Manual do Artista 2026" 
-                    className="h-14 rounded-xl border-slate-200 text-lg font-medium focus:ring-blue-500"
+                    className="h-14 rounded-xl border-slate-200 text-lg font-medium"
                   />
                 </div>
 
@@ -243,46 +248,64 @@ const AdminBibliotecaDialog = ({ category, open, onOpenChange }: AdminBiblioteca
 
                   <div className="space-y-2">
                     <Label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Arquivo Anexado</Label>
-                    <div className="flex items-center gap-2">
-                      <div className="flex-grow relative">
-                        <FileText className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-                        <Input 
-                          value={formData.file_name} 
-                          onChange={(e) => setFormData({...formData, file_name: e.target.value})}
-                          placeholder="Nome do arquivo" 
-                          className="h-14 rounded-xl border-slate-200 pl-12 pr-10"
-                        />
-                        {formData.file_name && (
-                          <button 
-                            onClick={() => setFormData({...formData, file_name: ''})} 
-                            className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-red-500 transition-colors"
-                          >
-                            <X size={16} />
-                          </button>
-                        )}
+                    <div 
+                      onClick={() => fileInputRef.current?.click()}
+                      className={`h-14 rounded-xl border-2 border-dashed flex items-center justify-between px-4 cursor-pointer transition-all ${
+                        formData.file_name ? 'border-blue-200 bg-blue-50' : 'border-slate-200 hover:border-blue-400 hover:bg-slate-50'
+                      }`}
+                    >
+                      <input type="file" ref={fileInputRef} className="hidden" onChange={handleFileChange} />
+                      <div className="flex items-center gap-3 min-w-0">
+                        <Upload size={18} className={formData.file_name ? 'text-blue-600' : 'text-slate-400'} />
+                        <span className={`text-sm truncate ${formData.file_name ? 'text-blue-700 font-bold' : 'text-slate-400'}`}>
+                          {formData.file_name || "Clique para upar"}
+                        </span>
                       </div>
-                      <Button variant="outline" className="h-14 rounded-xl border-slate-200 px-4 hover:bg-slate-50">
-                        <Upload size={20} />
-                      </Button>
+                      {formData.file_name && (
+                        <button 
+                          onClick={(e) => { e.stopPropagation(); setFormData({...formData, file_name: ''}); }} 
+                          className="text-slate-400 hover:text-red-500"
+                        >
+                          <X size={16} />
+                        </button>
+                      )}
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div className="flex gap-4 pt-4">
+              <Button 
+                onClick={handlePreSave} 
+                className="w-full h-14 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl font-bold text-lg shadow-xl shadow-blue-100"
+              >
+                {editingId ? "Salvar Alterações" : "Adicionar Item"}
+              </Button>
+            </div>
+          )}
+
+          {view === 'confirm' && (
+            <div className="text-center py-6 animate-in zoom-in-95 duration-300">
+              <div className="w-16 h-16 bg-amber-50 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                <AlertCircle size={32} className="text-amber-500" />
+              </div>
+              <h2 className="text-2xl font-bold text-slate-900 mb-2">Confirmar e Publicar?</h2>
+              <p className="text-slate-500 font-medium mb-10">
+                Este item ficará visível imediatamente na página pública da Biblioteca para todos os usuários.
+              </p>
+              <div className="flex flex-col gap-3">
                 <Button 
-                  variant="ghost" 
-                  onClick={() => setView('list')} 
-                  className="flex-1 h-14 rounded-2xl font-bold text-slate-500"
+                  onClick={handleFinalSave} 
+                  disabled={loading}
+                  className="w-full h-14 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl font-bold text-lg shadow-xl shadow-blue-100"
                 >
-                  Cancelar
+                  {loading ? <Loader2 className="animate-spin" /> : "Confirmar e Publicar"}
                 </Button>
                 <Button 
-                  onClick={handleSave} 
-                  disabled={loading} 
-                  className="flex-1 h-14 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl font-bold text-lg shadow-xl shadow-blue-100"
+                  variant="ghost" 
+                  onClick={() => setView('form')} 
+                  className="w-full h-12 rounded-xl font-bold text-slate-500"
                 >
-                  {loading ? <Loader2 className="animate-spin" /> : editingId ? "Salvar Alterações" : "Adicionar Item"}
+                  Voltar e Editar
                 </Button>
               </div>
             </div>
