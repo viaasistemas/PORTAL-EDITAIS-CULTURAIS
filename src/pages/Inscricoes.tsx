@@ -70,20 +70,20 @@ const Inscricoes = () => {
       <Navbar />
       
       <main className="flex-grow">
-        {/* Hero Section */}
-        <section className="pt-48 pb-32 bg-blue-600 text-center text-white px-4">
+        {/* Hero Section - Adjusted height and padding */}
+        <section className="pt-32 pb-20 bg-blue-600 text-center text-white px-4">
           <div className="container mx-auto max-w-4xl">
-            <h1 className="text-4xl md:text-6xl font-extrabold mb-6 tracking-tight">
+            <h1 className="text-3xl md:text-5xl font-extrabold mb-4 tracking-tight">
               Acompanhar Inscrição
             </h1>
-            <p className="text-lg md:text-xl text-blue-50 font-medium opacity-90">
+            <p className="text-base md:text-lg text-blue-50 font-medium opacity-90">
               Utilize o número do seu protocolo para verificar a sua inscrição.
             </p>
           </div>
         </section>
 
-        {/* Search Section */}
-        <section className="relative -mt-16 px-4 pb-24">
+        {/* Search Section - Moved up slightly */}
+        <section className="relative -mt-10 px-4 pb-24">
           <div className="container mx-auto max-w-3xl">
             <div className="bg-white rounded-2xl shadow-2xl shadow-blue-900/10 border border-gray-100 p-8 md:p-12">
               <h2 className="text-2xl font-bold text-gray-900 mb-8">Consultar Protocolo</h2>

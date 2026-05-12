@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import { Mail, Phone, MapPin, Clock, Instagram } from 'lucide-react';
+import { Mail, Phone, MapPin, Clock, Instagram, Facebook, Youtube } from 'lucide-react';
 
 const Footer = () => {
   return (
@@ -66,11 +66,15 @@ const Footer = () => {
           <div className="flex items-center gap-4">
             <span className="text-sm font-bold text-slate-200">Siga-nos</span>
             <div className="flex gap-2">
-              {[1, 2, 3].map((i) => (
-                <a key={i} href="#" className="w-8 h-8 rounded-lg bg-slate-900 flex items-center justify-center hover:bg-blue-600 transition-all border border-slate-800">
-                  <Instagram size={16} />
-                </a>
-              ))}
+              <a href="#" className="w-8 h-8 rounded-lg bg-slate-900 flex items-center justify-center hover:bg-blue-600 transition-all border border-slate-800">
+                <Instagram size={16} />
+              </a>
+              <a href="#" className="w-8 h-8 rounded-lg bg-slate-900 flex items-center justify-center hover:bg-blue-600 transition-all border border-slate-800">
+                <Facebook size={16} />
+              </a>
+              <a href="#" className="w-8 h-8 rounded-lg bg-slate-900 flex items-center justify-center hover:bg-blue-600 transition-all border border-slate-800">
+                <Youtube size={16} />
+              </a>
             </div>
           </div>
         </div>
