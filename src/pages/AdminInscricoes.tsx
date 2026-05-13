@@ -42,7 +42,8 @@ const AdminInscricoes = () => {
     
     const matchesStatus = statusFilter === 'todos' || 
                          (statusFilter === 'aberto' && edital.status === 'Aberto') ||
-                         (statusFilter === 'encerrado' && edital.status === 'Encerrado');
+                         (statusFilter === 'encerrado' && edital.status === 'Encerrado') ||
+                         (statusFilter === 'finalizado' && edital.status === 'Encerrado'); // Mapeado para encerrado no mock
 
     const matchesCategory = categoryFilter === 'todas' || 
                            edital.categories.includes(categoryFilter);
@@ -101,6 +102,7 @@ const AdminInscricoes = () => {
                   <SelectItem value="todos">Todos os Status</SelectItem>
                   <SelectItem value="aberto">Aberto</SelectItem>
                   <SelectItem value="encerrado">Encerrado</SelectItem>
+                  <SelectItem value="finalizado">Finalizados</SelectItem>
                 </SelectContent>
               </Select>
             </div>

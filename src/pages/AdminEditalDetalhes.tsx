@@ -14,7 +14,9 @@ import {
   ArrowLeft, 
   Search, 
   Calendar as CalendarIcon,
-  Download
+  Download,
+  Eye,
+  X
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import {
@@ -30,6 +32,12 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -46,6 +54,7 @@ const AdminEditalDetalhes = () => {
     from: undefined,
     to: undefined
   });
+  const [selectedFiles, setSelectedFiles] = useState<any[] | null>(null);
 
   useEffect(() => {
     if (!loading && !session) navigate('/login');
@@ -66,6 +75,8 @@ const AdminEditalDetalhes = () => {
       
       if (!error && data) {
         setData(data);
+      } else {
+        setData([]);
       }
     }
     setFetching(false);
@@ -90,14 +101,23 @@ const AdminEditalDetalhes = () => {
   });
 
   const getEmptyMessage = () => {
-    if (activeView === 'inscricoes') return "Nenhum Inscrito";
+    if (activeView === 'inscricoes') return "Nenhuma Inscrição";
     if (activeView === 'recursos') return "Nenhum Recurso";
-    if (activeView === 'documentacao') return "Nenhum Documento";
+    if (activeView === 'documentacao') return "Nenhuma Documentação";
     return "Nenhum registro encontrado";
   };
 
-  // Helper to determine if a value is likely a CNPJ (more than 11 digits or formatted)
   const isCNPJ = (val: string) => val.replace(/\D/g, '').length > 11;
+
+  const handleViewFiles = (item: any) => {
+    // Mock de arquivos para demonstração
+    const mockFiles = [
+      { name: 'Documento_Identificacao.pdf', size: '1.2 MB' },
+      { name: 'Projeto_Cultural.pdf', size: '3.5 MB' },
+      { name: 'Comprovante_Residencia.pdf', size: '0.8 MB' }
+    ];
+    setSelectedFiles(mockFiles);
+  };
 
   if (loading || !session) return null;
 
@@ -254,11 +274,14 @@ const AdminEditalDetalhes = () => {
                             </div>
                           </TableCell>
                           <TableCell>
-                            <div className="flex flex-wrap gap-2">
-                              <Button variant="ghost" size="sm" className="rounded-lg bg-slate-100 text-slate-500 hover:bg-blue-50 hover:text-blue-600 flex gap-2 h-8 px-2">
-                                <Download size={14} /> <span className="text-[10px]">Ver Arquivos</span>
-                              </Button>
-                            </div>
+                            <Button 
+                              variant="ghost" 
+                              size="icon" 
+                              onClick={() => handleViewFiles(item)}
+                              className="rounded-xl bg-slate-100 text-slate-500 hover:bg-blue-50 hover:text-blue-600 h-10 w-10"
+                            >
+                              <Eye size={18} />
+                            </Button>
                           </TableCell>
                         </TableRow>
                       ))
@@ -275,6 +298,41 @@ const AdminEditalDetalhes = () => {
             </div>
           )}
         </div>
+
+        <Dialog open={!!selectedFiles} onOpenChange={(open) => !open && setSelectedFiles(null)}>
+          <DialogContent className="max-w-md rounded-[2.5rem] p-8">
+            <DialogHeader className="mb-6">
+              <DialogTitle className="text-2xl font-bold text-slate-900">Arquivos Anexados</DialogTitle>
+              <p className="text-slate-500 text-sm font-medium mt-1">
+                {activeView === 'inscricoes' ? 'Documentos da Inscrição' : 
+                 activeView === 'recursos' ? 'Documentos do Recurso' : 'Documentos da Documentação'}
+              </p>
+            </DialogHeader>
+
+            <div className="space-y-3">
+              {selectedFiles?.map((file, i) => (
+                <div key={i} className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100 group hover:border-blue-200 transition-all">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <FileText size={20} className="text-blue-600 shrink-0" />
+                    <div className="min-w-0">
+                      <p className="text-sm font-bold text-slate-900 truncate">{file.name}</p>
+                      <p className="text-[10px] text-slate-400 font-bold">{file.size}</p>
+                    </div>
+                  </div>
+                  <Button variant="ghost" size="icon" className="text-slate-400 hover:text-blue-600">
+                    <Download size={18} />
+                  </Button>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-8">
+              <Button onClick={() => setSelectedFiles(null)} className="w-full h-14 bg-slate-900 hover:bg-black text-white rounded-xl font-bold">
+                Fechar
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
       </main>
     </div>
   );
