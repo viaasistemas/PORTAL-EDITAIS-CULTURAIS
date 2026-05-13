@@ -43,22 +43,23 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Horário Section */}
-          <div className="space-y-3 min-w-[200px]">
-            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Horário de Funcionamento</p>
-            <div className="flex items-center gap-3">
-              <Clock size={16} className="text-blue-400 shrink-0" />
-              <span className="text-[11px] text-slate-300 font-medium">Expediente: Seg à Sex das 07h às 13h</span>
+          {/* Horário e Instituições Section */}
+          <div className="space-y-10 min-w-[200px]">
+            <div className="space-y-3">
+              <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Horário de Funcionamento</p>
+              <div className="flex items-center gap-3">
+                <Clock size={16} className="text-blue-400 shrink-0" />
+                <span className="text-[11px] text-slate-300 font-medium">Expediente: Seg à Sex das 07h às 13h</span>
+              </div>
             </div>
-          </div>
 
-          {/* Institutions Section */}
-          <div className="space-y-4 min-w-[200px]">
-            <div>
-              <p className="text-sm font-bold text-slate-200">Prefeitura Municipal de Extremoz</p>
-            </div>
-            <div>
-              <p className="text-sm font-bold text-slate-200">SECRETARIA MUNICIPAL DE CULTURA - SECULT</p>
+            <div className="space-y-4">
+              <div>
+                <p className="text-sm font-bold text-slate-200">PREFEITURA MUNICIPAL DE EXTREMOZ</p>
+              </div>
+              <div>
+                <p className="text-sm font-bold text-slate-200">SECRETARIA MUNICIPAL DE CULTURA - SECULT</p>
+              </div>
             </div>
           </div>
 

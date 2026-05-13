@@ -84,12 +84,12 @@ const Index = () => {
           <h1 className="text-5xl md:text-7xl font-extrabold mb-8 tracking-tight leading-[1.1]">
             Transforme sua ideia em <span className="text-blue-400">Realidade</span>
           </h1>
-          <p className="text-lg md:text-xl text-gray-100/90 mb-12 leading-relaxed max-w-2xl mx-auto font-medium">
+          <p className="text-lg md:text-xl text-slate-300 mb-12 leading-relaxed max-w-2xl mx-auto font-medium">
             O Portal de Editais Culturais de Extremoz-RN é a sua ponte para oportunidades, fomento e reconhecimento.
           </p>
           <Link to="/editais">
             <Button className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-12 py-8 text-lg rounded-xl shadow-2xl shadow-blue-600/30 transition-all hover:scale-105 active:scale-95">
-              EDITAIS ABERTOS
+              Inscreva-se em nossos editais
             </Button>
           </Link>
         </div>
