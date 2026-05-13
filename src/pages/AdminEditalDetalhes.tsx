@@ -110,7 +110,6 @@ const AdminEditalDetalhes = () => {
   const isCNPJ = (val: string) => val.replace(/\D/g, '').length > 11;
 
   const handleViewFiles = (item: any) => {
-    // Mock de arquivos para demonstração
     const mockFiles = [
       { name: 'Documento_Identificacao.pdf', size: '1.2 MB' },
       { name: 'Projeto_Cultural.pdf', size: '3.5 MB' },
@@ -244,7 +243,7 @@ const AdminEditalDetalhes = () => {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {filteredData.length === 0 && !fetching ? (
+                    {filteredData.length === 0 ? (
                       <TableRow>
                         <TableCell colSpan={6} className="text-center py-20 text-slate-400 font-medium">
                           {getEmptyMessage()}
