@@ -16,27 +16,30 @@ const Footer = () => {
             <span className="text-[9px] font-bold text-blue-400 uppercase tracking-[0.1em] mt-1">Portal de Editais de Extremoz</span>
           </div>
 
-          {/* Endereço Section */}
-          <div className="space-y-3 min-w-[250px]">
-            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Endereço</p>
-            <div className="flex items-start gap-3">
-              <MapPin size={16} className="text-blue-400 shrink-0 mt-0.5" />
-              <span className="text-[11px] text-slate-300 font-medium leading-tight">
-                Rua Lagoa, 2110, Centro -<br />Extremoz - RN - 59575-000
-              </span>
+          {/* Endereço e Contato Grouped */}
+          <div className="space-y-10 min-w-[250px]">
+            {/* Endereço Section */}
+            <div className="space-y-3">
+              <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Endereço</p>
+              <div className="flex items-start gap-3">
+                <MapPin size={16} className="text-blue-400 shrink-0 mt-0.5" />
+                <span className="text-[11px] text-slate-300 font-medium leading-tight">
+                  Rua Lagoa, 2110, Centro -<br />Extremoz - RN - 59575-000
+                </span>
+              </div>
             </div>
-          </div>
 
-          {/* Contato Section */}
-          <div className="space-y-3 min-w-[250px]">
-            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Contato</p>
-            <div className="flex items-center gap-3">
-              <Phone size={16} className="text-blue-400 shrink-0" />
-              <span className="text-[11px] text-slate-300 font-medium">Telefone: (84) 3279-4910</span>
-            </div>
-            <div className="flex items-center gap-3">
-              <Mail size={16} className="text-blue-400 shrink-0" />
-              <span className="text-[11px] text-slate-300 font-medium">Email: gabinetecivilextremoz@gmail.com</span>
+            {/* Contato Section */}
+            <div className="space-y-3">
+              <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Contato</p>
+              <div className="flex items-center gap-3">
+                <Phone size={16} className="text-blue-400 shrink-0" />
+                <span className="text-[11px] text-slate-300 font-medium">Telefone: (84) 3279-4910</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <Mail size={16} className="text-blue-400 shrink-0" />
+                <span className="text-[11px] text-slate-300 font-medium">Email: gabinetecivilextremoz@gmail.com</span>
+              </div>
             </div>
           </div>
 
@@ -76,17 +79,10 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* Developer Credits */}
-        <div className="flex justify-center mb-10">
-          <p className="text-[10px] font-medium text-slate-500 uppercase tracking-widest">
-            Desenvolvido por: <span className="text-slate-200 font-bold ml-1">VIAA SISTEMAS</span>
-          </p>
-        </div>
-
-        {/* Copyright */}
+        {/* Copyright and Credits Unified */}
         <div className="pt-8 border-t border-slate-900 text-center">
           <p className="text-[10px] text-slate-500 font-bold tracking-widest uppercase">
-            © Prefeitura Municipal de Extremoz - RN
+            © Prefeitura Municipal de Extremoz - RN | Desenvolvido por VIAA SISTEMAS
           </p>
         </div>
       </div>
