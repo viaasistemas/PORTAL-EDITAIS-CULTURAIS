@@ -244,13 +244,7 @@ const AdminEditalDetalhes = () => {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {fetching ? (
-                      <TableRow>
-                        <TableCell colSpan={6} className="text-center py-20 text-slate-400 font-medium">
-                          Carregando dados...
-                        </TableCell>
-                      </TableRow>
-                    ) : filteredData.length === 0 ? (
+                    {filteredData.length === 0 && !fetching ? (
                       <TableRow>
                         <TableCell colSpan={6} className="text-center py-20 text-slate-400 font-medium">
                           {getEmptyMessage()}

@@ -25,25 +25,61 @@ const AdminInscricoes = () => {
   const [statusFilter, setStatusFilter] = useState('todos');
   const [categoryFilter, setCategoryFilter] = useState('todas');
   const [searchTerm, setSearchTerm] = useState('');
+  const [editalSettings, setEditalSettings] = useState<Record<string, any>>({});
 
   useEffect(() => {
     if (!loading && !session) navigate('/login');
+    
+    const loadSettings = () => {
+      const settings: Record<string, any> = {};
+      editaisData.forEach(e => {
+        const saved = localStorage.getItem(`edital_settings_${e.id}`);
+        if (saved) settings[e.id] = JSON.parse(saved);
+      });
+      setEditalSettings(settings);
+    };
+
+    loadSettings();
+    window.addEventListener('storage', loadSettings);
+    return () => window.removeEventListener('storage', loadSettings);
   }, [session, loading, navigate]);
 
   if (loading || !session) return null;
 
-  const tabs = ["Todos", "Fomento Municipal", "LPG", "PNAB"];
+  const getDynamicStatus = (edital: any) => {
+    const settings = editalSettings[edital.id];
+    if (settings?.isFinalized) return 'Finalizado';
+    
+    const now = new Date();
+    const endStr = settings?.dates?.encerramento && settings?.dates?.horaEncerramento 
+      ? `${settings.dates.encerramento}T${settings.dates.horaEncerramento}` 
+      : edital.dataEncerramento;
+    
+    const end = endStr ? new Date(endStr) : null;
+    if (end && now > end) return 'Encerrado';
+    
+    const startStr = settings?.dates?.abertura && settings?.dates?.horaAbertura 
+      ? `${settings.dates.abertura}T${settings.dates.horaAbertura}` 
+      : edital.dataAbertura;
+    const start = startStr ? new Date(startStr) : null;
+    
+    if (start && now < start) return 'Em breve';
+    return 'Aberto';
+  };
 
   const filteredEditais = editaisData.filter(edital => {
+    const currentStatus = getDynamicStatus(edital);
+    const settings = editalSettings[edital.id];
+
     const matchesTab = activeTab === 'Todos' || 
                       (activeTab === 'Fomento Municipal' && edital.tipo === 'FM') ||
                       (activeTab === 'LPG' && edital.tipo === 'LPG') ||
                       (activeTab === 'PNAB' && edital.tipo === 'PNAB');
     
     const matchesStatus = statusFilter === 'todos' || 
-                         (statusFilter === 'aberto' && edital.status === 'Aberto') ||
-                         (statusFilter === 'encerrado' && edital.status === 'Encerrado') ||
-                         (statusFilter === 'finalizado' && edital.status === 'Encerrado'); // Mapeado para encerrado no mock
+                         (statusFilter === 'aberto' && currentStatus === 'Aberto') ||
+                         (statusFilter === 'encerrado' && currentStatus === 'Encerrado' && !settings?.isFinalized) ||
+                         (statusFilter === 'finalizado' && settings?.isFinalized);
 
     const matchesCategory = categoryFilter === 'todas' || 
                            edital.categories.includes(categoryFilter);
@@ -54,6 +90,8 @@ const AdminInscricoes = () => {
 
     return matchesTab && matchesStatus && matchesSearch && matchesCategory;
   });
+
+  const tabs = ["Todos", "Fomento Municipal", "LPG", "PNAB"];
 
   return (
     <div className="min-h-screen bg-[#f8fafc] flex">
