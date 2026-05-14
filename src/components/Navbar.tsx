@@ -14,33 +14,32 @@ import {
 const Navbar = () => {
   const { session, logoutFake } = useSession();
   const location = useLocation();
-  const isHome = location.pathname === "/";
   const [isOpen, setIsOpen] = useState(false);
 
   const navLinks = [
-    { name: 'Início', path: '/' },
+    { name: 'Inicio', path: '/' },
     { name: 'Editais', path: '/editais' },
     { name: 'Inscrições', path: '/inscricoes' },
     { name: 'Biblioteca', path: '/biblioteca' },
   ];
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 border-b border-gray-100 ${isHome ? 'bg-white' : 'bg-white/80 backdrop-blur-lg'}`}>
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-50">
       <div className="container mx-auto px-4 h-20 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2 group">
           <div className="flex flex-col">
-            <span className="text-2xl font-bold tracking-tight text-blue-600 leading-none group-hover:text-blue-700 transition-colors">CULTURA</span>
-            <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-[0.2em]">Portal de Editais de Extremoz</span>
+            <span className="text-2xl font-black tracking-tight text-[#2b59c3] leading-none">CULTURA</span>
+            <span className="text-[8px] font-bold text-slate-400 uppercase tracking-[0.2em]">Portal de Editais de Extremoz</span>
           </div>
         </Link>
 
         {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center gap-8">
+        <div className="hidden md:flex items-center gap-10">
           {navLinks.map((link) => (
             <Link 
               key={link.path} 
               to={link.path} 
-              className={`text-sm font-medium transition-colors ${location.pathname === link.path ? 'text-blue-600' : 'text-gray-500 hover:text-blue-600'}`}
+              className={`text-sm font-bold transition-colors ${location.pathname === link.path ? 'text-[#2b59c3]' : 'text-slate-500 hover:text-[#2b59c3]'}`}
             >
               {link.name}
             </Link>
@@ -49,22 +48,17 @@ const Navbar = () => {
 
         <div className="flex items-center gap-4">
           {session ? (
-            <div className="hidden md:flex items-center gap-4">
-              <div className="w-8 h-8 bg-blue-600 rounded-xl flex items-center justify-center text-white text-[10px] font-bold">
-                {session.user.email?.substring(0, 2).toUpperCase()}
-              </div>
-              <Button 
-                variant="ghost" 
-                className="text-xs font-bold uppercase tracking-wider text-gray-500"
-                onClick={logoutFake}
-              >
-                Sair
-              </Button>
-            </div>
+            <Button 
+              variant="ghost" 
+              className="text-xs font-bold uppercase tracking-wider text-slate-500"
+              onClick={logoutFake}
+            >
+              Sair
+            </Button>
           ) : (
             <Link to="/login" className="hidden md:block">
-              <Button className="bg-blue-600 hover:bg-blue-700 text-white px-6 rounded-xl font-semibold uppercase text-[11px] tracking-wider shadow-sm">
-                Entrar
+              <Button className="bg-[#2b59c3] hover:bg-[#1e44a3] text-white px-8 h-11 rounded-xl font-bold uppercase text-[11px] tracking-wider shadow-md shadow-blue-100">
+                ENTRAR
               </Button>
             </Link>
           )}
@@ -73,14 +67,14 @@ const Navbar = () => {
           <div className="md:hidden">
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="text-blue-600">
+                <Button variant="ghost" size="icon" className="text-[#2b59c3]">
                   <Menu size={28} />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right" className="w-[300px] sm:w-[400px] p-0">
+              <SheetContent side="right" className="w-[300px] p-0">
                 <div className="flex flex-col h-full bg-white">
-                  <div className="p-6 border-b border-gray-100 flex justify-between items-center">
-                    <span className="text-xl font-bold text-blue-600">Menu</span>
+                  <div className="p-6 border-b border-slate-50 flex justify-between items-center">
+                    <span className="text-xl font-bold text-[#2b59c3]">Menu</span>
                     <Button variant="ghost" size="icon" onClick={() => setIsOpen(false)}>
                       <X size={24} />
                     </Button>
@@ -91,27 +85,17 @@ const Navbar = () => {
                         key={link.path} 
                         to={link.path} 
                         onClick={() => setIsOpen(false)}
-                        className={`block text-lg font-bold ${location.pathname === link.path ? 'text-blue-600' : 'text-gray-900'}`}
+                        className={`block text-lg font-bold ${location.pathname === link.path ? 'text-[#2b59c3]' : 'text-slate-900'}`}
                       >
                         {link.name}
                       </Link>
                     ))}
                   </div>
-                  <div className="p-6 border-t border-gray-100">
-                    {session ? (
-                      <Button 
-                        className="w-full bg-red-50 text-red-600 hover:bg-red-100 font-bold rounded-xl h-12"
-                        onClick={() => {
-                          logoutFake();
-                          setIsOpen(false);
-                        }}
-                      >
-                        Sair da Conta
-                      </Button>
-                    ) : (
+                  <div className="p-6 border-t border-slate-50">
+                    {!session && (
                       <Link to="/login" onClick={() => setIsOpen(false)}>
-                        <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl h-12">
-                          Entrar no Sistema
+                        <Button className="w-full bg-[#2b59c3] hover:bg-[#1e44a3] text-white font-bold rounded-xl h-12">
+                          ENTRAR
                         </Button>
                       </Link>
                     )}

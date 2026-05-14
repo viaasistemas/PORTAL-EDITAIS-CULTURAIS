@@ -1,32 +1,32 @@
 "use client";
 
 import React from 'react';
-import { LucideIcon } from 'lucide-react';
 
 interface CategoryCardProps {
-  icon?: LucideIcon;
   imageIcon?: string;
   title: string;
   description: string;
 }
 
-const CategoryCard = ({ icon: Icon, imageIcon, title, description }: CategoryCardProps) => {
+const CategoryCard = ({ imageIcon, title, description }: CategoryCardProps) => {
   return (
-    <div className="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group flex flex-col text-left h-full">
-      <div className="flex items-center gap-6 mb-8">
-        <div className="w-20 h-20 bg-slate-50 rounded-2xl flex items-center justify-center shrink-0 group-hover:bg-blue-50 transition-colors duration-300 overflow-hidden p-4">
-          {imageIcon ? (
-            <img src={imageIcon} alt={title} className="w-full h-full object-contain grayscale group-hover:grayscale-0 transition-all duration-300" />
-          ) : Icon ? (
-            <Icon className="text-slate-400 group-hover:text-blue-600 transition-colors duration-300" size={32} />
-          ) : null}
+    <div className="bg-white p-8 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col text-left h-full group">
+      <div className="flex items-center gap-4 mb-6">
+        <div className="w-14 h-14 bg-slate-50 rounded-xl flex items-center justify-center shrink-0 group-hover:bg-blue-50 transition-colors duration-300 p-3">
+          {imageIcon && (
+            <img src={imageIcon} alt={title} className="w-full h-full object-contain" />
+          )}
         </div>
         <div className="flex flex-col">
-          <h3 className="text-xl font-bold text-slate-900 leading-tight">{title}</h3>
-          <div className="w-8 h-1 bg-blue-600 mt-3 rounded-full" />
+          <h3 className="text-lg font-bold text-[#2b59c3] leading-tight">{title}</h3>
+          <div className="flex gap-1 mt-2">
+            <div className="w-6 h-0.5 bg-blue-600 rounded-full" />
+            <div className="w-6 h-0.5 bg-yellow-400 rounded-full" />
+            <div className="w-6 h-0.5 bg-red-500 rounded-full" />
+          </div>
         </div>
       </div>
-      <p className="text-slate-500 text-sm leading-relaxed font-medium">
+      <p className="text-slate-600 text-xs leading-relaxed font-medium">
         {description}
       </p>
     </div>

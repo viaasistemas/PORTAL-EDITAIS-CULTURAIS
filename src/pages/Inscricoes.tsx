@@ -56,12 +56,12 @@ const Inscricoes = () => {
   const getStatusBadge = (status: string) => {
     switch (status.toLowerCase()) {
       case 'aprovado':
-        return <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-green-100 text-green-700 text-xs font-bold uppercase"><CheckCircle2 size={14} /> Aprovado</span>;
+        return <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-green-100 text-green-700 text-[10px] font-bold uppercase tracking-wider"><CheckCircle2 size={12} /> Aprovado</span>;
       case 'reprovado':
-        return <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-red-100 text-red-700 text-xs font-bold uppercase"><AlertCircle size={14} /> Reprovado</span>;
+        return <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-red-100 text-red-700 text-[10px] font-bold uppercase tracking-wider"><AlertCircle size={12} /> Reprovado</span>;
       case 'pendente':
       default:
-        return <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-yellow-100 text-yellow-700 text-xs font-bold uppercase"><Clock size={14} /> Em Análise</span>;
+        return <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-yellow-100 text-yellow-700 text-[10px] font-bold uppercase tracking-wider"><Clock size={12} /> Em Análise</span>;
     }
   };
 
@@ -70,31 +70,34 @@ const Inscricoes = () => {
       <Navbar />
       
       <main className="flex-grow">
-        {/* Hero Section - Adjusted height and padding */}
-        <section className="pt-32 pb-20 bg-blue-600 text-center text-white px-4">
-          <div className="container mx-auto max-w-4xl">
-            <h1 className="text-3xl md:text-5xl font-extrabold mb-4 tracking-tight">
+        <section className="pt-32 pb-16 bg-white text-center relative overflow-hidden">
+          <div className="container mx-auto px-4 relative z-10">
+            <h1 className="text-4xl md:text-6xl font-extrabold mb-4 tracking-tight text-[#2b59c3]">
               Acompanhar Inscrição
             </h1>
-            <p className="text-base md:text-lg text-blue-50 font-medium opacity-90">
+            <div className="flex justify-center gap-1 mb-4">
+              <div className="w-12 h-1 bg-blue-600 rounded-full" />
+              <div className="w-12 h-1 bg-yellow-400 rounded-full" />
+              <div className="w-12 h-1 bg-red-500 rounded-full" />
+            </div>
+            <p className="text-base md:text-lg text-[#2b59c3] font-bold">
               Utilize o número do seu protocolo para verificar a sua inscrição.
             </p>
           </div>
         </section>
 
-        {/* Search Section - Moved up slightly */}
-        <section className="relative -mt-10 px-4 pb-24">
+        <section className="px-4 pb-24">
           <div className="container mx-auto max-w-3xl">
-            <div className="bg-white rounded-2xl shadow-2xl shadow-blue-900/10 border border-gray-100 p-8 md:p-12">
-              <h2 className="text-2xl font-bold text-gray-900 mb-8">Consultar Protocolo</h2>
+            <div className="bg-white rounded-2xl shadow-xl shadow-blue-900/5 border border-slate-100 p-8 md:p-12">
+              <h2 className="text-xl font-bold text-slate-900 mb-8">Consultar Protocolo</h2>
               
               <form onSubmit={handleSearch} className="flex flex-col md:flex-row gap-4">
                 <div className="relative flex-grow">
-                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
                   <Input 
                     type="text" 
                     placeholder="Ex: 2026123456" 
-                    className="pl-12 h-14 rounded-xl border-gray-200 focus:ring-blue-500 focus:border-blue-500 text-lg"
+                    className="pl-12 h-14 rounded-xl border-slate-200 focus:ring-[#2b59c3] text-lg font-medium"
                     value={protocol}
                     onChange={(e) => setProtocol(e.target.value)}
                   />
@@ -102,41 +105,40 @@ const Inscricoes = () => {
                 <Button 
                   type="submit" 
                   disabled={loading}
-                  className="h-14 px-10 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition-all shadow-lg shadow-blue-600/20"
+                  className="h-14 px-10 bg-[#2b59c3] hover:bg-[#1e44a3] text-white font-bold rounded-xl transition-all shadow-lg shadow-blue-100"
                 >
                   {loading ? <Loader2 className="animate-spin" /> : "Buscar"}
                 </Button>
               </form>
 
-              {/* Results Area */}
               {result && (
-                <div className="mt-12 pt-12 border-t border-gray-100 animate-in fade-in slide-in-from-top-4 duration-500">
+                <div className="mt-12 pt-12 border-t border-slate-50 animate-in fade-in slide-in-from-top-4 duration-500">
                   <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
                     <div>
-                      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Status da Inscrição</p>
+                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Status da Inscrição</p>
                       {getStatusBadge(result.status)}
                     </div>
-                    <div className="text-right md:text-right">
-                      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Protocolo</p>
-                      <p className="text-xl font-mono font-bold text-blue-600">{result.protocol}</p>
+                    <div className="text-left md:text-right">
+                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Protocolo</p>
+                      <p className="text-2xl font-mono font-bold text-[#2b59c3]">{result.protocol}</p>
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="bg-slate-50 p-6 rounded-xl border border-slate-100">
-                      <div className="flex items-center gap-3 mb-4 text-blue-600">
-                        <FileText size={20} />
-                        <h3 className="font-bold">Detalhes do Edital</h3>
+                      <div className="flex items-center gap-3 mb-4 text-[#2b59c3]">
+                        <FileText size={18} />
+                        <h3 className="text-xs font-bold uppercase tracking-wider">Edital</h3>
                       </div>
-                      <p className="text-gray-900 font-semibold">{result.editais?.title || 'Edital não identificado'}</p>
+                      <p className="text-slate-900 font-bold text-sm">{result.editais?.title || 'Edital não identificado'}</p>
                     </div>
 
                     <div className="bg-slate-50 p-6 rounded-xl border border-slate-100">
-                      <div className="flex items-center gap-3 mb-4 text-blue-600">
-                        <Calendar size={20} />
-                        <h3 className="font-bold">Data de Envio</h3>
+                      <div className="flex items-center gap-3 mb-4 text-[#2b59c3]">
+                        <Calendar size={18} />
+                        <h3 className="text-xs font-bold uppercase tracking-wider">Data de Envio</h3>
                       </div>
-                      <p className="text-gray-900 font-semibold">
+                      <p className="text-slate-900 font-bold text-sm">
                         {new Date(result.created_at).toLocaleDateString('pt-BR', {
                           day: '2-digit',
                           month: 'long',

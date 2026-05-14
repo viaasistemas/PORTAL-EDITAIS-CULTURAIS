@@ -5,85 +5,71 @@ import { Mail, Phone, MapPin, Clock, Instagram, Facebook, Youtube } from 'lucide
 
 const Footer = () => {
   return (
-    <footer className="bg-[#0a0f1c] text-white pt-16 pb-8">
+    <footer className="bg-[#0a0f1c] text-white pt-20 pb-10">
       <div className="container mx-auto px-4">
-        {/* Main Footer Content */}
-        <div className="flex flex-col lg:flex-row items-start justify-between gap-12 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
           
           {/* Logo Section */}
-          <div className="flex flex-col min-w-[200px]">
-            <span className="text-3xl font-bold tracking-tight text-white leading-none">CULTURA</span>
-            <span className="text-[9px] font-bold text-blue-400 uppercase tracking-[0.1em] mt-1">Portal de Editais de Extremoz</span>
+          <div className="flex flex-col">
+            <span className="text-3xl font-black tracking-tight text-white leading-none">CULTURA</span>
+            <span className="text-[9px] font-bold text-blue-400 uppercase tracking-[0.2em] mt-1">Portal de Editais de Extremoz</span>
           </div>
 
-          {/* Endereço e Contato Grouped */}
-          <div className="space-y-10 min-w-[250px]">
-            {/* Endereço Section */}
-            <div className="space-y-3">
-              <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Endereço</p>
-              <div className="flex items-start gap-3">
-                <MapPin size={16} className="text-blue-400 shrink-0 mt-0.5" />
-                <span className="text-[11px] text-slate-300 font-medium leading-tight">
-                  Rua Lagoa, 2110, Centro -<br />Extremoz - RN - 59575-000
-                </span>
-              </div>
+          {/* Endereço Section */}
+          <div className="space-y-6">
+            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Endereço</p>
+            <div className="flex items-start gap-3">
+              <MapPin size={18} className="text-blue-400 shrink-0 mt-0.5" />
+              <span className="text-xs text-slate-300 font-medium leading-relaxed">
+                Rua Lagoa, 2110, Centro -<br />Extremoz - RN - 59575-000
+              </span>
             </div>
-
-            {/* Contato Section */}
-            <div className="space-y-3">
+            <div className="space-y-3 pt-2">
               <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Contato</p>
               <div className="flex items-center gap-3">
                 <Phone size={16} className="text-blue-400 shrink-0" />
-                <span className="text-[11px] text-slate-300 font-medium">Telefone: (84) 3279-4910</span>
+                <span className="text-xs text-slate-300 font-medium">(84) 3279-4910</span>
               </div>
               <div className="flex items-center gap-3">
                 <Mail size={16} className="text-blue-400 shrink-0" />
-                <span className="text-[11px] text-slate-300 font-medium">Email: gabinetecivilextremoz@gmail.com</span>
+                <span className="text-xs text-slate-300 font-medium">gabinetecivilextremoz@gmail.com</span>
               </div>
             </div>
           </div>
 
-          {/* Horário e Instituições Section */}
-          <div className="space-y-10 min-w-[200px]">
-            <div className="space-y-3">
-              <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Horário de Funcionamento</p>
-              <div className="flex items-center gap-3">
-                <Clock size={16} className="text-blue-400 shrink-0" />
-                <span className="text-[11px] text-slate-300 font-medium">Expediente: Seg à Sex das 07h às 13h</span>
-              </div>
+          {/* Horário Section */}
+          <div className="space-y-6">
+            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Horário de Funcionamento</p>
+            <div className="flex items-center gap-3">
+              <Clock size={18} className="text-blue-400 shrink-0" />
+              <span className="text-xs text-slate-300 font-medium">Seg à Sex das 07h às 13h</span>
             </div>
-
-            <div className="space-y-4">
-              <div>
-                <p className="text-sm font-bold text-slate-200">PREFEITURA MUNICIPAL DE EXTREMOZ</p>
-              </div>
-              <div>
-                <p className="text-sm font-bold text-slate-200">SECRETARIA MUNICIPAL DE CULTURA - SECULT</p>
-              </div>
+            <div className="space-y-4 pt-4">
+              <p className="text-xs font-bold text-slate-200 uppercase tracking-wider">PREFEITURA MUNICIPAL DE EXTREMOZ</p>
+              <p className="text-xs font-bold text-slate-200 uppercase tracking-wider">SECRETARIA MUNICIPAL DE CULTURA - SECULT</p>
             </div>
           </div>
 
           {/* Social Section */}
-          <div className="flex flex-col gap-4">
+          <div className="space-y-6">
             <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Siga-nos</p>
-            <div className="flex gap-2">
-              <a href="#" className="w-8 h-8 rounded-lg bg-slate-900 flex items-center justify-center hover:bg-blue-600 transition-all border border-slate-800">
-                <Instagram size={16} />
+            <div className="flex gap-3">
+              <a href="#" className="w-10 h-10 rounded-xl bg-slate-900 flex items-center justify-center hover:bg-blue-600 transition-all border border-slate-800">
+                <Instagram size={18} />
               </a>
-              <a href="#" className="w-8 h-8 rounded-lg bg-slate-900 flex items-center justify-center hover:bg-blue-600 transition-all border border-slate-800">
-                <Facebook size={16} />
+              <a href="#" className="w-10 h-10 rounded-xl bg-slate-900 flex items-center justify-center hover:bg-blue-600 transition-all border border-slate-800">
+                <Facebook size={18} />
               </a>
-              <a href="#" className="w-8 h-8 rounded-lg bg-slate-900 flex items-center justify-center hover:bg-blue-600 transition-all border border-slate-800">
-                <Youtube size={16} />
+              <a href="#" className="w-10 h-10 rounded-xl bg-slate-900 flex items-center justify-center hover:bg-blue-600 transition-all border border-slate-800">
+                <Youtube size={18} />
               </a>
             </div>
           </div>
         </div>
 
-        {/* Copyright and Credits Unified */}
-        <div className="pt-8 border-t border-slate-900 text-center">
+        <div className="pt-10 border-t border-slate-900 text-center">
           <p className="text-[10px] text-slate-500 font-bold tracking-widest uppercase">
-            © Prefeitura Municipal de Extremoz - RN | Desenvolvido por VIAA SISTEMAS
+            © PREFEITURA MUNICIPAL DE EXTREMOZ - RN | DESENVOLVIDO POR VIAA SISTEMAS
           </p>
         </div>
       </div>
