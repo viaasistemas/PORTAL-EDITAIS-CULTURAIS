@@ -18,7 +18,7 @@ const CategoryCard = ({ imageIcon, title, description }: CategoryCardProps) => {
           )}
         </div>
         <div className="flex flex-col">
-          <h3 className="text-lg font-bold text-[#2b59c3] leading-tight">{title}</h3>
+          <h3 className="text-xl font-bold text-slate-900 leading-tight">{title}</h3>
           <div className="flex gap-1 mt-2">
             <div className="w-6 h-0.5 bg-blue-600 rounded-full" />
             <div className="w-6 h-0.5 bg-yellow-400 rounded-full" />
@@ -26,7 +26,7 @@ const CategoryCard = ({ imageIcon, title, description }: CategoryCardProps) => {
           </div>
         </div>
       </div>
-      <p className="text-slate-600 text-xs leading-relaxed font-medium">
+      <p className="text-slate-500 text-sm leading-relaxed font-medium">
         {description}
       </p>
     </div>

@@ -20,7 +20,7 @@ import iconProdutor from '@/assets/icon-produtor.png';
 
 const Index = () => {
   const categories = [
-    { imageIcon: iconMusica, title: "Música", description: "Produção, shows e formação musical. Estímulo à produção cultural brasileira em seus diferentes segmentos e à circulação de projetos." },
+    { imageIcon: iconMusica, title: "Música", description: "Produção, shows e formation musical. Estímulo à produção cultural brasileira em seus diferentes segmentos e à circulação de projetos." },
     { imageIcon: iconVisuais, title: "Artes Visuais", description: "Exposições, murais e arte digital. Projetos que mobilizam grande público e realizadores de todo o país valorizando a cultura regional." },
     { imageIcon: iconCenicas, title: "Artes Cênicas", description: "Teatro, dança, circo e performance. Abrange a criação, produção e apresentação de projetos culturais para os mais diversos públicos." },
     { imageIcon: iconAudiovisual, title: "Audiovisual", description: "Cinema, documentários e web séries. Fomento à produção de conteúdo audiovisual e novas mídias digitais." },
@@ -56,13 +56,13 @@ const Index = () => {
       <section className="py-20 bg-white">
         <div className="container mx-auto px-4 max-w-7xl">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Oportunidades para Todos os Artistas</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Oportunidades para Todos os Artistas</h2>
             <div className="flex justify-center gap-1 mb-6">
               <div className="w-8 h-1 bg-blue-600 rounded-full" />
               <div className="w-8 h-1 bg-yellow-400 rounded-full" />
               <div className="w-8 h-1 bg-red-500 rounded-full" />
             </div>
-            <p className="text-[#2b59c3] max-w-2xl mx-auto text-sm font-bold">Encontre editais em diversas áreas e impulsione sua carreira cultural.</p>
+            <p className="text-slate-500 max-w-2xl mx-auto text-lg font-medium">Encontre editais em diversas áreas e impulsione sua carreira cultural.</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -77,23 +77,23 @@ const Index = () => {
       <section className="py-24 bg-gradient-to-b from-white to-blue-50/30 relative overflow-hidden">
         <div className="container mx-auto px-4 relative z-10">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-[#2b59c3] mb-4">Investimento</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Investimento</h2>
             <div className="flex justify-center gap-1">
               <div className="w-12 h-1 bg-blue-600 rounded-full" />
             </div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center max-w-5xl mx-auto">
             <div className="space-y-2">
-              <p className="text-5xl font-bold text-[#2b59c3] tracking-tighter">R$ 1.5M+</p>
-              <p className="text-[#2b59c3] font-bold uppercase tracking-widest text-[10px]">Em recursos distribuídos</p>
+              <p className="text-5xl font-bold text-slate-900 tracking-tighter">R$ 1.5M+</p>
+              <p className="text-slate-500 font-bold uppercase tracking-widest text-[10px]">Em recursos distribuídos</p>
             </div>
             <div className="space-y-2">
-              <p className="text-5xl font-bold text-[#f9b233] tracking-tighter">500+</p>
-              <p className="text-[#2b59c3] font-bold uppercase tracking-widest text-[10px]">Artistas e projetos apoiados</p>
+              <p className="text-5xl font-bold text-slate-900 tracking-tighter">500+</p>
+              <p className="text-slate-500 font-bold uppercase tracking-widest text-[10px]">Artistas e projetos apoiados</p>
             </div>
             <div className="space-y-2">
-              <p className="text-5xl font-bold text-[#10b981] tracking-tighter">30+</p>
-              <p className="text-[#2b59c3] font-bold uppercase tracking-widest text-[10px]">Editais lançados</p>
+              <p className="text-5xl font-bold text-slate-900 tracking-tighter">30+</p>
+              <p className="text-slate-500 font-bold uppercase tracking-widest text-[10px]">Editais lançados</p>
             </div>
           </div>
         </div>
@@ -105,13 +105,13 @@ const Index = () => {
           <div className="w-16 h-16 bg-[#2b59c3] rounded-full flex items-center justify-center mx-auto mb-8 shadow-lg shadow-blue-100">
             <Search className="text-white" size={32} />
           </div>
-          <h2 className="text-3xl md:text-4xl font-bold text-[#2b59c3] mb-4">Acompanhe sua Inscrição</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Acompanhe sua Inscrição</h2>
           <div className="flex justify-center gap-1 mb-8">
             <div className="w-8 h-1 bg-blue-600 rounded-full" />
             <div className="w-8 h-1 bg-yellow-400 rounded-full" />
             <div className="w-8 h-1 bg-red-500 rounded-full" />
           </div>
-          <p className="text-[#2b59c3] mb-10 text-sm font-bold leading-relaxed">
+          <p className="text-slate-500 mb-10 text-lg font-medium leading-relaxed">
             Utilize o número de protocolo para acompanhar a sua inscrição e ver o status do seu projeto em tempo real.
           </p>
           <Link to="/inscricoes">
