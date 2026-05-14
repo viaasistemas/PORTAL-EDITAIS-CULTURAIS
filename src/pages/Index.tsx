@@ -17,7 +17,6 @@ import iconLiteratura from '@/assets/icon-literatura.png';
 import iconArtesanato from '@/assets/icon-artesanato.png';
 import iconPopular from '@/assets/icon-popular.png';
 import iconProdutor from '@/assets/icon-produtor.png';
-import heroFull from '@/assets/hero-full.png';
 
 const Index = () => {
   const categories = [
@@ -36,7 +35,7 @@ const Index = () => {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="relative pt-32 pb-0 overflow-hidden bg-white">
+      <section className="relative pt-40 pb-20 overflow-hidden bg-white">
         <div className="container mx-auto px-4 relative z-10 text-center max-w-5xl">
           <h1 className="text-4xl md:text-7xl font-extrabold mb-4 tracking-tight leading-tight text-[#2b59c3]">
             Transforme sua ideia em <br />
@@ -46,15 +45,10 @@ const Index = () => {
             O Portal de Editais Culturais de Extremoz-RN é a sua ponte para oportunidades, fomento e reconhecimento.
           </p>
           <Link to="/editais">
-            <Button className="bg-[#2b59c3] hover:bg-[#1e44a3] text-white font-bold px-10 py-7 text-base rounded-xl shadow-lg shadow-blue-100 transition-all mb-12">
+            <Button className="bg-[#2b59c3] hover:bg-[#1e44a3] text-white font-bold px-10 py-7 text-base rounded-xl shadow-lg shadow-blue-100 transition-all">
               Inscreva-se em nossos editais
             </Button>
           </Link>
-        </div>
-
-        {/* Ilustração do Hero */}
-        <div className="w-full max-w-6xl mx-auto px-4">
-          <img src={heroFull} alt="Cultura Extremoz" className="w-full h-auto object-contain" />
         </div>
       </section>
 
@@ -102,13 +96,6 @@ const Index = () => {
               <p className="text-[#2b59c3] font-bold uppercase tracking-widest text-[10px]">Editais lançados</p>
             </div>
           </div>
-        </div>
-        
-        {/* Wavy Border Bottom */}
-        <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-[0]">
-          <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="relative block w-full h-20 fill-[#2b59c3]">
-            <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5,73.84-4.36,147.54,16.88,218.2,35.26,69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113,2,1200,0V0Z"></path>
-          </svg>
         </div>
       </section>
 
