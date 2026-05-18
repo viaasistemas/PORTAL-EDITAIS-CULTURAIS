@@ -8,7 +8,7 @@ import Footer from '@/components/Footer';
 import CategoryCard from '@/components/CategoryCard';
 import { Button } from '@/components/ui/button';
 
-// Importando os ícones de imagem
+// Importando os ícones e a imagem de fundo
 import iconMusica from '@/assets/icon-musica.png';
 import iconVisuais from '@/assets/icon-visuais.png';
 import iconCenicas from '@/assets/icon-cenicas.png';
@@ -17,6 +17,7 @@ import iconLiteratura from '@/assets/icon-literatura.png';
 import iconArtesanato from '@/assets/icon-artesanato.png';
 import iconPopular from '@/assets/icon-popular.png';
 import iconProdutor from '@/assets/icon-produtor.png';
+import heroBg from '@/assets/hero-bg.png';
 
 const Index = () => {
   const categories = [
@@ -35,7 +36,17 @@ const Index = () => {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="relative pt-40 pb-20 overflow-hidden bg-white">
+      <section className="relative pt-48 pb-32 overflow-hidden min-h-[85vh] flex items-center">
+        {/* Background Image */}
+        <div className="absolute inset-0 z-0">
+          <img 
+            src={heroBg} 
+            alt="Background" 
+            className="w-full h-full object-cover object-center opacity-40" 
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-white/60 via-transparent to-white" />
+        </div>
+
         <div className="container mx-auto px-4 relative z-10 text-center max-w-5xl">
           <h1 className="text-4xl md:text-7xl font-extrabold mb-4 tracking-tight leading-tight text-[#2b59c3]">
             Transforme sua ideia em <br />
