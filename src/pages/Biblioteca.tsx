@@ -31,7 +31,6 @@ const Biblioteca = () => {
   useEffect(() => {
     fetchData();
 
-    // Inscrição em tempo real para atualizações automáticas
     const channel = supabase
       .channel('biblioteca-changes')
       .on(
@@ -53,14 +52,21 @@ const Biblioteca = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#f8fafc]">
+    <div className="min-h-screen flex flex-col bg-white">
       <Navbar />
       
       <main className="flex-grow">
-        <section className="pt-32 pb-16 bg-blue-600 text-white text-center">
-          <div className="container mx-auto px-4">
-            <h1 className="text-4xl md:text-5xl font-extrabold mb-4 tracking-tight">Biblioteca Digital</h1>
-            <p className="text-blue-50 text-lg max-w-2xl mx-auto font-medium opacity-90">
+        <section className="pt-32 pb-16 bg-white text-center relative overflow-hidden">
+          <div className="container mx-auto px-4 relative z-10">
+            <h1 className="text-4xl md:text-6xl font-extrabold mb-4 tracking-tight text-[#2b59c3]">
+              Biblioteca Digital
+            </h1>
+            <div className="flex justify-center gap-1 mb-4">
+              <div className="w-12 h-1 bg-blue-600 rounded-full" />
+              <div className="w-12 h-1 bg-yellow-400 rounded-full" />
+              <div className="w-12 h-1 bg-red-500 rounded-full" />
+            </div>
+            <p className="text-base md:text-lg text-[#2b59c3] font-bold">
               Acesse leis, manuais, modelos de documentos e materiais de apoio para artistas e produtores culturais.
             </p>
           </div>
@@ -125,7 +131,7 @@ const Biblioteca = () => {
             <p className="text-slate-500 mb-10 font-medium">
               Nossa equipe está à disposição para tirar dúvidas sobre a documentação necessária para os editais.
             </p>
-            <Button className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-10 h-14 rounded-xl shadow-lg shadow-blue-100">
+            <Button className="bg-[#2b59c3] hover:bg-[#1e44a3] text-white font-bold px-10 h-14 rounded-xl shadow-lg shadow-blue-100">
               Falar com Suporte
             </Button>
           </div>
