@@ -42,9 +42,8 @@ const Index = () => {
           <img 
             src={heroBg} 
             alt="Background" 
-            className="w-full h-full object-cover object-center opacity-40" 
+            className="w-full h-full object-cover object-center" 
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-white/60 via-transparent to-white" />
         </div>
 
         <div className="container mx-auto px-4 relative z-10 text-center max-w-5xl">
