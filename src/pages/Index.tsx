@@ -7,8 +7,9 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import CategoryCard from '@/components/CategoryCard';
 import { Button } from '@/components/ui/button';
+import { useIsMobile } from '@/hooks/use-mobile';
 
-// Importando os ícones e a imagem de fundo
+// Importando os ícones e as imagens de fundo
 import iconMusica from '@/assets/icon-musica.png';
 import iconVisuais from '@/assets/icon-visuais.png';
 import iconCenicas from '@/assets/icon-cenicas.png';
@@ -18,8 +19,11 @@ import iconArtesanato from '@/assets/icon-artesanato.png';
 import iconPopular from '@/assets/icon-popular.png';
 import iconProdutor from '@/assets/icon-produtor.png';
 import heroBg from '@/assets/hero-bg.png';
+import heroBgMobile from '@/assets/hero-bg-mobile.png';
 
 const Index = () => {
+  const isMobile = useIsMobile();
+  
   const categories = [
     { imageIcon: iconMusica, title: "Música", description: "Produção, shows e formation musical. Estímulo à produção cultural brasileira em seus diferentes segmentos e à circulação de projetos." },
     { imageIcon: iconVisuais, title: "Artes Visuais", description: "Exposições, murais e arte digital. Projetos que mobilizam grande público e realizadores de todo o país valorizando a cultura regional." },
@@ -40,7 +44,7 @@ const Index = () => {
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
           <img 
-            src={heroBg} 
+            src={isMobile ? heroBgMobile : heroBg} 
             alt="Background" 
             className="w-full h-full object-cover object-center" 
           />
