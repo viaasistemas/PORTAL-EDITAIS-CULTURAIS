@@ -36,7 +36,7 @@ const Index = () => {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="relative pt-48 pb-32 overflow-hidden min-h-[85vh] flex items-center">
+      <section className="relative pt-48 pb-32 overflow-hidden min-h-screen flex items-center">
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
           <img 
