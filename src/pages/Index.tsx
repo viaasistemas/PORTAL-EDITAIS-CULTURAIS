@@ -32,7 +32,7 @@ const Index = () => {
     { imageIcon: iconLiteratura, title: "Literatura", description: "Publicação, contação de histórias e poesia. Incentivo à leitura e à produção literária local e regional." },
     { imageIcon: iconPopular, title: "Cultura Popular", description: "Folclore, tradições e manifestações populares que valorizam a identidade e a história da nossa gente." },
     { imageIcon: iconArtesanato, title: "Artesanato", description: "Produção e comercialização de arte manual. Apoio aos artesãos e às técnicas tradicionais do Rio Grande do Norte." },
-    { imageIcon: iconProdutor, title: "Produtor Cultural", description: "Gestão, produção e curadoria de eventos. Capacitação e suporte para profissionais da cadeia produtiva da cultura." },
+    { imageIcon: iconProdutor, title: "Produtor Cultural", description: "Gestão, production e curadoria de eventos. Capacitação e suporte para profissionais da cadeia produtiva da cultura." },
   ];
 
   return (
@@ -50,7 +50,7 @@ const Index = () => {
           />
         </div>
 
-        <div className="container mx-auto px-4 relative z-10 text-center max-w-5xl -mt-24 md:-mt-36">
+        <div className="container mx-auto px-4 relative z-10 text-center max-w-5xl -mt-48 md:-mt-80">
           <h1 className="text-4xl md:text-7xl font-extrabold mb-4 tracking-tight leading-tight text-[#2b59c3]">
             Transforme sua ideia em <br />
             <span className="text-[#f9b233] italic font-serif">Realidade</span>
