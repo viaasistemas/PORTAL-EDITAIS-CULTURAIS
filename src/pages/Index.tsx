@@ -18,7 +18,7 @@ import iconLiteratura from '@/assets/icon-literatura.png';
 import iconArtesanato from '@/assets/icon-artesanato.png';
 import iconPopular from '@/assets/icon-popular.png';
 import iconProdutor from '@/assets/icon-produtor.png';
-import heroBg from '@/assets/hero-bg.png';
+import heroBg from '@/assets/hero-bg.jpg';
 import heroBgMobile from '@/assets/hero-bg-mobile.png';
 
 const Index = () => {
