@@ -50,7 +50,7 @@ const Index = () => {
           />
         </div>
 
-        <div className="container mx-auto px-4 relative z-10 text-center max-w-5xl">
+        <div className="container mx-auto px-4 relative z-10 text-center max-w-5xl -mt-24 md:-mt-36">
           <h1 className="text-4xl md:text-7xl font-extrabold mb-4 tracking-tight leading-tight text-[#2b59c3]">
             Transforme sua ideia em <br />
             <span className="text-[#f9b233] italic font-serif">Realidade</span>
