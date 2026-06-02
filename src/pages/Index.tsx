@@ -18,7 +18,7 @@ import iconLiteratura from '@/assets/icon-literatura.png';
 import iconArtesanato from '@/assets/icon-artesanato.png';
 import iconPopular from '@/assets/icon-popular.png';
 import iconProdutor from '@/assets/icon-produtor.png';
-import heroBg from '@/assets/hero-bg.jpg';
+import heroBg from '@/assets/hero-bg.png';
 import heroBgMobile from '@/assets/hero-bg-mobile.png';
 
 const Index = () => {
@@ -50,21 +50,19 @@ const Index = () => {
           />
         </div>
 
-        <div className="container mx-auto px-4 relative z-10 text-center max-w-5xl flex flex-col items-center">
-          <h1 className="text-4xl md:text-7xl font-extrabold mb-8 tracking-tight leading-tight text-white drop-shadow-md">
+        <div className="container mx-auto px-4 relative z-10 text-center max-w-5xl">
+          <h1 className="text-4xl md:text-7xl font-extrabold mb-4 tracking-tight leading-tight text-[#2b59c3]">
             Transforme sua ideia em <br />
             <span className="text-[#f9b233] italic font-serif">Realidade</span>
           </h1>
-          
-          <Link to="/editais" className="mb-8">
+          <p className="text-base md:text-lg text-slate-900 mb-8 max-w-2xl mx-auto font-bold">
+            O Portal de Editais Culturais de Extremoz-RN é a sua ponte para oportunidades, fomento e reconhecimento.
+          </p>
+          <Link to="/editais">
             <Button className="bg-[#2b59c3] hover:bg-[#1e44a3] text-white font-bold px-10 py-7 text-base rounded-xl shadow-lg shadow-blue-100 transition-all">
               Inscreva-se em nossos editais
             </Button>
           </Link>
-
-          <p className="text-base md:text-lg text-white max-w-2xl mx-auto font-bold drop-shadow-md">
-            O Portal de Editais Culturais de Extremoz-RN é a sua ponte para oportunidades, fomento e reconhecimento.
-          </p>
         </div>
       </section>
 
