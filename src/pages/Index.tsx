@@ -34,8 +34,9 @@ const Index = () => {
     { imageIcon: iconAudiovisual, title: "Audiovisual", description: "Cinema, documentários e web séries. Fomento à produção de conteúdo audiovisual e novas mídias digitais." },
     { imageIcon: iconLiteratura, title: "Literatura", description: "Publicação, contação de histórias e poetry. Incentivo à leitura e à produção literária local e regional." },
     { imageIcon: iconPopular, title: "Cultura Popular", description: "Folclore, tradições e manifestações populares que valorizam a identidade e a história da nossa gente." },
-    { imageIcon: iconArtesanato, title: "Artesanato", description: "Produção e comercialização de arte manual. Apoio aos artesãos e às técnicas tradicionais do Rio Grande do Norte.", center: true },
-    { imageIcon: iconProdutor, title: "Produtor Cultural", description: "Gestão, production e curadoria de eventos. Capacitação e suporte para profissionais da cadeia produtiva da cultura.", center: true },
+    // Troquei o ícone de Artesanato pelo de Produtor Cultural conforme solicitado
+    { imageIcon: iconProdutor, title: "Artesanato", description: "Produção e comercialização de arte manual. Apoio aos artesãos e às técnicas tradicionais do Rio Grande do Norte." },
+    { imageIcon: iconProdutor, title: "Produtor Cultural", description: "Gestão, production e curadoria de eventos. Capacitação e suporte para profissionais da cadeia produtiva da cultura." },
   ];
 
   return (
@@ -43,14 +44,16 @@ const Index = () => {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="relative pt-48 pb-20 overflow-hidden min-h-[85vh] flex items-center bg-slate-50 md:bg-transparent">
-        {/* Background Image - Hidden on Mobile */}
-        <div className="absolute inset-0 z-0 hidden md:block">
+      <section className="relative pt-48 pb-20 overflow-hidden min-h-[85vh] flex items-center">
+        {/* Background Image - Agora visível também no mobile com opacidade ajustada se necessário */}
+        <div className="absolute inset-0 z-0">
           <img 
             src={heroBg} 
             alt="Background" 
             className="w-full h-full object-cover object-center" 
           />
+          {/* Overlay leve para garantir leitura no mobile */}
+          <div className="absolute inset-0 bg-white/40 md:bg-transparent"></div>
         </div>
 
         <div className="container mx-auto px-4 relative z-10 text-center max-w-5xl -mt-16 md:-mt-28">
@@ -69,10 +72,10 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Categories Section */}
-      <section className="pt-6 pb-20 bg-white relative z-20">
+      {/* Categories Section - Ajustada a margem superior (mt-12) para descer o nome */}
+      <section className="pt-12 pb-20 bg-white relative z-20 mt-12">
         <div className="container mx-auto px-4 max-w-7xl">
-          <div className="text-center mb-12">
+          <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-3">Oportunidades para Todos os Artistas</h2>
             <div className="flex justify-center gap-1 mb-4">
               <div className="w-8 h-1 bg-blue-600 rounded-full" />
@@ -88,7 +91,8 @@ const Index = () => {
                 key={index} 
                 className="w-full md:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.333rem)] flex"
               >
-                <CategoryCard {...cat} />
+                {/* Propriedade center={isMobile} garante a centralização apenas no mobile */}
+                <CategoryCard {...cat} center={isMobile} />
               </div>
             ))}
           </div>
