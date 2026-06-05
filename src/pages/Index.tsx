@@ -41,7 +41,7 @@ const Index = () => {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="relative pt-48 pb-32 overflow-hidden min-h-screen flex items-center bg-slate-50 md:bg-transparent">
+      <section className="relative pt-48 pb-20 overflow-hidden min-h-[85vh] flex items-center bg-slate-50 md:bg-transparent">
         {/* Background Image - Hidden on Mobile */}
         <div className="absolute inset-0 z-0 hidden md:block">
           <img 
@@ -51,7 +51,7 @@ const Index = () => {
           />
         </div>
 
-        <div className="container mx-auto px-4 relative z-10 text-center max-w-5xl -mt-24 md:-mt-36">
+        <div className="container mx-auto px-4 relative z-10 text-center max-w-5xl -mt-16 md:-mt-28">
           <h1 className="text-4xl md:text-7xl font-extrabold mb-4 tracking-tight leading-tight text-[#2b59c3]">
             Transforme sua ideia em <br />
             <span className="text-[#f9b233] italic font-serif">Realidade</span>
@@ -68,11 +68,11 @@ const Index = () => {
       </section>
 
       {/* Categories Section */}
-      <section className="py-20 bg-white">
+      <section className="pt-6 pb-20 bg-white relative z-20">
         <div className="container mx-auto px-4 max-w-7xl">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Oportunidades para Todos os Artistas</h2>
-            <div className="flex justify-center gap-1 mb-6">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-3">Oportunidades para Todos os Artistas</h2>
+            <div className="flex justify-center gap-1 mb-4">
               <div className="w-8 h-1 bg-blue-600 rounded-full" />
               <div className="w-8 h-1 bg-yellow-400 rounded-full" />
               <div className="w-8 h-1 bg-red-500 rounded-full" />
@@ -80,9 +80,15 @@ const Index = () => {
             <p className="text-slate-500 max-w-2xl mx-auto text-lg font-medium">Encontre editais em diversas áreas e impulsione sua carreira cultural.</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {/* Flex layout to automatically center leftover items on the last row */}
+          <div className="flex flex-wrap justify-center gap-8">
             {categories.map((cat, index) => (
-              <CategoryCard key={index} {...cat} />
+              <div 
+                key={index} 
+                className="w-full md:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.333rem)] flex"
+              >
+                <CategoryCard {...cat} />
+              </div>
             ))}
           </div>
         </div>
