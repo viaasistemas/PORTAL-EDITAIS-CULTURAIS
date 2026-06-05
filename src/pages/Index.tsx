@@ -9,18 +9,20 @@ import CategoryCard from '@/components/CategoryCard';
 import { Button } from '@/components/ui/button';
 import { useIsMobile } from '@/hooks/use-mobile';
 
-// Importando os ícones e as imagens de fundo
-import iconMusica from '@/assets/icon-musica.png';
-import iconVisuais from '@/assets/icon-visuais.png';
-import iconCenicas from '@/assets/icon-cenicas.png';
-import iconAudiovisual from '@/assets/icon-audiovisual.png';
-import iconLiteratura from '@/assets/icon-literatura.png';
-import iconArtesanato from '@/assets/icon-artesanato.png';
-import iconPopular from '@/assets/icon-popular.png';
-import iconProdutor from '@/assets/icon-produtor.png';
+// Importando as imagens de fundo
 import heroBg from '@/assets/hero-bg.png';
 import waveLeft from '@/assets/wave-left.png';
 import waveRight from '@/assets/wave-right.png';
+
+// URLs das novas imagens enviadas
+const iconMusica = "dyad-media://media/PORTAL%20EDITAIS%20CULTURAIS/.dyad/media/89788568739c2801b420fc906edcac85b18bc344486da53b8290c2a0c1a7167b.png";
+const iconVisuais = "dyad-media://media/PORTAL%20EDITAIS%20CULTURAIS/.dyad/media/6fb574c0e76c641689619821f1dd732ef35d9c40c6adf26207032b589e81dcd6.png";
+const iconCenicas = "dyad-media://media/PORTAL%20EDITAIS%20CULTURAIS/.dyad/media/82d0adce100c586902cd62f56438d5adaaf5878dd998ec90e517ac72f31aa9c3.png";
+const iconAudiovisual = "dyad-media://media/PORTAL%20EDITAIS%20CULTURAIS/.dyad/media/df09330fa879ef5f10a12eb556cb2b0fa19d3f799bf4fde0b89e969be5b4c79d.png";
+const iconLiteratura = "dyad-media://media/PORTAL%20EDITAIS%20CULTURAIS/.dyad/media/132a138c8493a519540ea548d3b95febb3291401f7e225657feb1e0944129bb4.png";
+const iconPopular = "dyad-media://media/PORTAL%20EDITAIS%20CULTURAIS/.dyad/media/8d546237826dcc15d9303bf7b3737e2bce88863efa137b85ea76a020cbe1ca7f.png";
+const iconArtesanato = "dyad-media://media/PORTAL%20EDITAIS%20CULTURAIS/.dyad/media/b5b818e2e87e59b3b4a6ba8837b9ed3f22012ac5da420e4850dbb1dbf9a5aae2.png";
+const iconProdutor = "dyad-media://media/PORTAL%20EDITAIS%20CULTURAIS/.dyad/media/d8198c23eae75a2c0608e6afe4a1be45b9d7cbd67758990cd2a494d7d33ae6cc.png";
 
 const Index = () => {
   const isMobile = useIsMobile();
