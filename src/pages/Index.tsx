@@ -14,28 +14,28 @@ import heroBg from '@/assets/hero-bg.png';
 import waveLeft from '@/assets/wave-left.png';
 import waveRight from '@/assets/wave-right.png';
 
-// URLs das novas imagens enviadas
-const iconMusica = "dyad-media://media/PORTAL%20EDITAIS%20CULTURAIS/.dyad/media/89788568739c2801b420fc906edcac85b18bc344486da53b8290c2a0c1a7167b.png";
-const iconVisuais = "dyad-media://media/PORTAL%20EDITAIS%20CULTURAIS/.dyad/media/6fb574c0e76c641689619821f1dd732ef35d9c40c6adf26207032b589e81dcd6.png";
-const iconCenicas = "dyad-media://media/PORTAL%20EDITAIS%20CULTURAIS/.dyad/media/82d0adce100c586902cd62f56438d5adaaf5878dd998ec90e517ac72f31aa9c3.png";
-const iconAudiovisual = "dyad-media://media/PORTAL%20EDITAIS%20CULTURAIS/.dyad/media/df09330fa879ef5f10a12eb556cb2b0fa19d3f799bf4fde0b89e969be5b4c79d.png";
-const iconLiteratura = "dyad-media://media/PORTAL%20EDITAIS%20CULTURAIS/.dyad/media/132a138c8493a519540ea548d3b95febb3291401f7e225657feb1e0944129bb4.png";
-const iconPopular = "dyad-media://media/PORTAL%20EDITAIS%20CULTURAIS/.dyad/media/8d546237826dcc15d9303bf7b3737e2bce88863efa137b85ea76a020cbe1ca7f.png";
-const iconArtesanato = "dyad-media://media/PORTAL%20EDITAIS%20CULTURAIS/.dyad/media/b5b818e2e87e59b3b4a6ba8837b9ed3f22012ac5da420e4850dbb1dbf9a5aae2.png";
-const iconProdutor = "dyad-media://media/PORTAL%20EDITAIS%20CULTURAIS/.dyad/media/d8198c23eae75a2c0608e6afe4a1be45b9d7cbd67758990cd2a494d7d33ae6cc.png";
+// URLs das novas imagens enviadas na sequência informada
+const iconMusica = "dyad-media://media/PORTAL%20EDITAIS%20CULTURAIS/.dyad/media/89788568739c2801b420fc906edcac85b18bc344486da53b8290c2a0c1a7167b.png"; // 1
+const iconCenicas = "dyad-media://media/PORTAL%20EDITAIS%20CULTURAIS/.dyad/media/82d0adce100c586902cd62f56438d5adaaf5878dd998ec90e517ac72f31aa9c3.png"; // 3
+const iconLiteratura = "dyad-media://media/PORTAL%20EDITAIS%20CULTURAIS/.dyad/media/132a138c8493a519540ea548d3b95febb3291401f7e225657feb1e0944129bb4.png"; // 5
+const iconArtesanato = "dyad-media://media/PORTAL%20EDITAIS%20CULTURAIS/.dyad/media/b5b818e2e87e59b3b4a6ba8837b9ed3f22012ac5da420e4850dbb1dbf9a5aae2.png"; // 7
+const iconVisuais = "dyad-media://media/PORTAL%20EDITAIS%20CULTURAIS/.dyad/media/6fb574c0e76c641689619821f1dd732ef35d9c40c6adf26207032b589e81dcd6.png"; // 2
+const iconProdutor = "dyad-media://media/PORTAL%20EDITAIS%20CULTURAIS/.dyad/media/d8198c23eae75a2c0608e6afe4a1be45b9d7cbd67758990cd2a494d7d33ae6cc.png"; // 8
+const iconPopular = "dyad-media://media/PORTAL%20EDITAIS%20CULTURAIS/.dyad/media/8d546237826dcc15d9303bf7b3737e2bce88863efa137b85ea76a020cbe1ca7f.png"; // 6
+const iconAudiovisual = "dyad-media://media/PORTAL%20EDITAIS%20CULTURAIS/.dyad/media/df09330fa879ef5f10a12eb556cb2b0fa19d3f799bf4fde0b89e969be5b4c79d.png"; // 4
 
 const Index = () => {
   const isMobile = useIsMobile();
   
   const categories = [
     { imageIcon: iconMusica, title: "Música", description: "Produção, shows e formation musical. Estímulo à produção cultural brasileira em seus diferentes segmentos e à circulação de projetos." },
-    { imageIcon: iconVisuais, title: "Artes Visuais", description: "Exposições, murais e arte digital. Projetos que mobilizam grande público e realizadores de todo o país valorizando a cultura regional." },
     { imageIcon: iconCenicas, title: "Artes Cênicas", description: "Teatro, dança, circo e performance. Abrange a criação, production e apresentação de projetos culturais para os mais diversos públicos." },
-    { imageIcon: iconAudiovisual, title: "Audiovisual", description: "Cinema, documentários e web séries. Fomento à produção de conteúdo audiovisual e novas mídias digitais." },
     { imageIcon: iconLiteratura, title: "Literatura", description: "Publicação, contação de histórias e poesia. Incentivo à leitura e à produção literária local e regional." },
-    { imageIcon: iconPopular, title: "Cultura Popular", description: "Folclore, tradições e manifestações populares que valorizam a identidade e a história da nossa gente." },
-    { imageIcon: iconArtesanato, title: "Artesanato", description: "Produção e comercialização de arte manual. Apoio aos artesãos e às técnicas tradicionais do Rio Grande do Norte.", center: true },
-    { imageIcon: iconProdutor, title: "Produtor Cultural", description: "Gestão, production e curadoria de eventos. Capacitação e suporte para profissionais da cadeia produtiva da cultura.", center: true },
+    { imageIcon: iconArtesanato, title: "Artesanato", description: "Produção e comercialização de arte manual. Apoio aos artesãos e às técnicas tradicionais do Rio Grande do Norte." },
+    { imageIcon: iconVisuais, title: "Artes Visuais", description: "Exposições, murais e arte digital. Projetos que mobilizam grande público e realizadores de todo o país valorizando a cultura regional." },
+    { imageIcon: iconProdutor, title: "Produtor Cultural", description: "Gestão, production e curadoria de eventos. Capacitação e suporte para profissionais da cadeia produtiva da cultura." },
+    { imageIcon: iconPopular, title: "Cultura Popular", description: "Folclore, tradições e manifestações populares que valorizam a identidade e a história da nossa gente.", center: true },
+    { imageIcon: iconAudiovisual, title: "Audiovisual", description: "Cinema, documentários e web séries. Fomento à produção de conteúdo audiovisual e novas mídias digitais.", center: true },
   ];
 
   return (
