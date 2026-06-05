@@ -19,7 +19,6 @@ import iconArtesanato from '@/assets/icon-artesanato.png';
 import iconPopular from '@/assets/icon-popular.png';
 import iconProdutor from '@/assets/icon-produtor.png';
 import heroBg from '@/assets/hero-bg.png';
-import investimentoBg from '@/assets/investimento-bg.png';
 
 const Index = () => {
   const isMobile = useIsMobile();
@@ -88,17 +87,8 @@ const Index = () => {
       </section>
 
       {/* Stats Section */}
-      <section className="relative py-24 overflow-hidden bg-slate-50/30">
-        {/* Background Image matching the reference */}
-        <div className="absolute inset-0 z-0">
-          <img 
-            src={investimentoBg} 
-            alt="Investimento Background" 
-            className="w-full h-full object-cover object-center" 
-          />
-        </div>
-
-        <div className="container mx-auto px-4 relative z-10">
+      <section className="py-24 bg-slate-50/50 border-y border-slate-100">
+        <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-extrabold text-[#2b59c3] mb-4">Investimento</h2>
             <div className="flex justify-center gap-1.5">
