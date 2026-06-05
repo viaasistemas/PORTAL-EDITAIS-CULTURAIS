@@ -19,6 +19,8 @@ import iconArtesanato from '@/assets/icon-artesanato.png';
 import iconPopular from '@/assets/icon-popular.png';
 import iconProdutor from '@/assets/icon-produtor.png';
 import heroBg from '@/assets/hero-bg.png';
+import waveLeft from '@/assets/wave-left.png';
+import waveRight from '@/assets/wave-right.png';
 
 const Index = () => {
   const isMobile = useIsMobile();
@@ -117,24 +119,45 @@ const Index = () => {
       </section>
 
       {/* Tracking Section */}
-      <section className="py-24 bg-white">
-        <div className="container mx-auto px-4 text-center max-w-3xl">
-          <div className="w-16 h-16 bg-[#2b59c3] rounded-full flex items-center justify-center mx-auto mb-8 shadow-lg shadow-blue-100">
-            <Search className="text-white" size={32} />
+      <section className="relative py-28 bg-white overflow-hidden">
+        {/* Left Wave Graphic */}
+        <div className="absolute bottom-0 left-0 w-[45%] max-w-[480px] pointer-events-none select-none z-0 hidden sm:block">
+          <img src={waveLeft} alt="" className="w-full h-auto object-contain object-bottom" />
+        </div>
+
+        {/* Right Wave Graphic */}
+        <div className="absolute bottom-0 right-0 w-[45%] max-w-[480px] pointer-events-none select-none z-0 hidden sm:block">
+          <img src={waveRight} alt="" className="w-full h-auto object-contain object-bottom" />
+        </div>
+
+        <div className="container mx-auto px-4 text-center max-w-3xl relative z-10">
+          {/* Circular Search Icon */}
+          <div className="w-16 h-16 bg-[#2b59c3] rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-blue-200">
+            <Search className="text-white" size={28} />
           </div>
-          <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Acompanhe sua Inscrição</h2>
+
+          {/* Title */}
+          <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-3">
+            Acompanhe sua Inscrição
+          </h2>
+
+          {/* Three-color bar */}
           <div className="flex justify-center gap-1 mb-8">
-            <div className="w-8 h-1 bg-blue-600 rounded-full" />
-            <div className="w-8 h-1 bg-yellow-400 rounded-full" />
-            <div className="w-8 h-1 bg-red-500 rounded-full" />
+            <div className="w-6 h-1 bg-[#2b59c3] rounded-full" />
+            <div className="w-6 h-1 bg-[#f9b233] rounded-full" />
+            <div className="w-6 h-1 bg-[#ef4444] rounded-full" />
           </div>
-          <p className="text-slate-500 mb-10 text-lg font-medium leading-relaxed">
+
+          {/* Description */}
+          <p className="text-[#5c7699] mb-10 text-base md:text-lg font-medium leading-relaxed max-w-2xl mx-auto">
             Utilize o número de protocolo para acompanhar a sua inscrição e ver o status do seu projeto em tempo real.
           </p>
+
+          {/* Button */}
           <Link to="/inscricoes">
-            <Button className="bg-[#2b59c3] hover:bg-[#1e44a3] text-white font-bold px-12 py-7 text-base rounded-xl shadow-xl shadow-blue-100 transition-all flex items-center gap-3 mx-auto">
+            <Button className="bg-[#2b59c3] hover:bg-[#1e44a3] text-white font-bold px-10 py-6 text-sm rounded-xl shadow-xl shadow-blue-100 transition-all flex items-center gap-2 mx-auto uppercase tracking-wider">
               VER INSCRIÇÕES
-              <ArrowRight size={20} />
+              <ArrowRight size={16} />
             </Button>
           </Link>
         </div>
