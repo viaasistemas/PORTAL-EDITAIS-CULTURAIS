@@ -22,7 +22,7 @@ import iconAudiovisual from '../../.dyad/media/b5b818e2e87e59b3b4a6ba8837b9ed3f2
 import iconLiteratura from '../../.dyad/media/6fb574c0e76c641689619821f1dd732ef35d9c40c6adf26207032b589e81dcd6.png';
 import iconPopular from '../../.dyad/media/d8198c23eae75a2c0608e6afe4a1be45b9d7cbd67758990cd2a494d7d33ae6cc.png';
 import iconArtesanato from '../../.dyad/media/df09330fa879ef5f10a12eb556cb2b0fa19d3f799bf4fde0b89e969be5b4c79d.png';
-import iconProdutor from '../../.dyad/media/8d546237826dcc15d9303bf7b3737e2bce88863efa137b85ea76a020cbe1ca7f.png';
+import iconProdutor from '../../.dyad/media/df09330fa879ef5f10a12eb556cb2b0fa19d3f799bf4fde0b89e969be5b4c79d.png';
 
 const Index = () => {
   const isMobile = useIsMobile();
@@ -34,8 +34,7 @@ const Index = () => {
     { imageIcon: iconAudiovisual, title: "Audiovisual", description: "Cinema, documentários e web séries. Fomento à produção de conteúdo audiovisual e novas mídias digitais." },
     { imageIcon: iconLiteratura, title: "Literatura", description: "Publicação, contação de histórias e poetry. Incentivo à leitura e à produção literária local e regional." },
     { imageIcon: iconPopular, title: "Cultura Popular", description: "Folclore, tradições e manifestações populares que valorizam a identidade e a história da nossa gente." },
-    // Troquei o ícone de Artesanato pelo de Produtor Cultural conforme solicitado
-    { imageIcon: iconProdutor, title: "Artesanato", description: "Produção e comercialização de arte manual. Apoio aos artesãos e às técnicas tradicionais do Rio Grande do Norte." },
+    { imageIcon: iconArtesanato, title: "Artesanato", description: "Produção e comercialização de arte manual. Apoio aos artesãos e às técnicas tradicionais do Rio Grande do Norte." },
     { imageIcon: iconProdutor, title: "Produtor Cultural", description: "Gestão, production e curadoria de eventos. Capacitação e suporte para profissionais da cadeia produtiva da cultura." },
   ];
 
@@ -45,7 +44,7 @@ const Index = () => {
 
       {/* Hero Section */}
       <section className="relative pt-48 pb-20 overflow-hidden min-h-[85vh] flex items-center">
-        {/* Background Image - Agora visível também no mobile com opacidade ajustada se necessário */}
+        {/* Background Image */}
         <div className="absolute inset-0 z-0">
           <img 
             src={heroBg} 
@@ -56,7 +55,7 @@ const Index = () => {
           <div className="absolute inset-0 bg-white/40 md:bg-transparent"></div>
         </div>
 
-        <div className="container mx-auto px-4 relative z-10 text-center max-w-5xl -mt-16 md:-mt-28">
+        <div className="container mx-auto px-4 relative z-10 text-center max-w-5xl -mt-32 md:-mt-48">
           <h1 className="text-4xl md:text-7xl font-extrabold mb-4 tracking-tight leading-tight text-[#2b59c3]">
             Transforme sua ideia em <br />
             <span className="text-[#f9b233] italic font-serif">Realidade</span>
@@ -72,7 +71,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Categories Section - Ajustada a margem superior (mt-12) para descer o nome */}
+      {/* Categories Section */}
       <section className="pt-12 pb-20 bg-white relative z-20 mt-12">
         <div className="container mx-auto px-4 max-w-7xl">
           <div className="text-center mb-16">
@@ -91,7 +90,6 @@ const Index = () => {
                 key={index} 
                 className="w-full md:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.333rem)] flex"
               >
-                {/* Propriedade center={isMobile} garante a centralização apenas no mobile */}
                 <CategoryCard {...cat} center={isMobile} />
               </div>
             ))}
