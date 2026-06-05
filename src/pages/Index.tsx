@@ -10,7 +10,6 @@ import { Button } from '@/components/ui/button';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 // Importando os ícones e as imagens de fundo
-import iconMusica from '@/assets/icon-musica.png';
 import iconVisuais from '@/assets/icon-visuais.png';
 import iconCenicas from '@/assets/icon-cenicas.png';
 import iconAudiovisual from '@/assets/icon-audiovisual.png';
@@ -21,6 +20,9 @@ import iconProdutor from '@/assets/icon-produtor.png';
 import heroBg from '@/assets/hero-bg.png';
 import waveLeft from '@/assets/wave-left.png';
 import waveRight from '@/assets/wave-right.png';
+
+// Novo ícone de música enviado
+import iconMusica from '../../.dyad/media/89788568739c2801b420fc906edcac85b18bc344486da53b8290c2a0c1a7167b.png';
 
 const Index = () => {
   const isMobile = useIsMobile();
