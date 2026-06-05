@@ -10,7 +10,6 @@ import { Button } from '@/components/ui/button';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 // Importando os ícones e as imagens de fundo
-import iconCenicas from '@/assets/icon-cenicas.png';
 import iconAudiovisual from '@/assets/icon-audiovisual.png';
 import iconLiteratura from '@/assets/icon-literatura.png';
 import iconArtesanato from '@/assets/icon-artesanato.png';
@@ -23,6 +22,7 @@ import waveRight from '@/assets/wave-right.png';
 // Novos ícones enviados
 import iconMusica from '../../.dyad/media/89788568739c2801b420fc906edcac85b18bc344486da53b8290c2a0c1a7167b.png';
 import iconVisuais from '../../.dyad/media/82d0adce100c586902cd62f56438d5adaaf5878dd998ec90e517ac72f31aa9c3.png';
+import iconCenicas from '../../.dyad/media/132a138c8493a519540ea548d3b95febb3291401f7e225657feb1e0944129bb4.png';
 
 const Index = () => {
   const isMobile = useIsMobile();
