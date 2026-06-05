@@ -9,20 +9,20 @@ import CategoryCard from '@/components/CategoryCard';
 import { Button } from '@/components/ui/button';
 import { useIsMobile } from '@/hooks/use-mobile';
 
-// Importando os ícones e as imagens de fundo
-import iconLiteratura from '@/assets/icon-literatura.png';
-import iconArtesanato from '@/assets/icon-artesanato.png';
-import iconPopular from '@/assets/icon-popular.png';
-import iconProdutor from '@/assets/icon-produtor.png';
+// Imagens de fundo
 import heroBg from '@/assets/hero-bg.png';
 import waveLeft from '@/assets/wave-left.png';
 import waveRight from '@/assets/wave-right.png';
 
-// Novos ícones enviados
+// Ícones atualizados via mídias do projeto
 import iconMusica from '../../.dyad/media/89788568739c2801b420fc906edcac85b18bc344486da53b8290c2a0c1a7167b.png';
 import iconVisuais from '../../.dyad/media/82d0adce100c586902cd62f56438d5adaaf5878dd998ec90e517ac72f31aa9c3.png';
 import iconCenicas from '../../.dyad/media/132a138c8493a519540ea548d3b95febb3291401f7e225657feb1e0944129bb4.png';
 import iconAudiovisual from '../../.dyad/media/b5b818e2e87e59b3b4a6ba8837b9ed3f22012ac5da420e4850dbb1dbf9a5aae2.png';
+import iconLiteratura from '../../.dyad/media/6fb574c0e76c641689619821f1dd732ef35d9c40c6adf26207032b589e81dcd6.png';
+import iconPopular from '../../.dyad/media/d8198c23eae75a2c0608e6afe4a1be45b9d7cbd67758990cd2a494d7d33ae6cc.png';
+import iconArtesanato from '../../.dyad/media/df09330fa879ef5f10a12eb556cb2b0fa19d3f799bf4fde0b89e969be5b4c79d.png';
+import iconProdutor from '../../.dyad/media/8d546237826dcc15d9303bf7b3737e2bce88863efa137b85ea76a020cbe1ca7f.png';
 
 const Index = () => {
   const isMobile = useIsMobile();
@@ -32,7 +32,7 @@ const Index = () => {
     { imageIcon: iconVisuais, title: "Artes Visuais", description: "Exposições, murais e arte digital. Projetos que mobilizam grande público e realizadores de todo o país valorizando a cultura regional." },
     { imageIcon: iconCenicas, title: "Artes Cênicas", description: "Teatro, dança, circo e performance. Abrange a criação, production e apresentação de projetos culturais para os mais diversos públicos." },
     { imageIcon: iconAudiovisual, title: "Audiovisual", description: "Cinema, documentários e web séries. Fomento à produção de conteúdo audiovisual e novas mídias digitais." },
-    { imageIcon: iconLiteratura, title: "Literatura", description: "Publicação, contação de histórias e poesia. Incentivo à leitura e à produção literária local e regional." },
+    { imageIcon: iconLiteratura, title: "Literatura", description: "Publicação, contação de histórias e poetry. Incentivo à leitura e à produção literária local e regional." },
     { imageIcon: iconPopular, title: "Cultura Popular", description: "Folclore, tradições e manifestações populares que valorizam a identidade e a história da nossa gente." },
     { imageIcon: iconArtesanato, title: "Artesanato", description: "Produção e comercialização de arte manual. Apoio aos artesãos e às técnicas tradicionais do Rio Grande do Norte.", center: true },
     { imageIcon: iconProdutor, title: "Produtor Cultural", description: "Gestão, production e curadoria de eventos. Capacitação e suporte para profissionais da cadeia produtiva da cultura.", center: true },
@@ -82,7 +82,6 @@ const Index = () => {
             <p className="text-slate-500 max-w-2xl mx-auto text-lg font-medium">Encontre editais em diversas áreas e impulsione sua carreira cultural.</p>
           </div>
 
-          {/* Flex layout to automatically center leftover items on the last row */}
           <div className="flex flex-wrap justify-center gap-8">
             {categories.map((cat, index) => (
               <div 
@@ -128,40 +127,33 @@ const Index = () => {
 
       {/* Tracking Section */}
       <section className="relative py-28 bg-white overflow-hidden">
-        {/* Left Wave Graphic */}
         <div className="absolute bottom-0 left-0 w-[45%] max-w-[480px] pointer-events-none select-none z-0 hidden sm:block">
           <img src={waveLeft} alt="" className="w-full h-auto object-contain object-bottom" />
         </div>
 
-        {/* Right Wave Graphic */}
         <div className="absolute bottom-0 right-0 w-[45%] max-w-[480px] pointer-events-none select-none z-0 hidden sm:block">
           <img src={waveRight} alt="" className="w-full h-auto object-contain object-bottom" />
         </div>
 
         <div className="container mx-auto px-4 text-center max-w-3xl relative z-10">
-          {/* Circular Search Icon */}
           <div className="w-16 h-16 bg-[#2b59c3] rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-blue-200">
             <Search className="text-white" size={28} />
           </div>
 
-          {/* Title */}
           <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-3">
             Acompanhe sua Inscrição
           </h2>
 
-          {/* Three-color bar */}
           <div className="flex justify-center gap-1 mb-8">
             <div className="w-6 h-1 bg-[#2b59c3] rounded-full" />
             <div className="w-6 h-1 bg-[#f9b233] rounded-full" />
             <div className="w-6 h-1 bg-[#ef4444] rounded-full" />
           </div>
 
-          {/* Description */}
           <p className="text-[#5c7699] mb-10 text-base md:text-lg font-medium leading-relaxed max-w-2xl mx-auto">
             Utilize o número de protocolo para acompanhar a sua inscrição e ver o status do seu projeto em tempo real.
           </p>
 
-          {/* Button */}
           <Link to="/inscricoes">
             <Button className="bg-[#2b59c3] hover:bg-[#1e44a3] text-white font-bold px-10 py-6 text-sm rounded-xl shadow-xl shadow-blue-100 transition-all flex items-center gap-2 mx-auto uppercase tracking-wider">
               VER INSCRIÇÕES
