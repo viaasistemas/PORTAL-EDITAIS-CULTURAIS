@@ -16,7 +16,7 @@ import waveRight from '@/assets/wave-right.png';
 
 // Ícones atualizados via mídias do projeto
 import iconMusica from '../../.dyad/media/89788568739c2801b420fc906edcac85b18bc344486da53b8290c2a0c1a7167b.png';
-import iconVisuais from '../../.dyad/media/82d0adce100c58698ec90e517ac72f31aa9c3.png';
+import iconVisuais from '../../.dyad/media/82d0adce100c586902cd62f56438d5adaaf5878dd998ec90e517ac72f31aa9c3.png';
 import iconCenicas from '../../.dyad/media/132a138c8493a519540ea548d3b95febb3291401f7e225657feb1e0944129bb4.png';
 import iconAudiovisual from '../../.dyad/media/b5b818e2e87e59b3b4a6ba8837b9ed3f22012ac5da420e4850dbb1dbf9a5aae2.png';
 import iconLiteratura from '../../.dyad/media/6fb574c0e76c641689619821f1dd732ef35d9c40c6adf26207032b589e81dcd6.png';
