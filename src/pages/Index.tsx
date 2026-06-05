@@ -19,7 +19,6 @@ import iconArtesanato from '@/assets/icon-artesanato.png';
 import iconPopular from '@/assets/icon-popular.png';
 import iconProdutor from '@/assets/icon-produtor.png';
 import heroBg from '@/assets/hero-bg.png';
-import heroBgMobile from '@/assets/hero-bg-mobile.png';
 
 const Index = () => {
   const isMobile = useIsMobile();
@@ -27,7 +26,7 @@ const Index = () => {
   const categories = [
     { imageIcon: iconMusica, title: "Música", description: "Produção, shows e formation musical. Estímulo à produção cultural brasileira em seus diferentes segmentos e à circulação de projetos." },
     { imageIcon: iconVisuais, title: "Artes Visuais", description: "Exposições, murais e arte digital. Projetos que mobilizam grande público e realizadores de todo o país valorizando a cultura regional." },
-    { imageIcon: iconCenicas, title: "Artes Cênicas", description: "Teatro, dança, circo e performance. Abrange a criação, produção e apresentação de projetos culturais para os mais diversos públicos." },
+    { imageIcon: iconCenicas, title: "Artes Cênicas", description: "Teatro, dança, circo e performance. Abrange a criação, production e apresentação de projetos culturais para os mais diversos públicos." },
     { imageIcon: iconAudiovisual, title: "Audiovisual", description: "Cinema, documentários e web séries. Fomento à produção de conteúdo audiovisual e novas mídias digitais." },
     { imageIcon: iconLiteratura, title: "Literatura", description: "Publicação, contação de histórias e poesia. Incentivo à leitura e à produção literária local e regional." },
     { imageIcon: iconPopular, title: "Cultura Popular", description: "Folclore, tradições e manifestações populares que valorizam a identidade e a história da nossa gente." },
@@ -40,17 +39,17 @@ const Index = () => {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="relative pt-48 pb-32 overflow-hidden min-h-screen flex items-center">
-        {/* Background Image */}
-        <div className="absolute inset-0 z-0">
+      <section className="relative pt-48 pb-32 overflow-hidden min-h-screen flex items-center bg-slate-50 md:bg-transparent">
+        {/* Background Image - Hidden on Mobile */}
+        <div className="absolute inset-0 z-0 hidden md:block">
           <img 
-            src={isMobile ? heroBgMobile : heroBg} 
+            src={heroBg} 
             alt="Background" 
             className="w-full h-full object-cover object-center" 
           />
         </div>
 
-        <div className="container mx-auto px-4 relative z-10 text-center max-w-5xl -mt-48 md:-mt-80">
+        <div className="container mx-auto px-4 relative z-10 text-center max-w-5xl -mt-24 md:-mt-36">
           <h1 className="text-4xl md:text-7xl font-extrabold mb-4 tracking-tight leading-tight text-[#2b59c3]">
             Transforme sua ideia em <br />
             <span className="text-[#f9b233] italic font-serif">Realidade</span>

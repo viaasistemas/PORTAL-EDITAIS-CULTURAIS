@@ -66,7 +66,7 @@ const Biblioteca = () => {
               <div className="w-12 h-1 bg-yellow-400 rounded-full" />
               <div className="w-12 h-1 bg-red-500 rounded-full" />
             </div>
-            <p className="text-base md:text-lg text-[#2b59c3] font-bold">
+            <p className="text-base md:text-lg text-black font-bold">
               Acesse leis, manuais, modelos de documentos e materiais de apoio para artistas e produtores culturais.
             </p>
           </div>
