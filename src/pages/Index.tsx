@@ -19,6 +19,7 @@ import iconArtesanato from '@/assets/icon-artesanato.png';
 import iconPopular from '@/assets/icon-popular.png';
 import iconProdutor from '@/assets/icon-produtor.png';
 import heroBg from '@/assets/hero-bg.png';
+import investimentoBg from '@/assets/investimento-bg.png';
 
 const Index = () => {
   const isMobile = useIsMobile();
@@ -87,26 +88,39 @@ const Index = () => {
       </section>
 
       {/* Stats Section */}
-      <section className="py-24 bg-gradient-to-b from-white to-blue-50/30 relative overflow-hidden">
+      <section className="relative py-24 overflow-hidden bg-slate-50/30">
+        {/* Background Image matching the reference */}
+        <div className="absolute inset-0 z-0">
+          <img 
+            src={investimentoBg} 
+            alt="Investimento Background" 
+            className="w-full h-full object-cover object-center" 
+          />
+        </div>
+
         <div className="container mx-auto px-4 relative z-10">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Investimento</h2>
-            <div className="flex justify-center gap-1">
-              <div className="w-12 h-1 bg-blue-600 rounded-full" />
+            <h2 className="text-3xl md:text-4xl font-extrabold text-[#2b59c3] mb-4">Investimento</h2>
+            <div className="flex justify-center gap-1.5">
+              <div className="w-10 h-1 bg-[#2b59c3] rounded-full" />
+              <div className="w-10 h-1 bg-[#f9b233] rounded-full" />
+              <div className="w-10 h-1 bg-[#2e7d32] rounded-full" />
+              <div className="w-10 h-1 bg-[#d32f2f] rounded-full" />
             </div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center max-w-5xl mx-auto">
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center max-w-6xl mx-auto items-center">
             <div className="space-y-2">
-              <p className="text-5xl font-bold text-slate-900 tracking-tighter">R$ 1.5M+</p>
-              <p className="text-slate-500 font-bold uppercase tracking-widest text-[10px]">Em recursos distribuídos</p>
+              <p className="text-4xl md:text-5xl font-black text-[#2b59c3] tracking-tight">R$ 1.5M+</p>
+              <p className="text-[#5c7699] font-bold uppercase tracking-wider text-[11px]">Em recursos distribuídos</p>
             </div>
             <div className="space-y-2">
-              <p className="text-5xl font-bold text-slate-900 tracking-tighter">500+</p>
-              <p className="text-slate-500 font-bold uppercase tracking-widest text-[10px]">Artistas e projetos apoiados</p>
+              <p className="text-4xl md:text-5xl font-black text-[#f9b233] tracking-tight">500+</p>
+              <p className="text-[#5c7699] font-bold uppercase tracking-wider text-[11px]">Artistas e projetos apoiados</p>
             </div>
             <div className="space-y-2">
-              <p className="text-5xl font-bold text-slate-900 tracking-tighter">30+</p>
-              <p className="text-slate-500 font-bold uppercase tracking-widest text-[10px]">Editais lançados</p>
+              <p className="text-4xl md:text-5xl font-black text-[#2e7d32] tracking-tight">30+</p>
+              <p className="text-[#5c7699] font-bold uppercase tracking-wider text-[11px]">Editais lançados</p>
             </div>
           </div>
         </div>
