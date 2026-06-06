@@ -28,11 +28,11 @@ const Index = () => {
   const isMobile = useIsMobile();
   
   const categories = [
-    { imageIcon: iconMusica, title: "Música", description: "Produção, shows e formation musical. Estímulo à produção cultural brasileira em seus diferentes segmentos e à circulação de projetos." },
+    { imageIcon: iconMusica, title: "Música", description: "Produção, shows e formation musical. Estímulo à production cultural brasileira em seus diferentes segmentos e à circulação de projetos." },
     { imageIcon: iconVisuais, title: "Artes Visuais", description: "Exposições, murais e arte digital. Projetos que mobilizam grande público e realizadores de todo o país valorizando a cultura regional." },
     { imageIcon: iconCenicas, title: "Artes Cênicas", description: "Teatro, dança, circo e performance. Abrange a criação, production e apresentação de projetos culturais para os mais diversos públicos." },
-    { imageIcon: iconAudiovisual, title: "Audiovisual", description: "Cinema, documentários e web séries. Fomento à produção de conteúdo audiovisual e novas mídias digitais." },
-    { imageIcon: iconLiteratura, title: "Literatura", description: "Publicação, contação de histórias e poetry. Incentivo à leitura e à produção literária local e regional." },
+    { imageIcon: iconAudiovisual, title: "Audiovisual", description: "Cinema, documentários e web séries. Fomento à production de conteúdo audiovisual e novas mídias digitais." },
+    { imageIcon: iconLiteratura, title: "Literatura", description: "Publicação, contação de histórias e poetry. Incentivo à leitura e à production literária local e regional." },
     { imageIcon: iconPopular, title: "Cultura Popular", description: "Folclore, tradições e manifestações populares que valorizam a identidade e a história da nossa gente." },
     { imageIcon: iconArtesanato, title: "Artesanato", description: "Produção e comercialização de arte manual. Apoio aos artesãos e às técnicas tradicionais do Rio Grande do Norte." },
     { imageIcon: iconProdutor, title: "Produtor Cultural", description: "Gestão, production e curadoria de eventos. Capacitação e suporte para profissionais da cadeia produtiva da cultura." },
@@ -55,11 +55,11 @@ const Index = () => {
         </div>
 
         <div className="container mx-auto px-4 relative z-10 text-center max-w-5xl -mt-32 md:-mt-48">
-          <h1 className="text-4xl md:text-7xl font-extrabold mb-4 tracking-tight leading-tight text-[#2b59c3]">
+          <h1 className="text-4xl md:text-7xl font-extrabold mb-4 tracking-tight leading-tight text-slate-900">
             Transforme sua ideia em <br />
-            <span className="text-[#f9b233] italic font-serif">Realidade</span>
+            <span className="text-[#f9b233] italic">Realidade</span>
           </h1>
-          <p className="text-base md:text-lg text-slate-900 mb-8 max-w-2xl mx-auto font-bold">
+          <p className="text-[#5c7699] mb-8 text-base md:text-lg font-medium leading-relaxed max-w-2xl mx-auto">
             O Portal de Editais Culturais de Extremoz-RN é a sua ponte para oportunidades, fomento e reconhecimento.
           </p>
           <Link to="/editais">
@@ -74,13 +74,13 @@ const Index = () => {
       <section className="pt-12 pb-20 bg-white relative z-20 mt-12">
         <div className="container mx-auto px-4 max-w-7xl">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-3">Oportunidades para Todos os Artistas</h2>
+            <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-3">Oportunidades para Todos os Artistas</h2>
             <div className="flex justify-center gap-1 mb-4">
               <div className="w-8 h-1 bg-blue-600 rounded-full" />
               <div className="w-8 h-1 bg-yellow-400 rounded-full" />
               <div className="w-8 h-1 bg-red-500 rounded-full" />
             </div>
-            <p className="text-slate-500 max-w-2xl mx-auto text-lg font-medium">Encontre editais em diversas áreas e impulsione sua carreira cultural.</p>
+            <p className="text-[#5c7699] max-w-2xl mx-auto text-lg font-medium">Encontre editais em diversas áreas e impulsione sua carreira cultural.</p>
           </div>
 
           <div className="flex flex-wrap justify-center gap-8">
@@ -100,7 +100,7 @@ const Index = () => {
       <section className="py-24 bg-slate-50/50 border-y border-slate-100">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-extrabold text-[#2b59c3] mb-4">Investimento</h2>
+            <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-4">Investimento</h2>
             <div className="flex justify-center gap-1.5">
               <div className="w-10 h-1 bg-[#2b59c3] rounded-full" />
               <div className="w-10 h-1 bg-[#f9b233] rounded-full" />
