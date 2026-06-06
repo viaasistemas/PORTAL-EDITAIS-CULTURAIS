@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useSession } from './SessionContextProvider';
-import { Menu, X } from 'lucide-react';
+import { Menu } from 'lucide-react';
 import {
   Sheet,
   SheetContent,
@@ -27,7 +27,7 @@ const Navbar = () => {
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-50">
       <div className="container mx-auto px-4 h-20 flex items-center justify-between">
         {/* Logo - Esquerda */}
-        <div className="flex-1 flex justify-start">
+        <div className="flex items-center">
           <Link to="/" className="flex items-center gap-2 group">
             <div className="flex flex-col">
               <span className="text-2xl font-black tracking-tight text-[#2b59c3] leading-none">CULTURA</span>
@@ -37,7 +37,7 @@ const Navbar = () => {
         </div>
 
         {/* Desktop Navigation - Centralizado */}
-        <div className="hidden md:flex items-center justify-center gap-8 flex-1">
+        <div className="hidden md:flex items-center justify-center gap-8 absolute left-1/2 -translate-x-1/2">
           {navLinks.map((link) => (
             <Link 
               key={link.path} 
@@ -49,8 +49,8 @@ const Navbar = () => {
           ))}
         </div>
 
-        {/* Auth - Direita */}
-        <div className="hidden md:flex items-center justify-end flex-1">
+        {/* Auth - Direita (Desktop) */}
+        <div className="hidden md:flex items-center gap-4">
           {session ? (
             <Button 
               variant="ghost" 
@@ -68,21 +68,19 @@ const Navbar = () => {
           )}
         </div>
 
-        {/* Mobile Menu */}
+        {/* Mobile Menu Trigger - Garantindo que fique à direita */}
         <div className="md:hidden flex items-center">
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="text-[#2b59c3]">
-                <Menu size={28} />
+              <Button variant="ghost" size="icon" className="text-[#2b59c3] p-0">
+                <Menu size={32} />
               </Button>
             </SheetTrigger>
             <SheetContent side="right" className="w-[300px] p-0 border-l-none">
               <div className="flex flex-col h-full bg-white">
-                <div className="p-6 border-b border-slate-50 flex items-center justify-between">
+                <div className="p-6 border-b border-slate-50">
                   <span className="text-xl font-bold text-[#2b59c3]">Menu</span>
-                  <Button variant="ghost" size="icon" onClick={() => setIsOpen(false)}>
-                    <X size={24} className="text-slate-400" />
-                  </Button>
+                  {/* Botão X removido conforme solicitado */}
                 </div>
                 <div className="flex-grow py-8 px-6 space-y-6">
                   {navLinks.map((link) => (
