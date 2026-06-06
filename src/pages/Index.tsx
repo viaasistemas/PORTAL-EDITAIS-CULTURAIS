@@ -112,15 +112,15 @@ const Index = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center max-w-6xl mx-auto items-center">
             <div className="space-y-2">
               <p className="text-4xl md:text-5xl font-black text-[#2b59c3] tracking-tight">R$ 1.5M+</p>
-              <p className="text-[#5c7699] font-bold uppercase tracking-wider text-[11px]">Em recursos distribuídos</p>
+              <p className="text-[#5c7699] font-medium text-sm">em recursos distribuídos</p>
             </div>
             <div className="space-y-2">
               <p className="text-4xl md:text-5xl font-black text-[#f9b233] tracking-tight">500+</p>
-              <p className="text-[#5c7699] font-bold uppercase tracking-wider text-[11px]">Artistas e projetos apoiados</p>
+              <p className="text-[#5c7699] font-medium text-sm">artistas e projetos apoiados</p>
             </div>
             <div className="space-y-2">
               <p className="text-4xl md:text-5xl font-black text-[#2e7d32] tracking-tight">30+</p>
-              <p className="text-[#5c7699] font-bold uppercase tracking-wider text-[11px]">Editais lançados</p>
+              <p className="text-[#5c7699] font-medium text-sm">editais lançados</p>
             </div>
           </div>
         </div>
