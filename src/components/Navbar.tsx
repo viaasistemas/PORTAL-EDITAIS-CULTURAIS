@@ -27,8 +27,8 @@ const Navbar = () => {
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-50">
       <div className="container mx-auto px-4 h-20 flex items-center justify-between relative">
         
-        {/* Mobile Menu Trigger - Lado Esquerdo no Mobile */}
-        <div className="md:hidden flex items-center">
+        {/* Mobile Menu Trigger - Lado Esquerdo */}
+        <div className="md:hidden flex items-center z-10">
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="text-[#2b59c3] p-0">
@@ -70,17 +70,17 @@ const Navbar = () => {
           </Sheet>
         </div>
 
-        {/* Logo - Esquerda no Desktop, Direita no Mobile */}
-        <div className="flex items-center md:order-first">
+        {/* Logo - Centralizado no Mobile, Esquerda no Desktop */}
+        <div className="flex items-center absolute left-1/2 -translate-x-1/2 md:relative md:left-0 md:translate-x-0 md:order-first">
           <Link to="/" className="flex items-center gap-2 group">
-            <div className="flex flex-col md:items-start items-end">
-              <span className="text-2xl font-black tracking-tight text-[#2b59c3] leading-none">CULTURA</span>
-              <span className="text-[8px] font-bold text-slate-400 uppercase tracking-[0.2em]">Portal de Editais de Extremoz</span>
+            <div className="flex flex-col items-center md:items-start">
+              <span className="text-2xl font-black tracking-tight text-[#2b59c3] leading-none text-center md:text-left">CULTURA</span>
+              <span className="text-[8px] font-bold text-slate-400 uppercase tracking-[0.2em] text-center md:text-left">Portal de Editais de Extremoz</span>
             </div>
           </Link>
         </div>
 
-        {/* Desktop Navigation - Centralizado no Desktop (Hidden no Mobile) */}
+        {/* Desktop Navigation - Centralizado (Oculto no Mobile) */}
         <div className="hidden md:flex items-center justify-center gap-8 absolute left-1/2 -translate-x-1/2">
           {navLinks.map((link) => (
             <Link 
@@ -93,7 +93,7 @@ const Navbar = () => {
           ))}
         </div>
 
-        {/* Auth - Direita no Desktop (Hidden no Mobile) */}
+        {/* Auth - Direita no Desktop (Oculto no Mobile) */}
         <div className="hidden md:flex items-center gap-4">
           {session ? (
             <Button 
