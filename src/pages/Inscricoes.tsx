@@ -10,14 +10,14 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
 const Inscricoes = () => {
-  const [protocol, setProtocol] = useState('');
+  const [searchValue, setSearchValue] = useState('');
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<any>(null);
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!protocol.trim()) {
-      toast.error("Por favor, insira um número de protocolo.");
+    if (!searchValue.trim()) {
+      toast.error("Por favor, insira um CPF ou Protocolo.");
       return;
     }
 
@@ -25,6 +25,9 @@ const Inscricoes = () => {
     setResult(null);
 
     try {
+      const cleanValue = searchValue.trim();
+      
+      // Busca por protocolo OU cpf
       const { data, error } = await supabase
         .from('inscricoes')
         .select(`
@@ -33,21 +36,19 @@ const Inscricoes = () => {
             title
           )
         `)
-        .eq('protocol', protocol.trim())
-        .single();
+        .or(`protocol.eq.${cleanValue},cpf.eq.${cleanValue}`)
+        .maybeSingle();
 
-      if (error) {
-        if (error.code === 'PGRST116') {
-          toast.error("Protocolo não encontrado.");
-        } else {
-          throw error;
-        }
+      if (error) throw error;
+
+      if (!data) {
+        toast.error("Inscrição não encontrada.");
       } else {
         setResult(data);
       }
     } catch (error: any) {
-      console.error("Erro ao buscar protocolo:", error);
-      toast.error("Ocorreu um erro ao buscar o protocolo.");
+      console.error("Erro ao buscar inscrição:", error);
+      toast.error("Ocorreu um erro ao buscar os dados.");
     } finally {
       setLoading(false);
     }
@@ -81,7 +82,7 @@ const Inscricoes = () => {
               <div className="w-12 h-1 bg-red-500 rounded-full" />
             </div>
             <p className="text-base md:text-lg text-black font-bold">
-              Utilize o número do seu protocolo para verificar a sua inscrição.
+              Utilize o CPF ou número do seu protocolo para verificar a sua inscrição.
             </p>
           </div>
         </section>
@@ -89,17 +90,17 @@ const Inscricoes = () => {
         <section className="px-4 pb-24">
           <div className="container mx-auto max-w-3xl">
             <div className="bg-white rounded-2xl shadow-xl shadow-blue-900/5 border border-slate-100 p-8 md:p-12">
-              <h2 className="text-xl font-bold text-slate-900 mb-8">Consultar Protocolo</h2>
+              <h2 className="text-xl font-bold text-slate-900 mb-8">Consultar Inscrição</h2>
               
               <form onSubmit={handleSearch} className="flex flex-col md:flex-row gap-4">
                 <div className="relative flex-grow">
                   <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
                   <Input 
                     type="text" 
-                    placeholder="Ex: 2026123456" 
+                    placeholder="CPF ou Protocolo" 
                     className="pl-12 h-14 rounded-xl border-slate-200 focus:ring-[#2b59c3] text-lg font-medium"
-                    value={protocol}
-                    onChange={(e) => setProtocol(e.target.value)}
+                    value={searchValue}
+                    onChange={(e) => setSearchValue(e.target.value)}
                   />
                 </div>
                 <Button 

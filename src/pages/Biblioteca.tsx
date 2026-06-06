@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import { FileText, Download, BookOpen, Scale, FileCheck, ExternalLink } from 'lucide-react';
+import { FileText, Download, BookOpen, Scale, FileCheck, ExternalLink, PlayCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -12,7 +12,7 @@ const Biblioteca = () => {
   const [data, setData] = useState<any[]>([]);
 
   const categories = [
-    { title: "Legislação", icon: Scale, color: "bg-blue-50 text-blue-600" },
+    { title: "Vídeos Tutoriais", icon: PlayCircle, color: "bg-blue-50 text-blue-600" },
     { title: "Manuais e Guias", icon: BookOpen, color: "bg-purple-50 text-purple-600" },
     { title: "Modelos de Documentos", icon: FileCheck, color: "bg-emerald-50 text-emerald-600" }
   ];
@@ -48,7 +48,8 @@ const Biblioteca = () => {
   }, []);
 
   const getItemsByCategory = (catTitle: string) => {
-    return data.filter(item => item.category === catTitle);
+    // Mapeia o título exibido para o título salvo no banco (caso haja divergência)
+    return data.filter(item => item.category === catTitle || (catTitle === "Vídeos Tutoriais" && item.category === "Legislação"));
   };
 
   return (
@@ -91,12 +92,12 @@ const Biblioteca = () => {
                         <div key={dIdx} className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all group flex items-center justify-between">
                           <div className="flex items-center gap-4 min-w-0">
                             <div className="w-10 h-10 rounded-lg bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-blue-50 group-hover:text-blue-600 transition-colors">
-                              {doc.link_url ? <ExternalLink size={20} /> : <FileText size={20} />}
+                              {doc.link_url ? <PlayCircle size={20} /> : <FileText size={20} />}
                             </div>
                             <div className="min-w-0">
                               <p className="text-sm font-bold text-slate-900 truncate leading-tight">{doc.title}</p>
                               <p className="text-[10px] text-slate-400 mt-1 font-bold uppercase tracking-wider">
-                                {doc.link_url ? 'Link Externo' : doc.file_name || 'Arquivo'}
+                                {doc.link_url ? 'Vídeo/Link' : doc.file_name || 'Arquivo'}
                               </p>
                             </div>
                           </div>

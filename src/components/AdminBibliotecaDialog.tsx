@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -15,13 +15,12 @@ import {
   Plus, 
   Pencil, 
   Trash2, 
-  FileText, 
+  PlayCircle, 
   Link as LinkIcon, 
-  Upload, 
   Loader2, 
-  X,
   ArrowLeft,
-  AlertCircle
+  AlertCircle,
+  FileText
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -39,16 +38,17 @@ const AdminBibliotecaDialog = ({ category, open, onOpenChange }: AdminBiblioteca
   const [editingId, setEditingId] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     title: '',
-    link_url: '',
-    file_name: ''
+    link_url: ''
   });
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const fetchItems = async () => {
+    // Mapeia categoria para o banco (caso seja o novo nome)
+    const dbCategory = category === 'Vídeos Tutoriais' ? 'Legislação' : category;
+    
     const { data, error } = await supabase
       .from('biblioteca')
       .select('*')
-      .eq('category', category)
+      .or(`category.eq.${category},category.eq.${dbCategory}`)
       .order('created_at', { ascending: false });
     
     if (!error && data) setItems(data);
@@ -61,15 +61,9 @@ const AdminBibliotecaDialog = ({ category, open, onOpenChange }: AdminBiblioteca
     }
   }, [open, category]);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setFormData(prev => ({ ...prev, file_name: e.target.files![0].name }));
-    }
-  };
-
   const handlePreSave = () => {
-    if (!formData.title) {
-      toast.error("O título é obrigatório.");
+    if (!formData.title || !formData.link_url) {
+      toast.error("O título e o link são obrigatórios.");
       return;
     }
     setView('confirm');
@@ -78,11 +72,12 @@ const AdminBibliotecaDialog = ({ category, open, onOpenChange }: AdminBiblioteca
   const handleFinalSave = async () => {
     setLoading(true);
     try {
+      const dbCategory = category === 'Vídeos Tutoriais' ? 'Legislação' : category;
       const payload = {
         title: formData.title,
-        category,
-        link_url: formData.link_url || null,
-        file_name: formData.file_name || null
+        category: dbCategory,
+        link_url: formData.link_url,
+        file_name: null // Removido suporte a arquivo conforme pedido
       };
 
       if (editingId) {
@@ -124,15 +119,14 @@ const AdminBibliotecaDialog = ({ category, open, onOpenChange }: AdminBiblioteca
   };
 
   const resetForm = () => {
-    setFormData({ title: '', link_url: '', file_name: '' });
+    setFormData({ title: '', link_url: '' });
     setEditingId(null);
   };
 
   const startEdit = (item: any) => {
     setFormData({
       title: item.title,
-      link_url: item.link_url || '',
-      file_name: item.file_name || ''
+      link_url: item.link_url || ''
     });
     setEditingId(item.id);
     setView('form');
@@ -178,9 +172,9 @@ const AdminBibliotecaDialog = ({ category, open, onOpenChange }: AdminBiblioteca
               {items.length === 0 ? (
                 <div className="py-20 text-center border-2 border-dashed border-slate-100 rounded-[2rem] flex flex-col items-center gap-4">
                   <div className="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-200">
-                    <FileText size={32} />
+                    <PlayCircle size={32} />
                   </div>
-                  <p className="text-slate-400 font-bold">Nenhum item publicado</p>
+                  <p className="text-slate-400 font-bold">Nenhum vídeo publicado</p>
                 </div>
               ) : (
                 <div className="grid grid-cols-1 gap-3">
@@ -188,12 +182,12 @@ const AdminBibliotecaDialog = ({ category, open, onOpenChange }: AdminBiblioteca
                     <div key={item.id} className="flex items-center justify-between p-5 bg-slate-50 rounded-2xl border border-slate-100 hover:border-blue-200 hover:bg-blue-50/30 transition-all group">
                       <div className="flex items-center gap-4 min-w-0">
                         <div className="w-12 h-12 rounded-xl bg-white flex items-center justify-center text-blue-600 shadow-sm shrink-0">
-                          {item.link_url ? <LinkIcon size={20} /> : <FileText size={20} />}
+                          <PlayCircle size={20} />
                         </div>
                         <div className="min-w-0">
                           <p className="text-base font-bold text-slate-900 truncate leading-tight">{item.title}</p>
                           <p className="text-[11px] text-slate-400 font-bold uppercase tracking-wider mt-1">
-                            {item.link_url ? 'Link Externo' : item.file_name || 'Arquivo Anexado'}
+                            Link do Vídeo
                           </p>
                         </div>
                       </div>
@@ -216,53 +210,25 @@ const AdminBibliotecaDialog = ({ category, open, onOpenChange }: AdminBiblioteca
             <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-300">
               <div className="space-y-6">
                 <div className="space-y-2">
-                  <Label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Título do Documento</Label>
+                  <Label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Título do Vídeo</Label>
                   <Input 
                     value={formData.title} 
                     onChange={(e) => setFormData({...formData, title: e.target.value})}
-                    placeholder="Ex: Manual do Artista 2026" 
+                    placeholder="Ex: Tutorial de Inscrição PNAB" 
                     className="h-14 rounded-xl border-slate-200 text-lg font-medium"
                   />
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <Label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Link Externo</Label>
-                    <div className="relative">
-                      <LinkIcon className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-                      <Input 
-                        value={formData.link_url} 
-                        onChange={(e) => setFormData({...formData, link_url: e.target.value})}
-                        placeholder="https://..." 
-                        className="h-14 rounded-xl border-slate-200 pl-12"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Arquivo Anexado</Label>
-                    <div 
-                      onClick={() => fileInputRef.current?.click()}
-                      className={`h-14 rounded-xl border-2 border-dashed flex items-center justify-between px-4 cursor-pointer transition-all ${
-                        formData.file_name ? 'border-blue-200 bg-blue-50' : 'border-slate-200 hover:border-blue-400 hover:bg-slate-50'
-                      }`}
-                    >
-                      <input type="file" ref={fileInputRef} className="hidden" onChange={handleFileChange} />
-                      <div className="flex items-center gap-3 min-w-0">
-                        <Upload size={18} className={formData.file_name ? 'text-blue-600' : 'text-slate-400'} />
-                        <span className={`text-sm truncate ${formData.file_name ? 'text-blue-700 font-bold' : 'text-slate-400'}`}>
-                          {formData.file_name || "Clique para upar"}
-                        </span>
-                      </div>
-                      {formData.file_name && (
-                        <button 
-                          onClick={(e) => { e.stopPropagation(); setFormData({...formData, file_name: ''}); }} 
-                          className="text-slate-400 hover:text-red-500"
-                        >
-                          <X size={16} />
-                        </button>
-                      )}
-                    </div>
+                <div className="space-y-2">
+                  <Label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Link do vídeo</Label>
+                  <div className="relative">
+                    <LinkIcon className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                    <Input 
+                      value={formData.link_url} 
+                      onChange={(e) => setFormData({...formData, link_url: e.target.value})}
+                      placeholder="https://youtube.com/..." 
+                      className="h-14 rounded-xl border-slate-200 pl-12"
+                    />
                   </div>
                 </div>
               </div>
@@ -271,7 +237,7 @@ const AdminBibliotecaDialog = ({ category, open, onOpenChange }: AdminBiblioteca
                 onClick={handlePreSave} 
                 className="w-full h-14 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl font-bold text-lg shadow-xl shadow-blue-100"
               >
-                {editingId ? "Salvar Alterações" : "Adicionar Item"}
+                {editingId ? "Salvar Alterações" : "Adicionar Vídeo"}
               </Button>
             </div>
           )}
@@ -283,7 +249,7 @@ const AdminBibliotecaDialog = ({ category, open, onOpenChange }: AdminBiblioteca
               </div>
               <h2 className="text-2xl font-bold text-slate-900 mb-2">Confirmar e Publicar?</h2>
               <p className="text-slate-500 font-medium mb-10">
-                Este item ficará visível imediatamente na página pública da Biblioteca para todos os usuários.
+                Este vídeo ficará visível imediatamente na página pública da Biblioteca para todos os usuários.
               </p>
               <div className="flex flex-col gap-3">
                 <Button 

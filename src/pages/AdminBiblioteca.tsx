@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { Scale, BookOpen, FileCheck, Settings2 } from 'lucide-react';
+import { PlayCircle, BookOpen, FileCheck, Settings2 } from 'lucide-react';
 import AdminSidebar from '@/components/AdminSidebar';
 import AdminHeader from '@/components/AdminHeader';
 import { useSession } from '@/components/SessionContextProvider';
@@ -15,7 +15,7 @@ const AdminConteudo = () => {
   const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [counts, setCounts] = useState<Record<string, number>>({
-    "Legislação": 0,
+    "Vídeos Tutoriais": 0,
     "Manuais e Guias": 0,
     "Modelos de Documentos": 0
   });
@@ -24,13 +24,15 @@ const AdminConteudo = () => {
     const { data, error } = await supabase.from('biblioteca').select('category');
     if (!error && data) {
       const newCounts: Record<string, number> = {
-        "Legislação": 0,
+        "Vídeos Tutoriais": 0,
         "Manuais e Guias": 0,
         "Modelos de Documentos": 0
       };
       data.forEach(item => {
-        if (newCounts[item.category] !== undefined) {
-          newCounts[item.category]++;
+        // Trata legado de 'Legislação' se necessário
+        const cat = item.category === 'Legislação' ? 'Vídeos Tutoriais' : item.category;
+        if (newCounts[cat] !== undefined) {
+          newCounts[cat]++;
         }
       });
       setCounts(newCounts);
@@ -45,7 +47,7 @@ const AdminConteudo = () => {
   if (loading || !session) return null;
 
   const sections = [
-    { title: "Legislação", icon: Scale, color: "text-blue-600 bg-blue-50" },
+    { title: "Vídeos Tutoriais", icon: PlayCircle, color: "text-blue-600 bg-blue-50" },
     { title: "Manuais e Guias", icon: BookOpen, color: "text-purple-600 bg-purple-50" },
     { title: "Modelos de Documentos", icon: FileCheck, color: "text-emerald-600 bg-emerald-50" },
   ];
@@ -77,7 +79,7 @@ const AdminConteudo = () => {
                   onClick={() => setSelectedCategory(section.title)}
                   className="w-full h-14 justify-between rounded-2xl bg-slate-50 hover:bg-blue-50 text-blue-600 font-bold border border-transparent hover:border-blue-100 transition-all px-6"
                 >
-                  Gerenciar Arquivos <Settings2 size={20} />
+                  Gerenciar Conteúdo <Settings2 size={20} />
                 </Button>
               </div>
             ))}
