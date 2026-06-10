@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import AdminEditalCard from '@/components/AdminEditalCard';
 import { Input } from '@/components/ui/input';
-import { Search } from 'lucide-react';
+import { Search, LayoutGrid, FileText } from 'lucide-react';
 import {
   Select,
   SelectContent,
@@ -101,52 +101,63 @@ const AdminInscricoes = () => {
         <AdminHeader title="Gestão de Editais" />
 
         <div className="p-4 md:px-8 lg:px-12 w-full space-y-8 py-8">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
             <div>
               <h2 className="text-2xl font-bold text-slate-900">Gestão de Inscrições</h2>
               <p className="text-slate-500 text-sm font-medium">Visualizar e gerenciar as inscrições recebidas por edital</p>
             </div>
             
-            <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
-              <div className="relative flex-grow md:w-64">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-                <Input 
-                  placeholder="Buscar edital (ex: #012026)..." 
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 h-11 rounded-xl border-slate-200 bg-white"
-                />
-              </div>
-              
-              {activeTab === 'PNAB' && (
-                <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+            <div className="flex flex-col items-end gap-3 w-full md:w-auto">
+              <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
+                <div className="relative flex-grow md:w-64">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                  <Input 
+                    placeholder="Buscar edital (ex: #012026)..." 
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-10 h-11 rounded-xl border-slate-200 bg-white"
+                  />
+                </div>
+                
+                {activeTab === 'PNAB' && (
+                  <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                    <SelectTrigger className="w-[180px] bg-white border-slate-200 rounded-xl h-11">
+                      <SelectValue placeholder="Categoria" />
+                    </SelectTrigger>
+                    <SelectContent className="rounded-xl">
+                      <SelectItem value="todas">Todas Categorias</SelectItem>
+                      <SelectItem value="Cultura Popular">Cultura Popular</SelectItem>
+                      <SelectItem value="Música">Música</SelectItem>
+                      <SelectItem value="Dança">Dança</SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
+
+                <Select value={statusFilter} onValueChange={setStatusFilter}>
                   <SelectTrigger className="w-[180px] bg-white border-slate-200 rounded-xl h-11">
-                    <SelectValue placeholder="Categoria" />
+                    <SelectValue placeholder="Status" />
                   </SelectTrigger>
                   <SelectContent className="rounded-xl">
-                    <SelectItem value="todas">Todas Categorias</SelectItem>
-                    <SelectItem value="Cultura Popular">Cultura Popular</SelectItem>
-                    <SelectItem value="Música">Música</SelectItem>
-                    <SelectItem value="Dança">Dança</SelectItem>
+                    <SelectItem value="todos">Todos os Status</SelectItem>
+                    <SelectItem value="aberto">Aberto</SelectItem>
+                    <SelectItem value="encerrado">Encerrado</SelectItem>
+                    <SelectItem value="finalizado">Finalizados</SelectItem>
                   </SelectContent>
                 </Select>
-              )}
-
-              <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger className="w-[180px] bg-white border-slate-200 rounded-xl h-11">
-                  <SelectValue placeholder="Status" />
-                </SelectTrigger>
-                <SelectContent className="rounded-xl">
-                  <SelectItem value="todos">Todos os Status</SelectItem>
-                  <SelectItem value="aberto">Aberto</SelectItem>
-                  <SelectItem value="encerrado">Encerrado</SelectItem>
-                  <SelectItem value="finalizado">Finalizados</SelectItem>
-                </SelectContent>
-              </Select>
+              </div>
+              
+              <div className="flex gap-2">
+                <Button className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl h-10 font-bold px-6 flex gap-2 shadow-lg shadow-blue-100">
+                  <LayoutGrid size={18} /> Categorias
+                </Button>
+                <Button className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl h-10 font-bold px-6 flex gap-2 shadow-lg shadow-blue-100">
+                  <FileText size={18} /> Editais
+                </Button>
+              </div>
             </div>
           </div>
 
-          <div className="flex gap-2 overflow-x-auto pb-2">
+          <div className="flex gap-2 overflow-x-auto pb-2 border-b border-slate-100">
             {tabs.map((tab) => (
               <Button
                 key={tab}
