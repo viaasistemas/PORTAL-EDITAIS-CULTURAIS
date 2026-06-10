@@ -38,19 +38,21 @@ const EditaisLPG = () => {
   useEffect(() => {
     const loadSettingsAndCategories = () => {
       const settings: Record<string, any> = {};
-      editaisData.forEach(e => {
+      
+      // Carrega editais dinâmicos primeiro para obter todos os IDs
+      const savedEditais = localStorage.getItem('admin_editais_list');
+      const allEditais = savedEditais ? JSON.parse(savedEditais) : editaisData;
+      setDynamicEditais(allEditais);
+
+      allEditais.forEach((e: any) => {
         const saved = localStorage.getItem(`edital_settings_${e.id}`);
-        if (saved) settings[e.id] = JSON.parse(saved);
+        if (saved) {
+          settings[e.id] = JSON.parse(saved);
+        } else {
+          settings[e.id] = { isVisible: true };
+        }
       });
       setEditalSettings(settings);
-
-      // Carrega editais dinâmicos
-      const savedEditais = localStorage.getItem('admin_editais_list');
-      if (savedEditais) {
-        setDynamicEditais(JSON.parse(savedEditais));
-      } else {
-        setDynamicEditais(editaisData);
-      }
 
       // Carrega categorias dinâmicas do LPG
       const savedCats = localStorage.getItem('admin_categories_by_program');
