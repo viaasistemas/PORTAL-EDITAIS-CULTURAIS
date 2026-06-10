@@ -67,6 +67,8 @@ const AdminEditalDetalhes = () => {
     else if (view === 'recursos') table = 'recursos';
     else if (view === 'documentacao') table = 'documentacao';
 
+    let fetchedData: any[] = [];
+
     if (table) {
       const { data, error } = await supabase
         .from(table)
@@ -74,11 +76,27 @@ const AdminEditalDetalhes = () => {
         .eq('edital_id', id);
       
       if (!error && data) {
-        setData(data);
-      } else {
-        setData([]);
+        fetchedData = data;
       }
     }
+
+    // Injeta dados de teste se o edital for o 042026
+    if (id === '042026' && view === 'inscricoes') {
+      const testInscription = {
+        id: 'test-id',
+        full_name: 'João da Silva',
+        cpf: '123.456.789-00',
+        protocol: '2026042026',
+        created_at: '2026-04-20T14:30:00.000Z',
+        status: 'Pendente'
+      };
+      // Evita duplicar se já estiver na lista
+      if (!fetchedData.some(item => item.protocol === '2026042026')) {
+        fetchedData = [testInscription, ...fetchedData];
+      }
+    }
+
+    setData(fetchedData);
     setFetching(false);
   };
 
@@ -332,3 +350,33 @@ const AdminEditalDetalhes = () => {
 };
 
 export default AdminEditalDetalhes;
+</dyad-file>
+
+<dyad-write path="src/pages/NotFound.tsx" description="Traduzindo a página de erro 404 para o português.">
+import { useLocation } from "react-router-dom";
+import { useEffect } from "react";
+
+const NotFound = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    console.error(
+      "Erro 404: O usuário tentou acessar uma rota inexistente:",
+      location.pathname,
+    );
+  }, [location.pathname]);
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="text-center">
+        <h1 className="text-4xl font-bold mb-4">404</h1>
+        <p className="text-xl text-gray-600 mb-4">Ops! Página não encontrada</p>
+        <a href="/" className="text-blue-500 hover:text-blue-700 underline">
+          Voltar para o Início
+        </a>
+      </div>
+    </div>
+  );
+};
+
+export default NotFound;

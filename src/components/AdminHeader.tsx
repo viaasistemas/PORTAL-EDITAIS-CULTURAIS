@@ -105,9 +105,9 @@ const AdminHeader = ({ title }: AdminHeaderProps) => {
             </PopoverContent>
           </Popover>
 
-          <Avatar className="h-10 w-10 md:h-12 md:w-12 border-2 border-blue-600 p-0.5 rounded-xl">
-            <AvatarImage src={profilePhoto || ''} className="rounded-xl" />
-            <AvatarFallback className="bg-blue-600 text-white text-xs font-bold rounded-xl">AD</AvatarFallback>
+          <Avatar className="h-10 w-10 md:h-12 md:w-12 border-2 border-blue-600 p-0.5 rounded-full">
+            <AvatarImage src={profilePhoto || ''} className="rounded-full" />
+            <AvatarFallback className="bg-blue-600 text-white text-xs font-bold rounded-full">AD</AvatarFallback>
           </Avatar>
         </div>
       </div>

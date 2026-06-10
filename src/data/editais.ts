@@ -22,6 +22,27 @@ export interface EditalDetail {
 
 export const editaisData: EditalDetail[] = [
   {
+    id: "042026",
+    number: "042026",
+    title: "PNAB - Fomento à Literatura 2026",
+    subtitle: "Incentivo à publicação de obras literárias e contação de histórias.",
+    description: "Edital de fomento à literatura para escritores e contadores de histórias locais.",
+    categories: ["Literatura"],
+    valorTotal: "R$ 80.000,00",
+    valorMaximo: "R$ 8.000,00",
+    inicioInscricao: "10/03/2026",
+    terminoInscricao: "10/04/2026",
+    dataAbertura: "2026-03-10T08:00:00",
+    dataEncerramento: "2026-04-10T23:59:59",
+    etapas: ["1. Inscrição online", "2. Análise documental", "3. Avaliação técnica", "4. Resultado final"],
+    requisitos: "Residir no município há pelo menos 2 anos.",
+    documentos: "RG, CPF, Comprovante de residência, Portfólio.",
+    status: "Aberto",
+    tipo: "PNAB",
+    prazoAtual: "PERÍODO DE INSCRIÇÃO",
+    vagas: "10"
+  },
+  {
     id: "032026",
     number: "032026",
     title: "PNAB - Fomento Cultura Popular 2026",
