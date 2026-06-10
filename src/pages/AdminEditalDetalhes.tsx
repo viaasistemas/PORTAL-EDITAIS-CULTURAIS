@@ -15,9 +15,7 @@ import {
   Search, 
   Calendar as CalendarIcon,
   Download,
-  Eye,
-  CheckCircle2,
-  Clock
+  Eye
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import {
@@ -90,16 +88,15 @@ const AdminEditalDetalhes = () => {
     }
 
     // Injeta dados de teste se o edital for o 042026
-    if (id === '042026' && view === 'inscricoes') {
+    if (id === '042026' && (view === 'inscricoes' || view === 'documentacao')) {
       const testInscription = {
         id: 'test-id',
         full_name: 'João da Silva',
         cpf: '123.456.789-00',
         protocol: '2026042026',
         created_at: '2026-04-20T14:30:00.000Z',
-        status: 'Inscrição CONFIRMADA'
+        status: 'CONFIRMADA'
       };
-      // Evita duplicar se já estiver na lista
       if (!fetchedData.some(item => item.protocol === '2026042026')) {
         fetchedData = [testInscription, ...fetchedData];
       }
@@ -130,12 +127,16 @@ const AdminEditalDetalhes = () => {
     }
 
     setData(prev => prev.map(item => item.protocol === protocol ? { ...item, status: newStatus } : item));
-    toast.success("Status da inscrição atualizado com sucesso!");
+    toast.success("Status atualizado com sucesso!");
   };
 
   const filteredData = data.filter(item => {
+    const cleanSearch = searchTerm.replace(/\D/g, '').toLowerCase();
+    const itemCpfClean = item.cpf ? item.cpf.replace(/\D/g, '') : '';
+    
     const matchesSearch = item.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          item.protocol.includes(searchTerm) ||
+                         (cleanSearch && itemCpfClean.includes(cleanSearch)) ||
                          item.cpf.includes(searchTerm);
     
     const itemDate = new Date(item.created_at);
@@ -164,10 +165,11 @@ const AdminEditalDetalhes = () => {
   };
 
   const getStatusValue = (item: any) => {
-    return localStorage.getItem(`inscription_status_${item.protocol}`) || item.status || 'Inscrição CONFIRMADA';
+    const saved = localStorage.getItem(`inscription_status_${item.protocol}`) || item.status || 'CONFIRMADA';
+    if (saved === 'Inscrição CONFIRMADA') return 'CONFIRMADA';
+    if (saved === 'Enviar DOCUMENTAÇÃO') return 'DOCUMENTAÇÃO';
+    return saved;
   };
-
-  if (loading || !session) return null;
 
   return (
     <div className="min-h-screen bg-[#f8fafc] flex">
@@ -241,7 +243,7 @@ const AdminEditalDetalhes = () => {
                   <div className="relative flex-grow md:w-64">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
                     <Input 
-                      placeholder="Pesquisar..." 
+                      placeholder="Pesquisar por nome, CPF ou CNPJ..." 
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                       className="pl-10 h-11 rounded-xl border-slate-200"
@@ -288,16 +290,16 @@ const AdminEditalDetalhes = () => {
                       <TableHead className="font-bold text-slate-900">CNPJ</TableHead>
                       <TableHead className="font-bold text-slate-900">Protocolo</TableHead>
                       <TableHead className="font-bold text-slate-900">Data e Hora de Envio</TableHead>
-                      <TableHead className="font-bold text-slate-900">Arquivos</TableHead>
-                      {activeView === 'inscricoes' && (
+                      {(activeView === 'inscricoes' || activeView === 'documentacao') && (
                         <TableHead className="font-bold text-slate-900">Status</TableHead>
                       )}
+                      <TableHead className="font-bold text-slate-900">Arquivos</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {filteredData.length === 0 ? (
                       <TableRow>
-                        <TableCell colSpan={activeView === 'inscricoes' ? 7 : 6} className="text-center py-20 text-slate-400 font-medium">
+                        <TableCell colSpan={activeView === 'inscricoes' || activeView === 'documentacao' ? 7 : 6} className="text-center py-20 text-slate-400 font-medium">
                           {getEmptyMessage()}
                         </TableCell>
                       </TableRow>
@@ -318,6 +320,31 @@ const AdminEditalDetalhes = () => {
                               <span className="text-[10px] text-slate-400">{new Date(item.created_at).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}</span>
                             </div>
                           </TableCell>
+                          {(activeView === 'inscricoes' || activeView === 'documentacao') && (
+                            <TableCell>
+                              <Select 
+                                value={getStatusValue(item)} 
+                                onValueChange={(val) => handleStatusChange(item.protocol, val, item.id)}
+                              >
+                                <SelectTrigger className={`w-[180px] h-10 rounded-xl border-slate-200 font-bold text-xs ${
+                                  getStatusValue(item) === 'APROVADO' ? 'text-emerald-600 border-emerald-200 bg-emerald-50/30' : ''
+                                }`}>
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent className="rounded-xl">
+                                  <SelectItem value="CONFIRMADA" className="text-emerald-600 font-bold">
+                                    CONFIRMADA
+                                  </SelectItem>
+                                  <SelectItem value="DOCUMENTAÇÃO" className="text-amber-600 font-bold">
+                                    DOCUMENTAÇÃO
+                                  </SelectItem>
+                                  <SelectItem value="APROVADO" className="text-emerald-600 font-bold">
+                                    APROVADO
+                                  </SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </TableCell>
+                          )}
                           <TableCell>
                             <Button 
                               variant="ghost" 
@@ -328,29 +355,6 @@ const AdminEditalDetalhes = () => {
                               <Eye size={18} />
                             </Button>
                           </TableCell>
-                          {activeView === 'inscricoes' && (
-                            <TableCell>
-                              <Select 
-                                value={getStatusValue(item)} 
-                                onValueChange={(val) => handleStatusChange(item.protocol, val, item.id)}
-                              >
-                                <SelectTrigger className="w-[220px] h-10 rounded-xl border-slate-200 font-bold text-xs">
-                                  <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent className="rounded-xl">
-                                  <SelectItem value="Inscrição CONFIRMADA" className="text-emerald-600 font-bold">
-                                    Sua inscrição está CONFIRMADA
-                                  </SelectItem>
-                                  <SelectItem value="Enviar DOCUMENTAÇÃO" className="text-amber-600 font-bold">
-                                    Enviar DOCUMENTAÇÃO
-                                  </SelectItem>
-                                  <SelectItem value="APROVADO" className="text-blue-600 font-bold">
-                                    APROVADO
-                                  </SelectItem>
-                                </SelectContent>
-                              </Select>
-                            </TableCell>
-                          )}
                         </TableRow>
                       ))
                     )}

@@ -18,7 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { CheckCircle2, Copy, Printer, Upload, Loader2, AlertCircle, FileCheck } from 'lucide-react';
+import { CheckCircle2, Copy, Printer, Upload, Loader2, FileCheck } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -85,9 +85,9 @@ const InscricaoDialog = ({ edital, open, onOpenChange }: InscricaoDialogProps) =
   const handleConfirm = async () => {
     setLoading(true);
     
-    // Geração de protocolo inteligente de acordo com o ano atual
+    // Geração de protocolo inteligente: Ano atual + exatamente 4 números aleatórios (ex: 20260102)
     const currentYear = new Date().getFullYear();
-    const randomSeq = Math.floor(100000 + Math.random() * 900000).toString();
+    const randomSeq = Math.floor(1000 + Math.random() * 9000).toString();
     const generatedProtocol = `${currentYear}${randomSeq}`;
     
     try {
@@ -97,13 +97,13 @@ const InscricaoDialog = ({ edital, open, onOpenChange }: InscricaoDialogProps) =
         protocol: generatedProtocol,
         full_name: isPJ ? formData.razaoSocial : formData.fullName,
         cpf: isPJ ? formData.cnpj : formData.cpf,
-        status: 'Inscrição CONFIRMADA'
+        status: 'CONFIRMADA'
       });
 
       if (error) throw error;
 
       // Salva localmente para garantir sincronização imediata no teste
-      localStorage.setItem(`inscription_status_${generatedProtocol}`, 'Inscrição CONFIRMADA');
+      localStorage.setItem(`inscription_status_${generatedProtocol}`, 'CONFIRMADA');
 
       setProtocol(generatedProtocol);
       setStep('success');

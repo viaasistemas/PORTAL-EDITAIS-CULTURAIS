@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { Search, Loader2, FileText, Calendar, CheckCircle2, Clock, AlertCircle } from 'lucide-react';
+import { Search, Loader2, FileText, Calendar, CheckCircle2, Clock, Download, Printer } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
@@ -35,7 +35,7 @@ const Inscricoes = () => {
           cpf: '123.456.789-00',
           protocol: '2026042026',
           created_at: '2026-04-20T14:30:00.000Z',
-          status: 'Inscrição CONFIRMADA',
+          status: 'CONFIRMADA',
           editais: {
             title: 'PNAB - Fomento à Literatura 2026'
           }
@@ -74,18 +74,17 @@ const Inscricoes = () => {
   };
 
   const getStatusBadge = (status: string, protocol: string) => {
-    // Carrega o status atualizado localmente ou usa o padrão
-    const currentStatus = localStorage.getItem(`inscription_status_${protocol}`) || status || 'Inscrição CONFIRMADA';
-    const normalized = currentStatus.trim();
+    const currentStatus = localStorage.getItem(`inscription_status_${protocol}`) || status || 'CONFIRMADA';
+    const normalized = currentStatus.trim().toUpperCase();
 
-    if (normalized === 'Inscrição CONFIRMADA' || normalized === 'Sua inscrição está CONFIRMADA' || normalized === 'Pendente') {
+    if (normalized === 'CONFIRMADA' || normalized === 'INSCRIÇÃO CONFIRMADA' || normalized === 'PENDENTE') {
       return (
         <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-xl bg-emerald-50 text-emerald-600 text-xs font-bold uppercase tracking-wider border border-emerald-100">
           <CheckCircle2 size={14} /> Sua inscrição está CONFIRMADA
         </span>
       );
     }
-    if (normalized === 'Enviar DOCUMENTAÇÃO') {
+    if (normalized === 'DOCUMENTAÇÃO' || normalized === 'ENVIAR DOCUMENTAÇÃO') {
       return (
         <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-xl bg-amber-50 text-amber-600 text-xs font-bold uppercase tracking-wider border border-amber-100">
           <Clock size={14} /> Enviar DOCUMENTAÇÃO
@@ -104,6 +103,10 @@ const Inscricoes = () => {
         {currentStatus}
       </span>
     );
+  };
+
+  const handleDownloadReceipt = () => {
+    window.print();
   };
 
   return (
@@ -153,8 +156,8 @@ const Inscricoes = () => {
               </form>
 
               {result && (
-                <div className="mt-12 pt-12 border-t border-slate-50 animate-in fade-in slide-in-from-top-4 duration-500">
-                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
+                <div className="mt-12 pt-12 border-t border-slate-50 animate-in fade-in slide-in-from-top-4 duration-500 space-y-8">
+                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                     <div>
                       <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Status da Inscrição</p>
                       {getStatusBadge(result.status, result.protocol)}
@@ -186,6 +189,52 @@ const Inscricoes = () => {
                           year: 'numeric'
                         })}
                       </p>
+                    </div>
+                  </div>
+
+                  {/* Seção do Comprovante de Inscrição */}
+                  <div className="border border-slate-100 rounded-2xl p-8 bg-slate-50/50 space-y-6 print:border-none print:bg-white">
+                    <div className="flex justify-between items-center border-b border-slate-100 pb-4">
+                      <div>
+                        <h3 className="text-lg font-bold text-slate-900">Comprovante de Inscrição</h3>
+                        <p className="text-xs text-slate-400">Portal de Editais Culturais - Extremoz-RN</p>
+                      </div>
+                      <CheckCircle2 className="text-emerald-500" size={32} />
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                      <div>
+                        <p className="text-xs text-slate-400 font-bold uppercase">Proponente</p>
+                        <p className="font-bold text-slate-800 mt-0.5">{result.full_name}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-slate-400 font-bold uppercase">CPF / CNPJ</p>
+                        <p className="font-bold text-slate-800 mt-0.5">{result.cpf}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-slate-400 font-bold uppercase">Protocolo</p>
+                        <p className="font-mono font-bold text-[#2b59c3] mt-0.5">{result.protocol}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-slate-400 font-bold uppercase">Data de Emissão</p>
+                        <p className="font-bold text-slate-800 mt-0.5">{new Date(result.created_at).toLocaleString('pt-BR')}</p>
+                      </div>
+                    </div>
+
+                    <div className="flex gap-3 pt-4 border-t border-slate-100 print:hidden">
+                      <Button 
+                        onClick={handleDownloadReceipt}
+                        className="flex-1 h-12 bg-slate-900 hover:bg-black text-white rounded-xl font-bold flex gap-2"
+                      >
+                        <Download size={16} /> Baixar Comprovante
+                      </Button>
+                      <Button 
+                        variant="outline"
+                        onClick={() => window.print()}
+                        className="h-12 rounded-xl border-slate-200 text-slate-600 font-bold flex gap-2"
+                      >
+                        <Printer size={16} /> Imprimir
+                      </Button>
                     </div>
                   </div>
                 </div>
