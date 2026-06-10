@@ -33,6 +33,7 @@ const AdminInscricoes = () => {
   const [isCategoriasOpen, setIsCategoriasOpen] = useState(false);
   const [isEditaisOpen, setIsEditaisOpen] = useState(false);
   const [dynamicEditais, setDynamicEditais] = useState<EditalDetail[]>(editaisData);
+  const [dynamicCategories, setDynamicCategories] = useState<string[]>([]);
 
   const loadSettingsAndEditais = () => {
     // Carrega configurações de prazos
@@ -49,6 +50,18 @@ const AdminInscricoes = () => {
       setDynamicEditais(JSON.parse(savedEditais));
     } else {
       setDynamicEditais(editaisData);
+    }
+
+    // Carrega categorias dinâmicas do localStorage
+    const savedCats = localStorage.getItem('admin_categories');
+    if (savedCats) {
+      const parsed = JSON.parse(savedCats);
+      const pnabCats = parsed
+        .filter((c: any) => c.type === 'PNAB')
+        .map((c: any) => c.title);
+      setDynamicCategories(pnabCats);
+    } else {
+      setDynamicCategories(["Cultura Popular", "Música", "Dança"]);
     }
   };
 
@@ -142,9 +155,9 @@ const AdminInscricoes = () => {
                     </SelectTrigger>
                     <SelectContent className="rounded-xl">
                       <SelectItem value="todas">Todas Categorias</SelectItem>
-                      <SelectItem value="Cultura Popular">Cultura Popular</SelectItem>
-                      <SelectItem value="Música">Música</SelectItem>
-                      <SelectItem value="Dança">Dança</SelectItem>
+                      {dynamicCategories.map((cat) => (
+                        <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 )}
@@ -170,7 +183,7 @@ const AdminInscricoes = () => {
                   <Plus size={18} /> Categorias
                 </Button>
                 <Button 
-                  onClick={() => setIsEditOpen(true)}
+                  onClick={() => setIsEditaisOpen(true)}
                   className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl h-10 font-bold px-6 flex gap-2 shadow-lg shadow-blue-100"
                 >
                   <Plus size={18} /> Editais

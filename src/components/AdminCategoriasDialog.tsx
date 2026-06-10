@@ -11,20 +11,33 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Plus, Pencil, Trash2, ArrowLeft, FolderPlus, FolderEdit, Check } from 'lucide-react';
+import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Plus, Pencil, Trash2, ArrowLeft, FolderPlus, FolderEdit, Check, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
+
+interface CategoryItem {
+  title: string;
+  type: 'FM' | 'LPG' | 'PNAB';
+}
 
 interface AdminCategoriasDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
-type ViewState = 'menu' | 'add' | 'edit';
+type ViewState = 'menu' | 'add-select-type' | 'add-input-title' | 'edit-select-type' | 'edit-list';
 
 const AdminCategoriasDialog = ({ open, onOpenChange }: AdminCategoriasDialogProps) => {
   const [view, setView] = useState<ViewState>('menu');
-  const [categories, setCategories] = useState<string[]>([]);
-  const [newCategory, setNewCategory] = useState('');
+  const [categories, setCategories] = useState<CategoryItem[]>([]);
+  const [selectedType, setSelectedType] = useState<'FM' | 'LPG' | 'PNAB'>('PNAB');
+  const [newCategoryTitle, setNewCategoryTitle] = useState('');
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [editingValue, setEditingValue] = useState('');
 
@@ -35,54 +48,75 @@ const AdminCategoriasDialog = ({ open, onOpenChange }: AdminCategoriasDialogProp
       if (saved) {
         setCategories(JSON.parse(saved));
       } else {
-        const defaultCats = ["Cultura Popular", "Música", "Dança", "Artes Visuais", "Artes Cênicas", "Audiovisual", "Literatura", "Artesanato"];
+        const defaultCats: CategoryItem[] = [
+          { title: "Cultura Popular", type: "PNAB" },
+          { title: "Música", type: "PNAB" },
+          { title: "Dança", type: "PNAB" },
+          { title: "Artes Visuais", type: "FM" },
+          { title: "Artes Cênicas", type: "FM" },
+          { title: "Audiovisual", type: "LPG" },
+          { title: "Literatura", type: "FM" },
+          { title: "Artesanato", type: "FM" }
+        ];
         setCategories(defaultCats);
         localStorage.setItem('admin_categories', JSON.stringify(defaultCats));
       }
     }
   }, [open]);
 
-  const saveCategories = (updated: string[]) => {
+  const saveCategories = (updated: CategoryItem[]) => {
     setCategories(updated);
     localStorage.setItem('admin_categories', JSON.stringify(updated));
     window.dispatchEvent(new Event('storage'));
   };
 
-  const handleAdd = (e: React.FormEvent) => {
+  const handleAddConfirm = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newCategory.trim()) {
+    if (!newCategoryTitle.trim()) {
       toast.error("O nome da categoria não pode ser vazio.");
       return;
     }
-    if (categories.includes(newCategory.trim())) {
-      toast.error("Esta categoria já existe.");
+
+    const exists = categories.some(
+      cat => cat.title.toLowerCase() === newCategoryTitle.trim().toLowerCase() && cat.type === selectedType
+    );
+
+    if (exists) {
+      toast.error("Esta categoria já existe neste programa.");
       return;
     }
-    const updated = [...categories, newCategory.trim()];
+
+    const updated = [...categories, { title: newCategoryTitle.trim(), type: selectedType }];
     saveCategories(updated);
     toast.success("Categoria adicionada com sucesso!");
-    setNewCategory('');
+    setNewCategoryTitle('');
     setView('menu');
   };
 
-  const handleEditSave = (index: number) => {
+  const handleEditSave = (globalIndex: number) => {
     if (!editingValue.trim()) {
       toast.error("O nome da categoria não pode ser vazio.");
       return;
     }
     const updated = [...categories];
-    updated[index] = editingValue.trim();
+    updated[globalIndex].title = editingValue.trim();
     saveCategories(updated);
     toast.success("Categoria atualizada com sucesso!");
     setEditingIndex(null);
   };
 
-  const handleDelete = (index: number) => {
+  const handleDelete = (globalIndex: number) => {
     if (confirm("Tem certeza que deseja excluir esta categoria?")) {
-      const updated = categories.filter((_, i) => i !== index);
+      const updated = categories.filter((_, i) => i !== globalIndex);
       saveCategories(updated);
       toast.success("Categoria excluída com sucesso!");
     }
+  };
+
+  const getTypeName = (type: 'FM' | 'LPG' | 'PNAB') => {
+    if (type === 'FM') return 'Fomento Municipal';
+    if (type === 'LPG') return 'Lei Paulo Gustavo';
+    return 'PNAB';
   };
 
   return (
@@ -91,14 +125,25 @@ const AdminCategoriasDialog = ({ open, onOpenChange }: AdminCategoriasDialogProp
         <DialogHeader className="mb-6">
           <div className="flex items-center gap-3">
             {view !== 'menu' && (
-              <Button variant="ghost" size="icon" onClick={() => setView('menu')} className="rounded-full h-8 w-8">
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                onClick={() => {
+                  if (view === 'add-input-title') setView('add-select-type');
+                  else if (view === 'edit-list') setView('edit-select-type');
+                  else setView('menu');
+                }} 
+                className="rounded-full h-8 w-8"
+              >
                 <ArrowLeft size={16} />
               </Button>
             )}
             <DialogTitle className="text-2xl font-bold text-slate-900">
               {view === 'menu' && "Gerenciar Categorias"}
-              {view === 'add' && "Adicionar Categoria"}
-              {view === 'edit' && "Editar Categorias"}
+              {view === 'add-select-type' && "Selecionar Programa"}
+              {view === 'add-input-title' && "Adicionar Categoria"}
+              {view === 'edit-select-type' && "Selecionar Programa"}
+              {view === 'edit-list' && `Editar: ${getTypeName(selectedType)}`}
             </DialogTitle>
           </div>
         </DialogHeader>
@@ -106,7 +151,7 @@ const AdminCategoriasDialog = ({ open, onOpenChange }: AdminCategoriasDialogProp
         {view === 'menu' && (
           <div className="grid grid-cols-1 gap-4 py-4">
             <button
-              onClick={() => setView('add')}
+              onClick={() => setView('add-select-type')}
               className="flex items-center gap-4 p-6 bg-slate-50 hover:bg-blue-50/50 border border-slate-100 hover:border-blue-200 rounded-2xl transition-all text-left group"
             >
               <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center group-hover:bg-blue-100 transition-colors">
@@ -119,7 +164,7 @@ const AdminCategoriasDialog = ({ open, onOpenChange }: AdminCategoriasDialogProp
             </button>
 
             <button
-              onClick={() => setView('edit')}
+              onClick={() => setView('edit-select-type')}
               className="flex items-center gap-4 p-6 bg-slate-50 hover:bg-blue-50/50 border border-slate-100 hover:border-blue-200 rounded-2xl transition-all text-left group"
             >
               <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center group-hover:bg-blue-100 transition-colors">
@@ -133,13 +178,46 @@ const AdminCategoriasDialog = ({ open, onOpenChange }: AdminCategoriasDialogProp
           </div>
         )}
 
-        {view === 'add' && (
-          <form onSubmit={handleAdd} className="space-y-6 py-2">
+        {view === 'add-select-type' && (
+          <div className="space-y-6 py-2">
             <div className="space-y-2">
-              <Label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Nome da Categoria</Label>
+              <Label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Selecione o Programa</Label>
+              <Select 
+                value={selectedType} 
+                onValueChange={(val: 'FM' | 'LPG' | 'PNAB') => setSelectedType(val)}
+              >
+                <SelectTrigger className="h-12 rounded-xl border-slate-200">
+                  <SelectValue placeholder="Selecione o programa" />
+                </SelectTrigger>
+                <SelectContent className="rounded-xl">
+                  <SelectItem value="FM">Fomento Municipal</SelectItem>
+                  <SelectItem value="LPG">Lei Paulo Gustavo</SelectItem>
+                  <SelectItem value="PNAB">PNAB</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <Button 
+              onClick={() => setView('add-input-title')} 
+              className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold"
+            >
+              Avançar
+            </Button>
+          </div>
+        )}
+
+        {view === 'add-input-title' && (
+          <form onSubmit={handleAddConfirm} className="space-y-6 py-2">
+            <div className="space-y-2">
+              <Label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Programa Selecionado</Label>
+              <p className="text-sm font-bold text-blue-600 bg-blue-50 px-4 py-2.5 rounded-xl border border-blue-100">
+                {getTypeName(selectedType)}
+              </p>
+            </div>
+            <div className="space-y-2">
+              <Label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Título da Categoria</Label>
               <Input
-                value={newCategory}
-                onChange={(e) => setNewCategory(e.target.value)}
+                value={newCategoryTitle}
+                onChange={(e) => setNewCategoryTitle(e.target.value)}
                 placeholder="Ex: Artes Visuais"
                 className="h-12 rounded-xl border-slate-200"
                 required
@@ -147,59 +225,97 @@ const AdminCategoriasDialog = ({ open, onOpenChange }: AdminCategoriasDialogProp
               />
             </div>
             <DialogFooter className="gap-3">
-              <Button type="button" variant="ghost" onClick={() => setView('menu')} className="rounded-xl font-bold text-slate-500">Voltar</Button>
-              <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl px-6 font-bold">Salvar Categoria</Button>
+              <Button type="button" variant="ghost" onClick={() => setView('add-select-type')} className="rounded-xl font-bold text-slate-500">Voltar</Button>
+              <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl px-6 font-bold">Confirmar</Button>
             </DialogFooter>
           </form>
         )}
 
-        {view === 'edit' && (
+        {view === 'edit-select-type' && (
+          <div className="space-y-6 py-2">
+            <div className="space-y-2">
+              <Label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Selecione o Programa</Label>
+              <Select 
+                value={selectedType} 
+                onValueChange={(val: 'FM' | 'LPG' | 'PNAB') => setSelectedType(val)}
+              >
+                <SelectTrigger className="h-12 rounded-xl border-slate-200">
+                  <SelectValue placeholder="Selecione o programa" />
+                </SelectTrigger>
+                <SelectContent className="rounded-xl">
+                  <SelectItem value="FM">Fomento Municipal</SelectItem>
+                  <SelectItem value="LPG">Lei Paulo Gustavo</SelectItem>
+                  <SelectItem value="PNAB">PNAB</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <Button 
+              onClick={() => setView('edit-list')} 
+              className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold"
+            >
+              Avançar
+            </Button>
+          </div>
+        )}
+
+        {view === 'edit-list' && (
           <div className="space-y-4 max-h-[350px] overflow-y-auto pr-2 py-2">
-            {categories.map((cat, index) => (
-              <div key={index} className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100 gap-3">
-                {editingIndex === index ? (
-                  <div className="flex items-center gap-2 w-full">
-                    <Input
-                      value={editingValue}
-                      onChange={(e) => setEditingValue(e.target.value)}
-                      className="h-9 rounded-lg border-slate-200 flex-grow"
-                      autoFocus
-                    />
-                    <Button size="icon" onClick={() => handleEditSave(index)} className="h-9 w-9 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg shrink-0">
-                      <Check size={16} />
-                    </Button>
-                    <Button size="icon" variant="ghost" onClick={() => setEditingIndex(null)} className="h-9 w-9 rounded-lg shrink-0 text-slate-400">
-                      <ArrowLeft size={16} />
-                    </Button>
-                  </div>
-                ) : (
-                  <>
-                    <span className="font-bold text-slate-800 text-sm">{cat}</span>
-                    <div className="flex items-center gap-1 shrink-0">
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        onClick={() => {
-                          setEditingIndex(index);
-                          setEditingValue(cat);
-                        }}
-                        className="h-8 w-8 rounded-lg text-slate-400 hover:text-blue-600 hover:bg-white"
-                      >
-                        <Pencil size={14} />
-                      </Button>
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        onClick={() => handleDelete(index)}
-                        className="h-8 w-8 rounded-lg text-slate-400 hover:text-red-600 hover:bg-white"
-                      >
-                        <Trash2 size={14} />
-                      </Button>
-                    </div>
-                  </>
-                )}
+            {categories.filter(cat => cat.type === selectedType).length === 0 ? (
+              <div className="py-12 text-center border-2 border-dashed border-slate-100 rounded-2xl flex flex-col items-center gap-2">
+                <AlertCircle className="text-slate-300" size={24} />
+                <p className="text-slate-400 font-bold text-sm">Nenhuma categoria cadastrada</p>
               </div>
-            ))}
+            ) : (
+              categories.map((cat, globalIndex) => {
+                if (cat.type !== selectedType) return null;
+                
+                return (
+                  <div key={globalIndex} className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100 gap-3">
+                    {editingIndex === globalIndex ? (
+                      <div className="flex items-center gap-2 w-full">
+                        <Input
+                          value={editingValue}
+                          onChange={(e) => setEditingValue(e.target.value)}
+                          className="h-9 rounded-lg border-slate-200 flex-grow"
+                          autoFocus
+                        />
+                        <Button size="icon" onClick={() => handleEditSave(globalIndex)} className="h-9 w-9 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg shrink-0">
+                          <Check size={16} />
+                        </Button>
+                        <Button size="icon" variant="ghost" onClick={() => setEditingIndex(null)} className="h-9 w-9 rounded-lg shrink-0 text-slate-400">
+                          <ArrowLeft size={16} />
+                        </Button>
+                      </div>
+                    ) : (
+                      <>
+                        <span className="font-bold text-slate-800 text-sm">{cat.title}</span>
+                        <div className="flex items-center gap-1 shrink-0">
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            onClick={() => {
+                              setEditingIndex(globalIndex);
+                              setEditingValue(cat.title);
+                            }}
+                            className="h-8 w-8 rounded-lg text-slate-400 hover:text-blue-600 hover:bg-white"
+                          >
+                            <Pencil size={14} />
+                          </Button>
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            onClick={() => handleDelete(globalIndex)}
+                            className="h-8 w-8 rounded-lg text-slate-400 hover:text-red-600 hover:bg-white"
+                          >
+                            <Trash2 size={14} />
+                          </Button>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                );
+              })
+            )}
           </div>
         )}
       </DialogContent>
