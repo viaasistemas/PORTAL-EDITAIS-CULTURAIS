@@ -16,7 +16,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { editaisData } from '@/data/editais';
+import { editaisData, EditalDetail } from '@/data/editais';
+import AdminCategoriasDialog from '@/components/AdminCategoriasDialog';
+import AdminEditaisDialog from '@/components/AdminEditaisDialog';
 
 const AdminInscricoes = () => {
   const { session, loading } = useSession();
@@ -26,22 +28,36 @@ const AdminInscricoes = () => {
   const [categoryFilter, setCategoryFilter] = useState('todas');
   const [searchTerm, setSearchTerm] = useState('');
   const [editalSettings, setEditalSettings] = useState<Record<string, any>>({});
+  
+  // Estados para controle dos diálogos
+  const [isCategoriasOpen, setIsCategoriasOpen] = useState(false);
+  const [isEditaisOpen, setIsEditaisOpen] = useState(false);
+  const [dynamicEditais, setDynamicEditais] = useState<EditalDetail[]>(editaisData);
+
+  const loadSettingsAndEditais = () => {
+    // Carrega configurações de prazos
+    const settings: Record<string, any> = {};
+    editaisData.forEach(e => {
+      const saved = localStorage.getItem(`edital_settings_${e.id}`);
+      if (saved) settings[e.id] = JSON.parse(saved);
+    });
+    setEditalSettings(settings);
+
+    // Carrega lista dinâmica de editais
+    const savedEditais = localStorage.getItem('admin_editais_list');
+    if (savedEditais) {
+      setDynamicEditais(JSON.parse(savedEditais));
+    } else {
+      setDynamicEditais(editaisData);
+    }
+  };
 
   useEffect(() => {
     if (!loading && !session) navigate('/login');
     
-    const loadSettings = () => {
-      const settings: Record<string, any> = {};
-      editaisData.forEach(e => {
-        const saved = localStorage.getItem(`edital_settings_${e.id}`);
-        if (saved) settings[e.id] = JSON.parse(saved);
-      });
-      setEditalSettings(settings);
-    };
-
-    loadSettings();
-    window.addEventListener('storage', loadSettings);
-    return () => window.removeEventListener('storage', loadSettings);
+    loadSettingsAndEditais();
+    window.addEventListener('storage', loadSettingsAndEditais);
+    return () => window.removeEventListener('storage', loadSettingsAndEditais);
   }, [session, loading, navigate]);
 
   if (loading || !session) return null;
@@ -67,7 +83,7 @@ const AdminInscricoes = () => {
     return 'Aberto';
   };
 
-  const filteredEditais = editaisData.filter(edital => {
+  const filteredEditais = dynamicEditais.filter(edital => {
     const currentStatus = getDynamicStatus(edital);
     const settings = editalSettings[edital.id];
 
@@ -147,10 +163,16 @@ const AdminInscricoes = () => {
               </div>
               
               <div className="flex gap-2">
-                <Button className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl h-10 font-bold px-6 flex gap-2 shadow-lg shadow-blue-100">
+                <Button 
+                  onClick={() => setIsCategoriasOpen(true)}
+                  className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl h-10 font-bold px-6 flex gap-2 shadow-lg shadow-blue-100"
+                >
                   <Plus size={18} /> Categorias
                 </Button>
-                <Button className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl h-10 font-bold px-6 flex gap-2 shadow-lg shadow-blue-100">
+                <Button 
+                  onClick={() => setIsEditOpen(true)}
+                  className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl h-10 font-bold px-6 flex gap-2 shadow-lg shadow-blue-100"
+                >
                   <Plus size={18} /> Editais
                 </Button>
               </div>
@@ -188,6 +210,10 @@ const AdminInscricoes = () => {
             )}
           </div>
         </div>
+
+        {/* Diálogos de Gerenciamento */}
+        <AdminCategoriasDialog open={isCategoriasOpen} onOpenChange={setIsCategoriasOpen} />
+        <AdminEditaisDialog open={isEditaisOpen} onOpenChange={setIsEditaisOpen} />
       </main>
     </div>
   );
