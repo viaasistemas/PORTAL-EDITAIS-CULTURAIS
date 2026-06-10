@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import AdminEditalCard from '@/components/AdminEditalCard';
 import { Input } from '@/components/ui/input';
-import { Search, LayoutGrid, FileText } from 'lucide-react';
+import { Search, Plus } from 'lucide-react';
 import {
   Select,
   SelectContent,
@@ -148,10 +148,10 @@ const AdminInscricoes = () => {
               
               <div className="flex gap-2">
                 <Button className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl h-10 font-bold px-6 flex gap-2 shadow-lg shadow-blue-100">
-                  <LayoutGrid size={18} /> Categorias
+                  <Plus size={18} /> Categorias
                 </Button>
                 <Button className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl h-10 font-bold px-6 flex gap-2 shadow-lg shadow-blue-100">
-                  <FileText size={18} /> Editais
+                  <Plus size={18} /> Editais
                 </Button>
               </div>
             </div>
