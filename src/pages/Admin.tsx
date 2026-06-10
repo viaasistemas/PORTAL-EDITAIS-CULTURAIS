@@ -14,7 +14,7 @@ import { useSession } from '@/components/SessionContextProvider';
 import AdminSidebar from '@/components/AdminSidebar';
 import AdminHeader from '@/components/AdminHeader';
 import { Button } from '@/components/ui/button';
-import { editaisData } from '@/data/editais';
+import { editaisData, EditalDetail } from '@/data/editais';
 import { supabase } from '@/integrations/supabase/client';
 
 const Admin = () => {
@@ -22,6 +22,7 @@ const Admin = () => {
   const navigate = useNavigate();
   const [totalInscriptions, setTotalInscriptions] = useState(0);
   const [recentInscriptions, setRecentInscriptions] = useState<any[]>([]);
+  const [stats, setStats] = useState<any[]>([]);
 
   useEffect(() => {
     if (!loading && !session) navigate('/login');
@@ -42,24 +43,76 @@ const Admin = () => {
         .limit(4);
       
       if (data) setRecentInscriptions(data);
+
+      // Carrega editais dinâmicos e calcula status dinamicamente
+      const savedEditais = localStorage.getItem('admin_editais_list');
+      const list: EditalDetail[] = savedEditais ? JSON.parse(savedEditais) : editaisData;
+
+      let ativos = 0;
+      let encerrados = 0;
+      let finalizados = 0;
+
+      const now = new Date();
+
+      list.forEach(edital => {
+        const savedSettings = localStorage.getItem(`edital_settings_${edital.id}`);
+        const settings = savedSettings ? JSON.parse(savedSettings) : null;
+
+        if (settings?.isFinalized) {
+          finalizados++;
+          return;
+        }
+
+        // Verifica se a prorrogação está ativa
+        let isProrrogado = false;
+        if (settings?.isProrrogacao && settings?.dates?.prorrogacaoInicio) {
+          const start = new Date(`${settings.dates.prorrogacaoInicio}T${settings.dates.prorrogacaoHoraInicio}`);
+          const end = new Date(`${settings.dates.prorrogacaoFim}T${settings.dates.prorrogacaoHoraFim}`);
+          if (now >= start && now <= end) {
+            isProrrogado = true;
+          }
+        }
+
+        if (isProrrogado) {
+          ativos++;
+          return;
+        }
+
+        const startStr = settings?.dates?.abertura && settings?.dates?.horaAbertura 
+          ? `${settings.dates.abertura}T${settings.dates.horaAbertura}` 
+          : edital.dataAbertura;
+        const endStr = settings?.dates?.encerramento && settings?.dates?.horaEncerramento 
+          ? `${settings.dates.encerramento}T${settings.dates.horaEncerramento}` 
+          : edital.dataEncerramento;
+
+        const start = startStr ? new Date(startStr) : null;
+        const end = endStr ? new Date(endStr) : null;
+
+        const status = (() => {
+          if (start && now < start) return 'Em breve';
+          if (start && end && now >= start && now <= end) return 'Aberto';
+          return 'Encerrado';
+        })();
+
+        if (status === 'Aberto') {
+          ativos++;
+        } else if (status === 'Encerrado') {
+          encerrados++;
+        }
+      });
+
+      setStats([
+        { label: "Inscrições Totais", value: (count !== null ? count : 0).toString(), icon: Users, color: "bg-blue-50 text-blue-600", trend: "Total" },
+        { label: "Editais Ativos", value: ativos.toString(), icon: FileText, color: "bg-green-50 text-green-600", trend: "Aberto" },
+        { label: "EDITAIS ENCERRADOS", value: encerrados.toString(), icon: Archive, color: "bg-rose-50 text-rose-600", trend: "Encerrados" },
+        { label: "FINALIZADOS", value: finalizados.toString(), icon: TrendingUp, color: "bg-purple-50 text-purple-600", trend: "Finalizado" },
+      ]);
     };
 
     if (session) fetchData();
   }, [session, loading, navigate]);
 
   if (loading || !session) return null;
-
-  const activeEditaisCount = editaisData.filter(e => e.status === 'Aberto').length;
-  const encerradosCount = editaisData.filter(e => e.status === 'Encerrado').length;
-  // Mock de finalizados para demonstração dinâmica
-  const finalizadosCount = 0; 
-
-  const stats = [
-    { label: "Inscrições Totais", value: totalInscriptions.toString(), icon: Users, color: "bg-blue-50 text-blue-600", trend: "+12%" },
-    { label: "Editais Ativos", value: activeEditaisCount.toString(), icon: FileText, color: "bg-green-50 text-green-600", trend: "Estável" },
-    { label: "ENCERRADOS", value: encerradosCount.toString(), icon: Archive, color: "bg-rose-50 text-rose-600", trend: "Finalizados" },
-    { label: "FINALIZADOS", value: finalizadosCount.toString(), icon: TrendingUp, color: "bg-purple-50 text-purple-600", trend: "Concluídos" },
-  ];
 
   return (
     <div className="min-h-screen bg-slate-50 flex font-sans">
@@ -81,7 +134,11 @@ const Admin = () => {
                   <div className={`p-4 rounded-xl ${stat.color}`}>
                     <stat.icon size={24} />
                   </div>
-                  <span className={`text-xs font-bold px-3 py-1 rounded-lg ${stat.trend.startsWith('+') ? 'bg-green-50 text-green-600' : 'bg-slate-50 text-slate-400'}`}>
+                  <span className={`text-xs font-bold px-3 py-1 rounded-lg ${
+                    stat.trend === 'Aberto' ? 'bg-green-50 text-green-600' : 
+                    stat.trend === 'Encerrados' ? 'bg-rose-50 text-rose-600' : 
+                    stat.trend === 'Finalizado' ? 'bg-purple-50 text-purple-600' : 'bg-slate-50 text-slate-400'
+                  }`}>
                     {stat.trend}
                   </span>
                 </div>
@@ -148,10 +205,10 @@ const Admin = () => {
                   </span>
                   <ArrowUpRight size={20} className="text-slate-300 group-hover:text-blue-600 transition-colors" />
                 </button>
-                <button onClick={() => navigate('/admin/conteudo')} className="w-full flex items-center justify-between p-5 rounded-xl border border-slate-50 hover:bg-slate-50 transition-all text-slate-700 font-bold text-base group">
+                <button onClick={() => navigate('/admin/biblioteca')} className="w-full flex items-center justify-between p-5 rounded-xl border border-slate-50 hover:bg-slate-50 transition-all text-slate-700 font-bold text-base group">
                   <span className="flex items-center gap-4">
                     <Book size={22} className="text-purple-600" />
-                    Conteúdo
+                    Biblioteca
                   </span>
                   <ArrowUpRight size={20} className="text-slate-300 group-hover:text-purple-600 transition-colors" />
                 </button>

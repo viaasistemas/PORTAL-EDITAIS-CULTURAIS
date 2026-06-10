@@ -26,6 +26,31 @@ const EditalDetailsDialog = ({ edital, open, onOpenChange }: EditalDetailsDialog
   const hasDocumentos = !!edital.documentos;
   const hasDescription = !!edital.description;
 
+  // Carrega configurações de agendamento para exibir data e hora corretas
+  const settingsKey = `edital_settings_${edital.id}`;
+  const savedSettings = typeof window !== 'undefined' ? localStorage.getItem(settingsKey) : null;
+  const settings = savedSettings ? JSON.parse(savedSettings) : null;
+
+  const formatDateTime = (dateStr: string | undefined, timeStr?: string) => {
+    if (!dateStr) return "Não definida";
+    const date = timeStr ? new Date(`${dateStr}T${timeStr}`) : new Date(dateStr);
+    return date.toLocaleString('pt-BR', { 
+      day: '2-digit', 
+      month: '2-digit', 
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    }).replace(',', ' às');
+  };
+
+  const displayInicio = settings?.dates?.abertura 
+    ? formatDateTime(settings.dates.abertura, settings.dates.horaAbertura)
+    : formatDateTime(edital.dataAbertura);
+    
+  const displayFim = settings?.dates?.encerramento 
+    ? formatDateTime(settings.dates.encerramento, settings.dates.horaEncerramento)
+    : formatDateTime(edital.dataEncerramento);
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto rounded-[2.5rem] p-8">
@@ -76,11 +101,11 @@ const EditalDetailsDialog = ({ edital, open, onOpenChange }: EditalDetailsDialog
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
             <section>
               <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Início da Inscrição</h4>
-              <p className="text-base font-bold text-slate-700">{edital.inicioInscricao}</p>
+              <p className="text-base font-bold text-slate-700">{displayInicio}</p>
             </section>
             <section>
               <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Término da Inscrição</h4>
-              <p className="text-base font-bold text-slate-700">{edital.terminoInscricao}</p>
+              <p className="text-base font-bold text-slate-700">{displayFim}</p>
             </section>
           </div>
 
