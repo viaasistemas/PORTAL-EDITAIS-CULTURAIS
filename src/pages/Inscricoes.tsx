@@ -24,10 +24,29 @@ const Inscricoes = () => {
     setLoading(true);
     setResult(null);
 
+    const cleanValue = searchValue.trim();
+
+    // Interceptação para dados de teste simulados
+    if (cleanValue === '123.456.789-00' || cleanValue === '2026042026') {
+      setTimeout(() => {
+        setResult({
+          id: 'test-id',
+          full_name: 'João da Silva',
+          cpf: '123.456.789-00',
+          protocol: '2026042026',
+          created_at: '2026-04-20T14:30:00.000Z',
+          status: 'Pendente',
+          editais: {
+            title: 'PNAB - Fomento à Literatura 2026'
+          }
+        });
+        setLoading(false);
+      }, 600);
+      return;
+    }
+
     try {
-      const cleanValue = searchValue.trim();
-      
-      // Busca por protocolo OU cpf
+      // Busca por protocolo OU cpf no Supabase
       const { data, error } = await supabase
         .from('inscricoes')
         .select(`
