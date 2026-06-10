@@ -162,6 +162,36 @@ const AdminEditaisDialog = ({ open, onOpenChange }: AdminEditaisDialogProps) => 
         requisitos: formData.requisitos,
         documentos: formData.documentos
       };
+
+      // Inicializa as configurações do edital com a visibilidade desativada por padrão
+      const settingsKey = `edital_settings_${generatedNumber}`;
+      const initialSettings = {
+        isVisible: false, // Chave de visibilidade desligada por padrão
+        isFinalized: false,
+        isProrrogacao: false,
+        isRecurso: false,
+        isDocumentacao: false,
+        dates: {
+          abertura: '',
+          horaAbertura: '08:00',
+          encerramento: '',
+          horaEncerramento: '23:59',
+          prorrogacaoInicio: '',
+          prorrogacaoHoraInicio: '08:00',
+          prorrogacaoFim: '',
+          prorrogacaoHoraFim: '23:59',
+          recursoInicio: '',
+          recursoHoraInicio: '08:00',
+          recursoFim: '',
+          recursoHoraFim: '23:59',
+          docInicio: '',
+          docHoraInicio: '08:00',
+          docFim: '',
+          docHoraFim: '23:59',
+        }
+      };
+      localStorage.setItem(settingsKey, JSON.stringify(initialSettings));
+
       saveEditais([...editais, newEdital]);
       toast.success(`Edital #${generatedNumber} criado com sucesso!`);
     }
