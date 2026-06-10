@@ -115,7 +115,7 @@ const EditaisLPG = () => {
     const start = aberturaStr ? new Date(aberturaStr) : null;
     const end = encerramentoStr ? new Date(encerramentoStr) : null;
 
-    if (start && text => now < start) return 'Em breve';
+    if (start && now < start) return 'Em breve';
     if (start && end && now >= start && now <= end) return 'Aberto';
     if (end && now > end) return 'Encerrado';
     
