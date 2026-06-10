@@ -186,7 +186,7 @@ const AdminInscricoes = () => {
                   <Plus size={18} /> Categorias
                 </Button>
                 <Button 
-                  onClick={() => setIsEditOpen ? setIsEditOpen(true) : setIsEditaisOpen(true)}
+                  onClick={() => setIsEditaisOpen(true)}
                   className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl h-10 font-bold px-6 flex gap-2 shadow-lg shadow-blue-100"
                 >
                   <Plus size={18} /> Editais

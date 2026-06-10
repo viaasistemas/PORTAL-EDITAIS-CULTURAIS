@@ -18,7 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Plus, Pencil, Trash2, ArrowLeft, FilePlus, FileEdit, Check } from 'lucide-react';
+import { Plus, Pencil, Trash2, ArrowLeft, FilePlus, FileEdit } from 'lucide-react';
 import { toast } from 'sonner';
 import { editaisData, EditalDetail } from '@/data/editais';
 
@@ -60,7 +60,6 @@ const AdminEditaisDialog = ({ open, onOpenChange }: AdminEditaisDialogProps) => 
   const saveEditais = (updated: EditalDetail[]) => {
     setEditais(updated);
     localStorage.setItem('admin_editais_list', JSON.stringify(updated));
-    // Dispara evento para atualizar a listagem principal
     window.dispatchEvent(new Event('storage'));
   };
 

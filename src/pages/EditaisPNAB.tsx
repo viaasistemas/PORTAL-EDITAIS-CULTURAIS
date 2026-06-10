@@ -34,6 +34,7 @@ const EditaisPNAB = () => {
   const [viewResultados, setViewResultados] = useState<EditalDetail | null>(null);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [categories, setCategories] = useState<string[]>(["Todas", "Cultura Popular", "Música", "Dança"]);
+  const [dynamicEditais, setDynamicEditais] = useState<EditalDetail[]>(editaisData);
 
   const [editalSettings, setEditalSettings] = useState<Record<string, any>>({});
 
@@ -45,6 +46,14 @@ const EditaisPNAB = () => {
         if (saved) settings[e.id] = JSON.parse(saved);
       });
       setEditalSettings(settings);
+
+      // Carrega editais dinâmicos
+      const savedEditais = localStorage.getItem('admin_editais_list');
+      if (savedEditais) {
+        setDynamicEditais(JSON.parse(savedEditais));
+      } else {
+        setDynamicEditais(editaisData);
+      }
 
       // Carrega categorias dinâmicas do PNAB
       const savedCats = localStorage.getItem('admin_categories_by_program');
@@ -128,7 +137,10 @@ const EditaisPNAB = () => {
     }).replace(',', ' às');
   };
 
-  const filteredEditais = editaisData.filter(e => {
+  const filteredEditais = dynamicEditais.filter(e => {
+    // Filtra apenas editais do tipo PNAB para esta página
+    if (e.tipo !== 'PNAB') return false;
+
     const settings = editalSettings[e.id];
     if (settings && settings.isVisible === false) return false;
 
