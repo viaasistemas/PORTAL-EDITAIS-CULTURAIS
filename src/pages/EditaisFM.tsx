@@ -74,7 +74,7 @@ const EditaisFM = () => {
 
   const isPhaseActive = (editalId: string, phase: 'recurso' | 'documentacao' | 'prorrogacao') => {
     const settings = editalSettings[editalId];
-    if (!settings) return false;
+    if (!settings || !settings.dates) return false;
 
     const now = currentTime;
     let startStr, endStr, isActive;
