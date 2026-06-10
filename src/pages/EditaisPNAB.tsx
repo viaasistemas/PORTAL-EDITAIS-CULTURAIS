@@ -33,25 +33,33 @@ const EditaisPNAB = () => {
   const [viewAnexos, setViewAnexos] = useState<EditalDetail | null>(null);
   const [viewResultados, setViewResultados] = useState<EditalDetail | null>(null);
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [categories, setCategories] = useState<string[]>(["Todas", "Cultura Popular", "Música", "Dança"]);
 
   const [editalSettings, setEditalSettings] = useState<Record<string, any>>({});
 
   useEffect(() => {
-    const loadSettings = () => {
+    const loadSettingsAndCategories = () => {
       const settings: Record<string, any> = {};
       editaisData.forEach(e => {
         const saved = localStorage.getItem(`edital_settings_${e.id}`);
         if (saved) settings[e.id] = JSON.parse(saved);
       });
       setEditalSettings(settings);
+
+      // Carrega categorias dinâmicas do PNAB
+      const savedCats = localStorage.getItem('admin_categories_by_program');
+      if (savedCats) {
+        const parsed = JSON.parse(savedCats);
+        setCategories(["Todas", ...(parsed.PNAB || [])]);
+      }
     };
 
-    loadSettings();
-    window.addEventListener('storage', loadSettings);
+    loadSettingsAndCategories();
+    window.addEventListener('storage', loadSettingsAndCategories);
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
     
     return () => {
-      window.removeEventListener('storage', loadSettings);
+      window.removeEventListener('storage', loadSettingsAndCategories);
       clearInterval(timer);
     };
   }, []);
@@ -133,8 +141,6 @@ const EditaisPNAB = () => {
 
     return matchesStatus && matchesCategory;
   });
-
-  const categories = ["Todas", "Cultura Popular", "Música", "Dança"];
 
   return (
     <div className="min-h-screen bg-white flex flex-col">

@@ -11,7 +11,16 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Plus, Pencil, Trash2, ArrowLeft, FolderPlus, FolderEdit, Check } from 'lucide-react';
+import { 
+  Plus, 
+  Pencil, 
+  Trash2, 
+  ArrowLeft, 
+  FolderPlus, 
+  FolderEdit, 
+  Check,
+  ChevronRight
+} from 'lucide-react';
 import { toast } from 'sonner';
 
 interface AdminCategoriasDialogProps {
@@ -19,59 +28,88 @@ interface AdminCategoriasDialogProps {
   onOpenChange: (open: boolean) => void;
 }
 
-type ViewState = 'menu' | 'add' | 'edit';
+type ProgramType = 'FM' | 'LPG' | 'PNAB';
+type ViewState = 'menu' | 'add_select_program' | 'add_form' | 'edit_select_program' | 'edit_list';
+
+interface ProgramCategories {
+  FM: string[];
+  LPG: string[];
+  PNAB: string[];
+}
+
+const defaultCategories: ProgramCategories = {
+  FM: ["Patrimônio", "Artesanato", "Cultura Popular"],
+  LPG: ["Audiovisual", "Artes Cênicas", "Música"],
+  PNAB: ["Cultura Popular", "Música", "Dança", "Artes Visuais", "Artes Cênicas", "Audiovisual", "Literatura", "Artesanato"]
+};
 
 const AdminCategoriasDialog = ({ open, onOpenChange }: AdminCategoriasDialogProps) => {
   const [view, setView] = useState<ViewState>('menu');
-  const [categories, setCategories] = useState<string[]>([]);
-  const [newCategory, setNewCategory] = useState('');
+  const [categories, setCategories] = useState<ProgramCategories>(defaultCategories);
+  const [selectedProgram, setSelectedProgram] = useState<ProgramType>('PNAB');
+  const [newCategoryTitle, setNewCategoryTitle] = useState('');
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [editingValue, setEditingValue] = useState('');
 
   useEffect(() => {
     if (open) {
       setView('menu');
-      const saved = localStorage.getItem('admin_categories');
+      const saved = localStorage.getItem('admin_categories_by_program');
       if (saved) {
         setCategories(JSON.parse(saved));
       } else {
-        const defaultCats = ["Cultura Popular", "Música", "Dança", "Artes Visuais", "Artes Cênicas", "Audiovisual", "Literatura", "Artesanato"];
-        setCategories(defaultCats);
-        localStorage.setItem('admin_categories', JSON.stringify(defaultCats));
+        setCategories(defaultCategories);
+        localStorage.setItem('admin_categories_by_program', JSON.stringify(defaultCategories));
       }
     }
   }, [open]);
 
-  const saveCategories = (updated: string[]) => {
+  const saveCategories = (updated: ProgramCategories) => {
     setCategories(updated);
-    localStorage.setItem('admin_categories', JSON.stringify(updated));
+    localStorage.setItem('admin_categories_by_program', JSON.stringify(updated));
     window.dispatchEvent(new Event('storage'));
   };
 
-  const handleAdd = (e: React.FormEvent) => {
+  const handleAddCategory = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newCategory.trim()) {
-      toast.error("O nome da categoria não pode ser vazio.");
+    const title = newCategoryTitle.trim();
+    if (!title) {
+      toast.error("O título da categoria não pode ser vazio.");
       return;
     }
-    if (categories.includes(newCategory.trim())) {
-      toast.error("Esta categoria já existe.");
+
+    const programList = categories[selectedProgram] || [];
+    if (programList.some(cat => cat.toLowerCase() === title.toLowerCase())) {
+      toast.error("Esta categoria já existe neste programa.");
       return;
     }
-    const updated = [...categories, newCategory.trim()];
+
+    const updated = {
+      ...categories,
+      [selectedProgram]: [...programList, title]
+    };
+
     saveCategories(updated);
-    toast.success("Categoria adicionada com sucesso!");
-    setNewCategory('');
+    toast.success(`Categoria "${title}" adicionada ao programa com sucesso!`);
+    setNewCategoryTitle('');
     setView('menu');
   };
 
   const handleEditSave = (index: number) => {
-    if (!editingValue.trim()) {
-      toast.error("O nome da categoria não pode ser vazio.");
+    const title = editingValue.trim();
+    if (!title) {
+      toast.error("O título da categoria não pode ser vazio.");
       return;
     }
-    const updated = [...categories];
-    updated[index] = editingValue.trim();
+
+    const programList = [...categories[selectedProgram]];
+    programList[index] = title;
+
+    const updated = {
+      ...categories,
+      [selectedProgram]: programList
+    };
+
     saveCategories(updated);
     toast.success("Categoria atualizada com sucesso!");
     setEditingIndex(null);
@@ -79,10 +117,20 @@ const AdminCategoriasDialog = ({ open, onOpenChange }: AdminCategoriasDialogProp
 
   const handleDelete = (index: number) => {
     if (confirm("Tem certeza que deseja excluir esta categoria?")) {
-      const updated = categories.filter((_, i) => i !== index);
+      const programList = categories[selectedProgram].filter((_, i) => i !== index);
+      const updated = {
+        ...categories,
+        [selectedProgram]: programList
+      };
       saveCategories(updated);
       toast.success("Categoria excluída com sucesso!");
     }
+  };
+
+  const getProgramLabel = (prog: ProgramType) => {
+    if (prog === 'FM') return 'Fomento Municipal';
+    if (prog === 'LPG') return 'Lei Paulo Gustavo';
+    return 'PNAB';
   };
 
   return (
@@ -91,14 +139,25 @@ const AdminCategoriasDialog = ({ open, onOpenChange }: AdminCategoriasDialogProp
         <DialogHeader className="mb-6">
           <div className="flex items-center gap-3">
             {view !== 'menu' && (
-              <Button variant="ghost" size="icon" onClick={() => setView('menu')} className="rounded-full h-8 w-8">
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                onClick={() => {
+                  if (view === 'add_form') setView('add_select_program');
+                  else if (view === 'edit_list') setView('edit_select_program');
+                  else setView('menu');
+                }} 
+                className="rounded-full h-8 w-8"
+              >
                 <ArrowLeft size={16} />
               </Button>
             )}
             <DialogTitle className="text-2xl font-bold text-slate-900">
               {view === 'menu' && "Gerenciar Categorias"}
-              {view === 'add' && "Adicionar Categoria"}
-              {view === 'edit' && "Editar Categorias"}
+              {view === 'add_select_program' && "Selecionar Programa"}
+              {view === 'add_form' && "Adicionar Categoria"}
+              {view === 'edit_select_program' && "Selecionar Programa para Editar"}
+              {view === 'edit_list' && `Editar: ${getProgramLabel(selectedProgram)}`}
             </DialogTitle>
           </div>
         </DialogHeader>
@@ -106,7 +165,7 @@ const AdminCategoriasDialog = ({ open, onOpenChange }: AdminCategoriasDialogProp
         {view === 'menu' && (
           <div className="grid grid-cols-1 gap-4 py-4">
             <button
-              onClick={() => setView('add')}
+              onClick={() => setView('add_select_program')}
               className="flex items-center gap-4 p-6 bg-slate-50 hover:bg-blue-50/50 border border-slate-100 hover:border-blue-200 rounded-2xl transition-all text-left group"
             >
               <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center group-hover:bg-blue-100 transition-colors">
@@ -119,7 +178,7 @@ const AdminCategoriasDialog = ({ open, onOpenChange }: AdminCategoriasDialogProp
             </button>
 
             <button
-              onClick={() => setView('edit')}
+              onClick={() => setView('edit_select_program')}
               className="flex items-center gap-4 p-6 bg-slate-50 hover:bg-blue-50/50 border border-slate-100 hover:border-blue-200 rounded-2xl transition-all text-left group"
             >
               <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center group-hover:bg-blue-100 transition-colors">
@@ -133,29 +192,53 @@ const AdminCategoriasDialog = ({ open, onOpenChange }: AdminCategoriasDialogProp
           </div>
         )}
 
-        {view === 'add' && (
-          <form onSubmit={handleAdd} className="space-y-6 py-2">
+        {(view === 'add_select_program' || view === 'edit_select_program') && (
+          <div className="space-y-3 py-2">
+            <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Escolha o Programa:</p>
+            {(['FM', 'LPG', 'PNAB'] as ProgramType[]).map((prog) => (
+              <button
+                key={prog}
+                onClick={() => {
+                  setSelectedProgram(prog);
+                  setView(view === 'add_select_program' ? 'add_form' : 'edit_list');
+                }}
+                className="w-full flex items-center justify-between p-5 bg-slate-50 hover:bg-blue-50/50 border border-slate-100 hover:border-blue-200 rounded-xl transition-all text-left font-bold text-slate-800"
+              >
+                <span>{getProgramLabel(prog)}</span>
+                <ChevronRight size={18} className="text-slate-400" />
+              </button>
+            ))}
+          </div>
+        )}
+
+        {view === 'add_form' && (
+          <form onSubmit={handleAddCategory} className="space-y-6 py-2">
+            <div className="bg-blue-50/50 border border-blue-100 p-4 rounded-xl">
+              <p className="text-[10px] font-bold text-blue-600 uppercase tracking-widest">Programa Selecionado</p>
+              <p className="text-sm font-bold text-slate-800 mt-1">{getProgramLabel(selectedProgram)}</p>
+            </div>
+
             <div className="space-y-2">
-              <Label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Nome da Categoria</Label>
+              <Label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Título da Categoria</Label>
               <Input
-                value={newCategory}
-                onChange={(e) => setNewCategory(e.target.value)}
-                placeholder="Ex: Artes Visuais"
+                value={newCategoryTitle}
+                onChange={(e) => setNewCategoryTitle(e.target.value)}
+                placeholder="Ex: Artes Visuais, Dança, Teatro..."
                 className="h-12 rounded-xl border-slate-200"
                 required
                 autoFocus
               />
             </div>
             <DialogFooter className="gap-3">
-              <Button type="button" variant="ghost" onClick={() => setView('menu')} className="rounded-xl font-bold text-slate-500">Voltar</Button>
-              <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl px-6 font-bold">Salvar Categoria</Button>
+              <Button type="button" variant="ghost" onClick={() => setView('add_select_program')} className="rounded-xl font-bold text-slate-500">Voltar</Button>
+              <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl px-6 font-bold">Confirmar</Button>
             </DialogFooter>
           </form>
         )}
 
-        {view === 'edit' && (
+        {view === 'edit_list' && (
           <div className="space-y-4 max-h-[350px] overflow-y-auto pr-2 py-2">
-            {categories.map((cat, index) => (
+            {(categories[selectedProgram] || []).map((cat, index) => (
               <div key={index} className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100 gap-3">
                 {editingIndex === index ? (
                   <div className="flex items-center gap-2 w-full">
@@ -200,6 +283,9 @@ const AdminCategoriasDialog = ({ open, onOpenChange }: AdminCategoriasDialogProp
                 )}
               </div>
             ))}
+            {(categories[selectedProgram] || []).length === 0 && (
+              <p className="text-center text-slate-400 text-sm py-8">Nenhuma categoria cadastrada neste programa.</p>
+            )}
           </div>
         )}
       </DialogContent>

@@ -28,6 +28,7 @@ const AdminInscricoes = () => {
   const [categoryFilter, setCategoryFilter] = useState('todas');
   const [searchTerm, setSearchTerm] = useState('');
   const [editalSettings, setEditalSettings] = useState<Record<string, any>>({});
+  const [dynamicCategories, setDynamicCategories] = useState<string[]>([]);
   
   // Estados para controle dos diálogos
   const [isCategoriasOpen, setIsCategoriasOpen] = useState(false);
@@ -50,6 +51,21 @@ const AdminInscricoes = () => {
     } else {
       setDynamicEditais(editaisData);
     }
+
+    // Carrega categorias dinâmicas
+    const savedCats = localStorage.getItem('admin_categories_by_program');
+    if (savedCats) {
+      const parsed = JSON.parse(savedCats);
+      if (activeTab === 'PNAB') setDynamicCategories(parsed.PNAB || []);
+      else if (activeTab === 'LPG') setDynamicCategories(parsed.LPG || []);
+      else if (activeTab === 'Fomento Municipal') setDynamicCategories(parsed.FM || []);
+      else setDynamicCategories([]);
+    } else {
+      if (activeTab === 'PNAB') setDynamicCategories(["Cultura Popular", "Música", "Dança", "Artes Visuais", "Artes Cênicas", "Audiovisual", "Literatura", "Artesanato"]);
+      else if (activeTab === 'LPG') setDynamicCategories(["Audiovisual", "Artes Cênicas", "Música"]);
+      else if (activeTab === 'Fomento Municipal') setDynamicCategories(["Patrimônio", "Artesanato", "Cultura Popular"]);
+      else setDynamicCategories([]);
+    }
   };
 
   useEffect(() => {
@@ -58,7 +74,7 @@ const AdminInscricoes = () => {
     loadSettingsAndEditais();
     window.addEventListener('storage', loadSettingsAndEditais);
     return () => window.removeEventListener('storage', loadSettingsAndEditais);
-  }, [session, loading, navigate]);
+  }, [session, loading, navigate, activeTab]);
 
   if (loading || !session) return null;
 
@@ -135,16 +151,16 @@ const AdminInscricoes = () => {
                   />
                 </div>
                 
-                {activeTab === 'PNAB' && (
+                {activeTab !== 'Todos' && dynamicCategories.length > 0 && (
                   <Select value={categoryFilter} onValueChange={setCategoryFilter}>
                     <SelectTrigger className="w-[180px] bg-white border-slate-200 rounded-xl h-11">
                       <SelectValue placeholder="Categoria" />
                     </SelectTrigger>
                     <SelectContent className="rounded-xl">
                       <SelectItem value="todas">Todas Categorias</SelectItem>
-                      <SelectItem value="Cultura Popular">Cultura Popular</SelectItem>
-                      <SelectItem value="Música">Música</SelectItem>
-                      <SelectItem value="Dança">Dança</SelectItem>
+                      {dynamicCategories.map((cat) => (
+                        <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 )}
@@ -170,7 +186,7 @@ const AdminInscricoes = () => {
                   <Plus size={18} /> Categorias
                 </Button>
                 <Button 
-                  onClick={() => setIsEditOpen(true)}
+                  onClick={() => setIsEditOpen ? setIsEditOpen(true) : setIsEditaisOpen(true)}
                   className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl h-10 font-bold px-6 flex gap-2 shadow-lg shadow-blue-100"
                 >
                   <Plus size={18} /> Editais
@@ -185,7 +201,7 @@ const AdminInscricoes = () => {
                 key={tab}
                 onClick={() => {
                   setTab(tab);
-                  if (tab !== 'PNAB') setCategoryFilter('todas');
+                  setCategoryFilter('todas');
                 }}
                 className={`rounded-xl px-6 h-11 font-bold text-sm transition-all shrink-0 ${
                   activeTab === tab 
