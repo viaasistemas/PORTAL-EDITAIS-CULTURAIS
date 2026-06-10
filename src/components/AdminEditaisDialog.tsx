@@ -11,6 +11,14 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Plus, Pencil, Trash2, ArrowLeft, FilePlus, FileEdit, ChevronRight } from 'lucide-react';
 import { toast } from 'sonner';
 import { editaisData, EditalDetail } from '@/data/editais';
@@ -24,7 +32,6 @@ type ProgramType = 'FM' | 'LPG' | 'PNAB';
 type ViewState = 
   | 'menu' 
   | 'add_select_program' 
-  | 'add_select_category' 
   | 'add_form' 
   | 'edit_select_program' 
   | 'edit_list';
@@ -39,25 +46,26 @@ const AdminEditaisDialog = ({ open, onOpenChange }: AdminEditaisDialogProps) => 
   const [view, setView] = useState<ViewState>('menu');
   const [editais, setEditais] = useState<EditalDetail[]>([]);
   const [selectedProgram, setSelectedProgram] = useState<ProgramType>('PNAB');
-  const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [availableCategories, setAvailableCategories] = useState<string[]>([]);
   
   const [formData, setFormData] = useState({
     title: '',
     subtitle: '',
-    number: '',
-    vagas: '10',
-    valorTotal: 'R$ 100.000,00',
-    valorMaximo: 'R$ 10.000,00',
+    description: '',
+    category: '',
+    valorTotal: '',
+    valorMaximo: '',
+    vagas: '',
+    etapas: '',
+    requisitos: '',
+    documentos: '',
   });
   const [editingId, setEditingId] = useState<string | null>(null);
 
-  // Carrega editais e categorias reais do localStorage ao abrir o diálogo
   useEffect(() => {
     if (open) {
       setView('menu');
       
-      // Carrega editais
       const savedEditais = localStorage.getItem('admin_editais_list');
       if (savedEditais) {
         setEditais(JSON.parse(savedEditais));
@@ -65,13 +73,20 @@ const AdminEditaisDialog = ({ open, onOpenChange }: AdminEditaisDialogProps) => 
         setEditais(editaisData);
         localStorage.setItem('admin_editais_list', JSON.stringify(editaisData));
       }
-
-      // Carrega categorias reais do programa selecionado
-      const savedCats = localStorage.getItem('admin_categories_by_program');
-      const cats = savedCats ? JSON.parse(savedCats) : defaultCategories;
-      setAvailableCategories(cats[selectedProgram] || []);
     }
-  }, [open, selectedProgram]);
+  }, [open]);
+
+  useEffect(() => {
+    const savedCats = localStorage.getItem('admin_categories_by_program');
+    const cats = savedCats ? JSON.parse(savedCats) : defaultCategories;
+    const programCats = cats[selectedProgram] || [];
+    setAvailableCategories(programCats);
+    
+    // Reseta a categoria selecionada se ela não estiver nas disponíveis do novo fomento
+    if (!programCats.includes(formData.category)) {
+      setFormData(prev => ({ ...prev, category: '' }));
+    }
+  }, [selectedProgram, formData.category]);
 
   const saveEditais = (updated: EditalDetail[]) => {
     setEditais(updated);
@@ -79,17 +94,30 @@ const AdminEditaisDialog = ({ open, onOpenChange }: AdminEditaisDialogProps) => 
     window.dispatchEvent(new Event('storage'));
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
+  const generateEditalNumber = () => {
+    const currentYear = new Date().getFullYear();
+    const yearStr = String(currentYear);
+    const editaisThisYear = editais.filter(e => e.number.endsWith(yearStr));
+    const nextSeq = editaisThisYear.length + 1;
+    const seqStr = String(nextSeq).padStart(2, '0');
+    return `${seqStr}${currentYear}`;
+  };
+
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.title || !formData.number) {
-      toast.error("Título e Número são obrigatórios.");
+    if (!formData.title || !formData.subtitle || !formData.category) {
+      toast.error("Título, Subtítulo e Categoria são obrigatórios.");
       return;
     }
+
+    const etapasArray = formData.etapas 
+      ? formData.etapas.split('\n').filter(line => line.trim() !== '')
+      : [];
 
     if (editingId) {
       const updated = editais.map(item => {
@@ -98,12 +126,15 @@ const AdminEditaisDialog = ({ open, onOpenChange }: AdminEditaisDialogProps) => 
             ...item,
             title: formData.title,
             subtitle: formData.subtitle,
-            number: formData.number,
+            description: formData.description,
             tipo: selectedProgram,
             vagas: formData.vagas,
             valorTotal: formData.valorTotal,
             valorMaximo: formData.valorMaximo,
-            categories: [selectedCategory]
+            categories: [formData.category],
+            etapas: etapasArray,
+            requisitos: formData.requisitos,
+            documentos: formData.documentos
           };
         }
         return item;
@@ -111,13 +142,14 @@ const AdminEditaisDialog = ({ open, onOpenChange }: AdminEditaisDialogProps) => 
       saveEditais(updated);
       toast.success("Edital atualizado com sucesso!");
     } else {
+      const generatedNumber = generateEditalNumber();
       const newEdital: EditalDetail = {
-        id: formData.number,
-        number: formData.number,
+        id: generatedNumber,
+        number: generatedNumber,
         title: formData.title,
         subtitle: formData.subtitle,
-        description: formData.subtitle,
-        categories: [selectedCategory],
+        description: formData.description,
+        categories: [formData.category],
         valorTotal: formData.valorTotal,
         valorMaximo: formData.valorMaximo,
         inicioInscricao: new Date().toLocaleDateString('pt-BR'),
@@ -126,12 +158,12 @@ const AdminEditaisDialog = ({ open, onOpenChange }: AdminEditaisDialogProps) => 
         tipo: selectedProgram,
         prazoAtual: 'PERÍODO DE INSCRIÇÃO',
         vagas: formData.vagas,
-        etapas: ["1. Inscrição online", "2. Análise documental", "3. Avaliação técnica", "4. Resultado final"],
-        requisitos: "Ser maior de 18 anos, residir no município.",
-        documentos: "RG, CPF, Comprovante de residência."
+        etapas: etapasArray,
+        requisitos: formData.requisitos,
+        documentos: formData.documentos
       };
       saveEditais([...editais, newEdital]);
-      toast.success("Edital criado com sucesso!");
+      toast.success(`Edital #${generatedNumber} criado com sucesso!`);
     }
 
     setView('menu');
@@ -142,10 +174,14 @@ const AdminEditaisDialog = ({ open, onOpenChange }: AdminEditaisDialogProps) => 
     setFormData({
       title: '',
       subtitle: '',
-      number: '',
-      vagas: '10',
-      valorTotal: 'R$ 100.000,00',
-      valorMaximo: 'R$ 10.000,00',
+      description: '',
+      category: '',
+      valorTotal: '',
+      valorMaximo: '',
+      vagas: '',
+      etapas: '',
+      requisitos: '',
+      documentos: '',
     });
     setEditingId(null);
   };
@@ -154,13 +190,16 @@ const AdminEditaisDialog = ({ open, onOpenChange }: AdminEditaisDialogProps) => 
     setFormData({
       title: item.title,
       subtitle: item.subtitle,
-      number: item.number,
-      vagas: item.vagas,
-      valorTotal: item.valorTotal,
-      valorMaximo: item.valorMaximo,
+      description: item.description || '',
+      category: item.categories[0] || '',
+      valorTotal: item.valorTotal || '',
+      valorMaximo: item.valorMaximo || '',
+      vagas: item.vagas || '',
+      etapas: item.etapas ? item.etapas.join('\n') : '',
+      requisitos: item.requisitos || '',
+      documentos: item.documentos || '',
     });
     setSelectedProgram(item.tipo);
-    setSelectedCategory(item.categories[0] || '');
     setEditingId(item.id);
     setView('add_form');
   };
@@ -181,10 +220,9 @@ const AdminEditaisDialog = ({ open, onOpenChange }: AdminEditaisDialogProps) => 
 
   const handleBack = () => {
     if (view === 'add_select_program') setView('menu');
-    else if (view === 'add_select_category') setView('add_select_program');
     else if (view === 'add_form') {
       if (editingId) setView('edit_list');
-      else setView('add_select_category');
+      else setView('add_select_program');
     }
     else if (view === 'edit_select_program') setView('menu');
     else if (view === 'edit_list') setView('edit_select_program');
@@ -192,7 +230,7 @@ const AdminEditaisDialog = ({ open, onOpenChange }: AdminEditaisDialogProps) => 
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-lg rounded-[2.5rem] p-8 max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-xl rounded-[2.5rem] p-8 max-h-[90vh] overflow-y-auto">
         <DialogHeader className="mb-6">
           <div className="flex items-center gap-3">
             {view !== 'menu' && (
@@ -202,10 +240,9 @@ const AdminEditaisDialog = ({ open, onOpenChange }: AdminEditaisDialogProps) => 
             )}
             <DialogTitle className="text-2xl font-bold text-slate-900">
               {view === 'menu' && "Gerenciar Editais"}
-              {view === 'add_select_program' && "Selecionar Programa"}
-              {view === 'add_select_category' && "Selecionar Categoria"}
+              {view === 'add_select_program' && "Selecionar Fomento"}
               {view === 'add_form' && (editingId ? "Editar Edital" : "Adicionar Edital")}
-              {view === 'edit_select_program' && "Selecionar Programa"}
+              {view === 'edit_select_program' && "Selecionar Fomento"}
               {view === 'edit_list' && `Editais: ${getProgramLabel(selectedProgram)}`}
             </DialogTitle>
           </div>
@@ -243,13 +280,13 @@ const AdminEditaisDialog = ({ open, onOpenChange }: AdminEditaisDialogProps) => 
 
         {(view === 'add_select_program' || view === 'edit_select_program') && (
           <div className="space-y-3 py-2">
-            <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Escolha o Programa:</p>
+            <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Escolha o Fomento:</p>
             {(['FM', 'LPG', 'PNAB'] as ProgramType[]).map((prog) => (
               <button
                 key={prog}
                 onClick={() => {
                   setSelectedProgram(prog);
-                  setView(view === 'add_select_program' ? 'add_select_category' : 'edit_list');
+                  setView(view === 'add_select_program' ? 'add_form' : 'edit_list');
                 }}
                 className="w-full flex items-center justify-between p-5 bg-slate-50 hover:bg-blue-50/50 border border-slate-100 hover:border-blue-200 rounded-xl transition-all text-left font-bold text-slate-800"
               >
@@ -260,62 +297,43 @@ const AdminEditaisDialog = ({ open, onOpenChange }: AdminEditaisDialogProps) => 
           </div>
         )}
 
-        {view === 'add_select_category' && (
-          <div className="space-y-3 py-2">
-            <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Escolha a Categoria para {getProgramLabel(selectedProgram)}:</p>
-            {availableCategories.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => {
-                  setSelectedCategory(cat);
-                  setView('add_form');
-                }}
-                className="w-full flex items-center justify-between p-5 bg-slate-50 hover:bg-blue-50/50 border border-slate-100 hover:border-blue-200 rounded-xl transition-all text-left font-bold text-slate-800"
-              >
-                <span>{cat}</span>
-                <ChevronRight size={18} className="text-slate-400" />
-              </button>
-            ))}
-            {availableCategories.length === 0 && (
-              <div className="text-center py-8 text-slate-400">
-                Nenhuma categoria cadastrada para este programa. Adicione categorias primeiro.
-              </div>
-            )}
-          </div>
-        )}
-
         {view === 'add_form' && (
           <form onSubmit={handleSave} className="space-y-5 py-2">
-            <div className="bg-blue-50/50 border border-blue-100 p-4 rounded-xl grid grid-cols-2 gap-4">
-              <div>
-                <p className="text-[10px] font-bold text-blue-600 uppercase tracking-widest">Programa</p>
-                <p className="text-xs font-bold text-slate-800 mt-1">{getProgramLabel(selectedProgram)}</p>
-              </div>
-              <div>
-                <p className="text-[10px] font-bold text-blue-600 uppercase tracking-widest">Categoria</p>
-                <p className="text-xs font-bold text-slate-800 mt-1">{selectedCategory || "Nenhuma"}</p>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Número do Edital</Label>
-                <Input name="number" value={formData.number} onChange={handleInputChange} placeholder="Ex: 042026" className="h-11 rounded-xl border-slate-200" required />
-              </div>
-              <div className="space-y-2">
-                <Label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Vagas</Label>
-                <Input name="vagas" value={formData.vagas} onChange={handleInputChange} placeholder="Ex: 15" className="h-11 rounded-xl border-slate-200" />
-              </div>
+            <div className="bg-blue-50/50 border border-blue-100 p-4 rounded-xl">
+              <p className="text-[10px] font-bold text-blue-600 uppercase tracking-widest">TIPO DE FOMENTO</p>
+              <p className="text-xs font-bold text-slate-800 mt-1">{getProgramLabel(selectedProgram)}</p>
             </div>
 
             <div className="space-y-2">
-              <Label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Título do Edital</Label>
+              <Label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Título do Edital *</Label>
               <Input name="title" value={formData.title} onChange={handleInputChange} placeholder="Ex: Fomento à Literatura" className="h-11 rounded-xl border-slate-200" required />
             </div>
 
             <div className="space-y-2">
-              <Label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Subtítulo / Resumo</Label>
-              <Input name="subtitle" value={formData.subtitle} onChange={handleInputChange} placeholder="Ex: Apoio a escritores e poetas locais" className="h-11 rounded-xl border-slate-200" />
+              <Label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Subtítulo / Resumo *</Label>
+              <Input name="subtitle" value={formData.subtitle} onChange={handleInputChange} placeholder="Ex: Apoio a escritores e poetas locais" className="h-11 rounded-xl border-slate-200" required />
+            </div>
+
+            <div className="space-y-2">
+              <Label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Descrição</Label>
+              <Textarea name="description" value={formData.description} onChange={handleInputChange} placeholder="Descrição detalhada do edital..." className="rounded-xl border-slate-200 min-h-[100px]" />
+            </div>
+
+            <div className="space-y-2">
+              <Label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Categoria *</Label>
+              <Select 
+                value={formData.category} 
+                onValueChange={(val) => setFormData(prev => ({ ...prev, category: val }))}
+              >
+                <SelectTrigger className="h-11 rounded-xl border-slate-200">
+                  <SelectValue placeholder="Selecione a categoria" />
+                </SelectTrigger>
+                <SelectContent className="rounded-xl">
+                  {availableCategories.map((cat) => (
+                    <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
@@ -327,6 +345,26 @@ const AdminEditaisDialog = ({ open, onOpenChange }: AdminEditaisDialogProps) => 
                 <Label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Valor Máximo por Projeto</Label>
                 <Input name="valorMaximo" value={formData.valorMaximo} onChange={handleInputChange} placeholder="Ex: R$ 10.000,00" className="h-11 rounded-xl border-slate-200" />
               </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Vagas</Label>
+              <Input name="vagas" value={formData.vagas} onChange={handleInputChange} placeholder="Ex: 15" className="h-11 rounded-xl border-slate-200" />
+            </div>
+
+            <div className="space-y-2">
+              <Label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Etapas do Processo (Uma por linha)</Label>
+              <Textarea name="etapas" value={formData.etapas} onChange={handleInputChange} placeholder="Ex:&#10;1. Inscrição online&#10;2. Análise documental&#10;3. Avaliação técnica" className="rounded-xl border-slate-200 min-h-[100px]" />
+            </div>
+
+            <div className="space-y-2">
+              <Label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Requisitos</Label>
+              <Textarea name="requisitos" value={formData.requisitos} onChange={handleInputChange} placeholder="Requisitos de participação..." className="rounded-xl border-slate-200 min-h-[80px]" />
+            </div>
+
+            <div className="space-y-2">
+              <Label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Documentos Necessários</Label>
+              <Textarea name="documentos" value={formData.documentos} onChange={handleInputChange} placeholder="Documentos exigidos..." className="rounded-xl border-slate-200 min-h-[80px]" />
             </div>
 
             <DialogFooter className="gap-3 pt-4">
@@ -365,7 +403,7 @@ const AdminEditaisDialog = ({ open, onOpenChange }: AdminEditaisDialogProps) => 
               </div>
             ))}
             {editais.filter(item => item.tipo === selectedProgram).length === 0 && (
-              <p className="text-center text-slate-400 text-sm py-8">Nenhum edital cadastrado neste programa.</p>
+              <p className="text-center text-slate-400 text-sm py-8">Nenhum edital cadastrado neste fomento.</p>
             )}
           </div>
         )}

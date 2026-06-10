@@ -19,6 +19,13 @@ interface EditalDetailsDialogProps {
 }
 
 const EditalDetailsDialog = ({ edital, open, onOpenChange }: EditalDetailsDialogProps) => {
+  const hasValorTotal = !!edital.valorTotal;
+  const hasValorMaximo = !!edital.valorMaximo;
+  const hasEtapas = edital.etapas && edital.etapas.length > 0;
+  const hasRequisitos = !!edital.requisitos;
+  const hasDocumentos = !!edital.documentos;
+  const hasDescription = !!edital.description;
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto rounded-[2.5rem] p-8">
@@ -31,10 +38,12 @@ const EditalDetailsDialog = ({ edital, open, onOpenChange }: EditalDetailsDialog
         </DialogHeader>
 
         <div className="space-y-10">
-          <section>
-            <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Descrição</h4>
-            <p className="text-base text-slate-600 leading-relaxed">{edital.description}</p>
-          </section>
+          {hasDescription && (
+            <section>
+              <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Descrição</h4>
+              <p className="text-base text-slate-600 leading-relaxed">{edital.description}</p>
+            </section>
+          )}
 
           <section>
             <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Categoria</h4>
@@ -47,16 +56,22 @@ const EditalDetailsDialog = ({ edital, open, onOpenChange }: EditalDetailsDialog
             </div>
           </section>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-            <section>
-              <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Valor Total</h4>
-              <p className="text-xl font-bold text-blue-600">{edital.valorTotal}</p>
-            </section>
-            <section>
-              <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Valor Máximo por Projeto</h4>
-              <p className="text-xl font-bold text-blue-600">{edital.valorMaximo}</p>
-            </section>
-          </div>
+          {(hasValorTotal || hasValorMaximo) && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+              {hasValorTotal && (
+                <section>
+                  <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Valor Total</h4>
+                  <p className="text-xl font-bold text-blue-600">{edital.valorTotal}</p>
+                </section>
+              )}
+              {hasValorMaximo && (
+                <section>
+                  <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Valor Máximo por Projeto</h4>
+                  <p className="text-xl font-bold text-blue-600">{edital.valorMaximo}</p>
+                </section>
+              )}
+            </div>
+          )}
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
             <section>
@@ -69,29 +84,35 @@ const EditalDetailsDialog = ({ edital, open, onOpenChange }: EditalDetailsDialog
             </section>
           </div>
 
-          <Separator className="bg-slate-100" />
+          {(hasEtapas || hasRequisitos || hasDocumentos) && <Separator className="bg-slate-100" />}
 
-          <section>
-            <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">Etapas do Processo</h4>
-            <ul className="space-y-3">
-              {edital.etapas.map((etapa, i) => (
-                <li key={i} className="text-base text-slate-600 flex items-center gap-3">
-                  <div className="w-2 h-2 rounded-full bg-blue-600" />
-                  {etapa}
-                </li>
-              ))}
-            </ul>
-          </section>
+          {hasEtapas && (
+            <section>
+              <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">Etapas do Processo</h4>
+              <ul className="space-y-3">
+                {edital.etapas.map((etapa, i) => (
+                  <li key={i} className="text-base text-slate-600 flex items-center gap-3">
+                    <div className="w-2 h-2 rounded-full bg-blue-600" />
+                    {etapa}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
 
-          <section>
-            <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Requisitos</h4>
-            <p className="text-base text-slate-600 leading-relaxed">{edital.requisitos}</p>
-          </section>
+          {hasRequisitos && (
+            <section>
+              <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Requisitos</h4>
+              <p className="text-base text-slate-600 leading-relaxed">{edital.requisitos}</p>
+            </section>
+          )}
 
-          <section>
-            <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Documentos Necessários</h4>
-            <p className="text-base text-slate-600 leading-relaxed">{edital.documentos}</p>
-          </section>
+          {hasDocumentos && (
+            <section>
+              <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Documentos Necessários</h4>
+              <p className="text-base text-slate-600 leading-relaxed">{edital.documentos}</p>
+            </section>
+          )}
         </div>
       </DialogContent>
     </Dialog>
