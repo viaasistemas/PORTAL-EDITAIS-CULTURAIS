@@ -15,7 +15,9 @@ import {
   Search, 
   Calendar as CalendarIcon,
   Download,
-  Eye
+  Eye,
+  CheckCircle2,
+  Clock
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import {
@@ -37,9 +39,17 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { toast } from 'sonner';
 
 const AdminEditalDetalhes = () => {
   const { id } = useParams();
@@ -87,7 +97,7 @@ const AdminEditalDetalhes = () => {
         cpf: '123.456.789-00',
         protocol: '2026042026',
         created_at: '2026-04-20T14:30:00.000Z',
-        status: 'Pendente'
+        status: 'Inscrição CONFIRMADA'
       };
       // Evita duplicar se já estiver na lista
       if (!fetchedData.some(item => item.protocol === '2026042026')) {
@@ -104,6 +114,24 @@ const AdminEditalDetalhes = () => {
       fetchData(activeView);
     }
   }, [activeView, id]);
+
+  const handleStatusChange = async (protocol: string, newStatus: string, itemId: string) => {
+    localStorage.setItem(`inscription_status_${protocol}`, newStatus);
+    
+    if (itemId !== 'test-id') {
+      try {
+        await supabase
+          .from('inscricoes')
+          .update({ status: newStatus })
+          .eq('id', itemId);
+      } catch (e) {
+        console.error("Erro ao atualizar status no banco:", e);
+      }
+    }
+
+    setData(prev => prev.map(item => item.protocol === protocol ? { ...item, status: newStatus } : item));
+    toast.success("Status da inscrição atualizado com sucesso!");
+  };
 
   const filteredData = data.filter(item => {
     const matchesSearch = item.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -133,6 +161,10 @@ const AdminEditalDetalhes = () => {
       { name: 'Comprovante_Residencia.pdf', size: '0.8 MB' }
     ];
     setSelectedFiles(mockFiles);
+  };
+
+  const getStatusValue = (item: any) => {
+    return localStorage.getItem(`inscription_status_${item.protocol}`) || item.status || 'Inscrição CONFIRMADA';
   };
 
   if (loading || !session) return null;
@@ -257,12 +289,15 @@ const AdminEditalDetalhes = () => {
                       <TableHead className="font-bold text-slate-900">Protocolo</TableHead>
                       <TableHead className="font-bold text-slate-900">Data e Hora de Envio</TableHead>
                       <TableHead className="font-bold text-slate-900">Arquivos</TableHead>
+                      {activeView === 'inscricoes' && (
+                        <TableHead className="font-bold text-slate-900">Status</TableHead>
+                      )}
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {filteredData.length === 0 ? (
                       <TableRow>
-                        <TableCell colSpan={6} className="text-center py-20 text-slate-400 font-medium">
+                        <TableCell colSpan={activeView === 'inscricoes' ? 7 : 6} className="text-center py-20 text-slate-400 font-medium">
                           {getEmptyMessage()}
                         </TableCell>
                       </TableRow>
@@ -293,6 +328,29 @@ const AdminEditalDetalhes = () => {
                               <Eye size={18} />
                             </Button>
                           </TableCell>
+                          {activeView === 'inscricoes' && (
+                            <TableCell>
+                              <Select 
+                                value={getStatusValue(item)} 
+                                onValueChange={(val) => handleStatusChange(item.protocol, val, item.id)}
+                              >
+                                <SelectTrigger className="w-[220px] h-10 rounded-xl border-slate-200 font-bold text-xs">
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent className="rounded-xl">
+                                  <SelectItem value="Inscrição CONFIRMADA" className="text-emerald-600 font-bold">
+                                    Sua inscrição está CONFIRMADA
+                                  </SelectItem>
+                                  <SelectItem value="Enviar DOCUMENTAÇÃO" className="text-amber-600 font-bold">
+                                    Enviar DOCUMENTAÇÃO
+                                  </SelectItem>
+                                  <SelectItem value="APROVADO" className="text-blue-600 font-bold">
+                                    APROVADO
+                                  </SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </TableCell>
+                          )}
                         </TableRow>
                       ))
                     )}

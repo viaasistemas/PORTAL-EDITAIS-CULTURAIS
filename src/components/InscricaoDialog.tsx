@@ -84,7 +84,11 @@ const InscricaoDialog = ({ edital, open, onOpenChange }: InscricaoDialogProps) =
 
   const handleConfirm = async () => {
     setLoading(true);
-    const generatedProtocol = Math.floor(1000000000 + Math.random() * 9000000000).toString();
+    
+    // Geração de protocolo inteligente de acordo com o ano atual
+    const currentYear = new Date().getFullYear();
+    const randomSeq = Math.floor(100000 + Math.random() * 900000).toString();
+    const generatedProtocol = `${currentYear}${randomSeq}`;
     
     try {
       const isPJ = tipoInscricao === 'PJ';
@@ -93,10 +97,13 @@ const InscricaoDialog = ({ edital, open, onOpenChange }: InscricaoDialogProps) =
         protocol: generatedProtocol,
         full_name: isPJ ? formData.razaoSocial : formData.fullName,
         cpf: isPJ ? formData.cnpj : formData.cpf,
-        status: 'Pendente'
+        status: 'Inscrição CONFIRMADA'
       });
 
       if (error) throw error;
+
+      // Salva localmente para garantir sincronização imediata no teste
+      localStorage.setItem(`inscription_status_${generatedProtocol}`, 'Inscrição CONFIRMADA');
 
       setProtocol(generatedProtocol);
       setStep('success');

@@ -35,7 +35,7 @@ const Inscricoes = () => {
           cpf: '123.456.789-00',
           protocol: '2026042026',
           created_at: '2026-04-20T14:30:00.000Z',
-          status: 'Pendente',
+          status: 'Inscrição CONFIRMADA',
           editais: {
             title: 'PNAB - Fomento à Literatura 2026'
           }
@@ -73,16 +73,37 @@ const Inscricoes = () => {
     }
   };
 
-  const getStatusBadge = (status: string) => {
-    switch (status.toLowerCase()) {
-      case 'aprovado':
-        return <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-green-100 text-green-700 text-[10px] font-bold uppercase tracking-wider"><CheckCircle2 size={12} /> Aprovado</span>;
-      case 'reprovado':
-        return <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-red-100 text-red-700 text-[10px] font-bold uppercase tracking-wider"><AlertCircle size={12} /> Reprovado</span>;
-      case 'pendente':
-      default:
-        return <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-yellow-100 text-yellow-700 text-[10px] font-bold uppercase tracking-wider"><Clock size={12} /> Em Análise</span>;
+  const getStatusBadge = (status: string, protocol: string) => {
+    // Carrega o status atualizado localmente ou usa o padrão
+    const currentStatus = localStorage.getItem(`inscription_status_${protocol}`) || status || 'Inscrição CONFIRMADA';
+    const normalized = currentStatus.trim();
+
+    if (normalized === 'Inscrição CONFIRMADA' || normalized === 'Sua inscrição está CONFIRMADA' || normalized === 'Pendente') {
+      return (
+        <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-xl bg-emerald-50 text-emerald-600 text-xs font-bold uppercase tracking-wider border border-emerald-100">
+          <CheckCircle2 size={14} /> Sua inscrição está CONFIRMADA
+        </span>
+      );
     }
+    if (normalized === 'Enviar DOCUMENTAÇÃO') {
+      return (
+        <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-xl bg-amber-50 text-amber-600 text-xs font-bold uppercase tracking-wider border border-amber-100">
+          <Clock size={14} /> Enviar DOCUMENTAÇÃO
+        </span>
+      );
+    }
+    if (normalized === 'APROVADO') {
+      return (
+        <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-xl bg-blue-50 text-blue-600 text-xs font-bold uppercase tracking-wider border border-blue-100">
+          <CheckCircle2 size={14} /> APROVADO
+        </span>
+      );
+    }
+    return (
+      <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-xl bg-slate-50 text-slate-600 text-xs font-bold uppercase tracking-wider border border-slate-100">
+        {currentStatus}
+      </span>
+    );
   };
 
   return (
@@ -136,7 +157,7 @@ const Inscricoes = () => {
                   <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
                     <div>
                       <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Status da Inscrição</p>
-                      {getStatusBadge(result.status)}
+                      {getStatusBadge(result.status, result.protocol)}
                     </div>
                     <div className="text-left md:text-right">
                       <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Protocolo</p>
