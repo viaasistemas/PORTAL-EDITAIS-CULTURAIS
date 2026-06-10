@@ -35,36 +35,23 @@ const EditaisPNAB = () => {
   const [currentTime, setCurrentTime] = useState(new Date());
 
   const [editalSettings, setEditalSettings] = useState<Record<string, any>>({});
-  const [categories, setCategories] = useState<string[]>(["Todas"]);
-
-  const loadSettingsAndCategories = () => {
-    const settings: Record<string, any> = {};
-    editaisData.forEach(e => {
-      const saved = localStorage.getItem(`edital_settings_${e.id}`);
-      if (saved) settings[e.id] = JSON.parse(saved);
-    });
-    setEditalSettings(settings);
-
-    // Carrega categorias dinâmicas do localStorage
-    const savedCats = localStorage.getItem('admin_categories');
-    if (savedCats) {
-      const parsed = JSON.parse(savedCats);
-      const pnabCats = parsed
-        .filter((c: any) => c.type === 'PNAB')
-        .map((c: any) => c.title);
-      setCategories(["Todas", ...pnabCats]);
-    } else {
-      setCategories(["Todas", "Cultura Popular", "Música", "Dança"]);
-    }
-  };
 
   useEffect(() => {
-    loadSettingsAndCategories();
-    window.addEventListener('storage', loadSettingsAndCategories);
+    const loadSettings = () => {
+      const settings: Record<string, any> = {};
+      editaisData.forEach(e => {
+        const saved = localStorage.getItem(`edital_settings_${e.id}`);
+        if (saved) settings[e.id] = JSON.parse(saved);
+      });
+      setEditalSettings(settings);
+    };
+
+    loadSettings();
+    window.addEventListener('storage', loadSettings);
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
     
     return () => {
-      window.removeEventListener('storage', loadSettingsAndCategories);
+      window.removeEventListener('storage', loadSettings);
       clearInterval(timer);
     };
   }, []);
@@ -146,6 +133,8 @@ const EditaisPNAB = () => {
 
     return matchesStatus && matchesCategory;
   });
+
+  const categories = ["Todas", "Cultura Popular", "Música", "Dança"];
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
