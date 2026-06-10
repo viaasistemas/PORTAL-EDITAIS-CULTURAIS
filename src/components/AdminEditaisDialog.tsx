@@ -11,13 +11,6 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { 
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Plus, Pencil, Trash2, ArrowLeft, FilePlus, FileEdit, ChevronRight } from 'lucide-react';
 import { toast } from 'sonner';
 import { editaisData, EditalDetail } from '@/data/editais';
@@ -59,25 +52,26 @@ const AdminEditaisDialog = ({ open, onOpenChange }: AdminEditaisDialogProps) => 
   });
   const [editingId, setEditingId] = useState<string | null>(null);
 
+  // Carrega editais e categorias reais do localStorage ao abrir o diálogo
   useEffect(() => {
     if (open) {
       setView('menu');
-      const saved = localStorage.getItem('admin_editais_list');
-      if (saved) {
-        setEditais(JSON.parse(saved));
+      
+      // Carrega editais
+      const savedEditais = localStorage.getItem('admin_editais_list');
+      if (savedEditais) {
+        setEditais(JSON.parse(savedEditais));
       } else {
         setEditais(editaisData);
         localStorage.setItem('admin_editais_list', JSON.stringify(editaisData));
       }
-    }
-  }, [open]);
 
-  // Carrega as categorias do programa selecionado
-  useEffect(() => {
-    const savedCats = localStorage.getItem('admin_categories_by_program');
-    const cats = savedCats ? JSON.parse(savedCats) : defaultCategories;
-    setAvailableCategories(cats[selectedProgram] || []);
-  }, [selectedProgram]);
+      // Carrega categorias reais do programa selecionado
+      const savedCats = localStorage.getItem('admin_categories_by_program');
+      const cats = savedCats ? JSON.parse(savedCats) : defaultCategories;
+      setAvailableCategories(cats[selectedProgram] || []);
+    }
+  }, [open, selectedProgram]);
 
   const saveEditais = (updated: EditalDetail[]) => {
     setEditais(updated);
