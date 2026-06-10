@@ -88,17 +88,106 @@ const AdminEditalDetalhes = () => {
     }
 
     // Injeta dados de teste se o edital for o 042026
-    if (id === '042026' && (view === 'inscricoes' || view === 'documentacao')) {
-      const testInscription = {
-        id: 'test-id',
-        full_name: 'João da Silva',
-        cpf: '123.456.789-00',
-        protocol: '2026042026',
-        created_at: '2026-04-20T14:30:00.000Z',
-        status: 'CONFIRMADA'
-      };
-      if (!fetchedData.some(item => item.protocol === '2026042026')) {
-        fetchedData = [testInscription, ...fetchedData];
+    if (id === '042026') {
+      if (view === 'inscricoes') {
+        const testInscriptions = [
+          {
+            id: 'test-id-1',
+            full_name: 'João da Silva',
+            cpf: '123.456.789-00',
+            protocol: '2026042026',
+            created_at: '2026-04-20T14:30:00.000Z',
+            status: 'CONFIRMADA'
+          },
+          {
+            id: 'test-id-2',
+            full_name: 'Maria Souza',
+            cpf: '222.333.444-55',
+            protocol: '2026042027',
+            created_at: '2026-04-21T10:15:00.000Z',
+            status: 'CONFIRMADA'
+          },
+          {
+            id: 'test-id-3',
+            full_name: 'Pedro Santos',
+            cpf: '333.444.555-66',
+            protocol: '2026042028',
+            created_at: '2026-04-22T16:45:00.000Z',
+            status: 'DOCUMENTAÇÃO'
+          },
+          {
+            id: 'test-id-4',
+            full_name: 'Ana Oliveira',
+            cpf: '444.555.666-77',
+            protocol: '2026042029',
+            created_at: '2026-04-23T09:00:00.000Z',
+            status: 'APROVADO'
+          },
+          {
+            id: 'test-id-5',
+            full_name: 'Carlos Lima Ltda',
+            cpf: '12.345.678/0001-99',
+            protocol: '2026042030',
+            created_at: '2026-04-24T11:30:00.000Z',
+            status: 'CONFIRMADA'
+          }
+        ];
+        
+        testInscriptions.forEach(testItem => {
+          if (!fetchedData.some(item => item.protocol === testItem.protocol)) {
+            fetchedData.push(testItem);
+          }
+        });
+      } else if (view === 'documentacao') {
+        const testDocs = [
+          {
+            id: 'test-doc-1',
+            full_name: 'João da Silva',
+            cpf: '123.456.789-00',
+            protocol: '2026042026',
+            created_at: '2026-04-25T14:30:00.000Z',
+            status: 'CONFIRMADA'
+          },
+          {
+            id: 'test-doc-2',
+            full_name: 'Maria Souza',
+            cpf: '222.333.444-55',
+            protocol: '2026042027',
+            created_at: '2026-04-26T10:15:00.000Z',
+            status: 'CONFIRMADA'
+          },
+          {
+            id: 'test-doc-3',
+            full_name: 'Carlos Lima Ltda',
+            cpf: '12.345.678/0001-99',
+            protocol: '2026042030',
+            created_at: '2026-04-27T11:30:00.000Z',
+            status: 'CONFIRMADA'
+          }
+        ];
+
+        testDocs.forEach(testItem => {
+          if (!fetchedData.some(item => item.protocol === testItem.protocol)) {
+            fetchedData.push(testItem);
+          }
+        });
+      } else if (view === 'recursos') {
+        const testRecursos = [
+          {
+            id: 'test-rec-1',
+            full_name: 'Pedro Santos',
+            cpf: '333.444.555-66',
+            protocol: '2026042028',
+            created_at: '2026-04-28T16:45:00.000Z',
+            status: 'PENDENTE'
+          }
+        ];
+
+        testRecursos.forEach(testItem => {
+          if (!fetchedData.some(item => item.protocol === testItem.protocol)) {
+            fetchedData.push(testItem);
+          }
+        });
       }
     }
 
@@ -112,21 +201,36 @@ const AdminEditalDetalhes = () => {
     }
   }, [activeView, id]);
 
-  const handleStatusChange = async (protocol: string, newStatus: string, itemId: string) => {
+  const handleStatusChange = async (protocol: string, newStatus: string, itemId: string, cpfCnpj: string) => {
+    const cleanCpfCnpj = cpfCnpj ? cpfCnpj.replace(/\D/g, '') : '';
+    if (cleanCpfCnpj) {
+      localStorage.setItem(`status_by_cpfcnpj_${cleanCpfCnpj}`, newStatus);
+    }
     localStorage.setItem(`inscription_status_${protocol}`, newStatus);
     
-    if (itemId !== 'test-id') {
+    if (itemId !== 'test-id' && !itemId.startsWith('test-id-') && !itemId.startsWith('test-doc-')) {
       try {
         await supabase
           .from('inscricoes')
           .update({ status: newStatus })
           .eq('id', itemId);
+          
+        await supabase
+          .from('documentacao')
+          .update({ status: newStatus })
+          .eq('cpf', cpfCnpj);
       } catch (e) {
         console.error("Erro ao atualizar status no banco:", e);
       }
     }
 
-    setData(prev => prev.map(item => item.protocol === protocol ? { ...item, status: newStatus } : item));
+    setData(prev => prev.map(item => {
+      const itemCleanCpfCnpj = item.cpf ? item.cpf.replace(/\D/g, '') : '';
+      if (itemCleanCpfCnpj === cleanCpfCnpj || item.protocol === protocol) {
+        return { ...item, status: newStatus };
+      }
+      return item;
+    }));
     toast.success("Status atualizado com sucesso!");
   };
 
@@ -165,6 +269,10 @@ const AdminEditalDetalhes = () => {
   };
 
   const getStatusValue = (item: any) => {
+    const cleanCpfCnpj = item.cpf ? item.cpf.replace(/\D/g, '') : '';
+    const savedByCpfCnpj = cleanCpfCnpj ? localStorage.getItem(`status_by_cpfcnpj_${cleanCpfCnpj}`) : null;
+    if (savedByCpfCnpj) return savedByCpfCnpj;
+
     const saved = localStorage.getItem(`inscription_status_${item.protocol}`) || item.status || 'CONFIRMADA';
     if (saved === 'Inscrição CONFIRMADA') return 'CONFIRMADA';
     if (saved === 'Enviar DOCUMENTAÇÃO') return 'DOCUMENTAÇÃO';
@@ -324,7 +432,7 @@ const AdminEditalDetalhes = () => {
                             <TableCell>
                               <Select 
                                 value={getStatusValue(item)} 
-                                onValueChange={(val) => handleStatusChange(item.protocol, val, item.id)}
+                                onValueChange={(val) => handleStatusChange(item.protocol, val, item.id, item.cpf)}
                               >
                                 <SelectTrigger className={`w-[180px] h-10 rounded-xl border-slate-200 font-bold text-xs ${
                                   getStatusValue(item) === 'APROVADO' ? 'text-emerald-600 border-emerald-200 bg-emerald-50/30' : ''
