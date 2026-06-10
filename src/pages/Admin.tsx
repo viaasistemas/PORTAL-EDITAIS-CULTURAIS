@@ -22,7 +22,14 @@ const Admin = () => {
   const navigate = useNavigate();
   const [totalInscriptions, setTotalInscriptions] = useState(0);
   const [recentInscriptions, setRecentInscriptions] = useState<any[]>([]);
-  const [stats, setStats] = useState<any[]>([]);
+  
+  // Inicializa o estado com valores padrão para garantir exibição imediata
+  const [stats, setStats] = useState<any[]>([
+    { label: "Inscrições Totais", value: "0", icon: Users, color: "bg-blue-50 text-blue-600", trend: "Aberto" },
+    { label: "Editais Ativos", value: "0", icon: FileText, color: "bg-green-50 text-green-600", trend: "Aberto" },
+    { label: "EDITAIS ENCERRADOS", value: "0", icon: Archive, color: "bg-rose-50 text-rose-600", trend: "Encerrados" },
+    { label: "FINALIZADOS", value: "0", icon: TrendingUp, color: "bg-purple-50 text-purple-600", trend: "Finalizado" },
+  ]);
 
   useEffect(() => {
     if (!loading && !session) navigate('/login');
@@ -102,7 +109,7 @@ const Admin = () => {
       });
 
       setStats([
-        { label: "Inscrições Totais", value: (count !== null ? count : 0).toString(), icon: Users, color: "bg-blue-50 text-blue-600", trend: "Total" },
+        { label: "Inscrições Totais", value: (count !== null ? count : 0).toString(), icon: Users, color: "bg-blue-50 text-blue-600", trend: "Aberto" },
         { label: "Editais Ativos", value: ativos.toString(), icon: FileText, color: "bg-green-50 text-green-600", trend: "Aberto" },
         { label: "EDITAIS ENCERRADOS", value: encerrados.toString(), icon: Archive, color: "bg-rose-50 text-rose-600", trend: "Encerrados" },
         { label: "FINALIZADOS", value: finalizados.toString(), icon: TrendingUp, color: "bg-purple-50 text-purple-600", trend: "Finalizado" },
