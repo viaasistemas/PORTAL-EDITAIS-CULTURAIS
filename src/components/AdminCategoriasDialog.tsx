@@ -19,7 +19,8 @@ import {
   FolderPlus, 
   FolderEdit, 
   Check,
-  ChevronRight
+  ChevronRight,
+  AlertTriangle
 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -29,7 +30,7 @@ interface AdminCategoriasDialogProps {
 }
 
 type ProgramType = 'FM' | 'LPG' | 'PNAB';
-type ViewState = 'menu' | 'add_select_program' | 'add_form' | 'edit_select_program' | 'edit_list';
+type ViewState = 'menu' | 'add_select_program' | 'add_form' | 'edit_select_program' | 'edit_list' | 'delete_confirm';
 
 interface ProgramCategories {
   FM: string[];
@@ -50,10 +51,12 @@ const AdminCategoriasDialog = ({ open, onOpenChange }: AdminCategoriasDialogProp
   const [newCategoryTitle, setNewCategoryTitle] = useState('');
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [editingValue, setEditingValue] = useState('');
+  const [indexToDelete, setIndexToDelete] = useState<number | null>(null);
 
   useEffect(() => {
     if (open) {
       setView('menu');
+      setIndexToDelete(null);
       const saved = localStorage.getItem('admin_categories_by_program');
       if (saved) {
         setCategories(JSON.parse(saved));
@@ -115,15 +118,17 @@ const AdminCategoriasDialog = ({ open, onOpenChange }: AdminCategoriasDialogProp
     setEditingIndex(null);
   };
 
-  const handleDelete = (index: number) => {
-    if (confirm("Tem certeza que deseja excluir esta categoria?")) {
-      const programList = categories[selectedProgram].filter((_, i) => i !== index);
+  const confirmDelete = () => {
+    if (indexToDelete !== null) {
+      const programList = categories[selectedProgram].filter((_, i) => i !== indexToDelete);
       const updated = {
         ...categories,
         [selectedProgram]: programList
       };
       saveCategories(updated);
       toast.success("Categoria excluída com sucesso!");
+      setIndexToDelete(null);
+      setView('edit_list');
     }
   };
 
@@ -145,6 +150,7 @@ const AdminCategoriasDialog = ({ open, onOpenChange }: AdminCategoriasDialogProp
                 onClick={() => {
                   if (view === 'add_form') setView('add_select_program');
                   else if (view === 'edit_list') setView('edit_select_program');
+                  else if (view === 'delete_confirm') setView('edit_list');
                   else setView('menu');
                 }} 
                 className="rounded-full h-8 w-8"
@@ -158,6 +164,7 @@ const AdminCategoriasDialog = ({ open, onOpenChange }: AdminCategoriasDialogProp
               {view === 'add_form' && "Adicionar Categoria"}
               {view === 'edit_select_program' && "Selecionar Programa para Editar"}
               {view === 'edit_list' && `Editar: ${getProgramLabel(selectedProgram)}`}
+              {view === 'delete_confirm' && "Excluir Categoria"}
             </DialogTitle>
           </div>
         </DialogHeader>
@@ -273,7 +280,10 @@ const AdminCategoriasDialog = ({ open, onOpenChange }: AdminCategoriasDialogProp
                       <Button
                         size="icon"
                         variant="ghost"
-                        onClick={() => handleDelete(index)}
+                        onClick={() => {
+                          setIndexToDelete(index);
+                          setView('delete_confirm');
+                        }}
                         className="h-8 w-8 rounded-lg text-slate-400 hover:text-red-600 hover:bg-white"
                       >
                         <Trash2 size={14} />
@@ -286,6 +296,36 @@ const AdminCategoriasDialog = ({ open, onOpenChange }: AdminCategoriasDialogProp
             {(categories[selectedProgram] || []).length === 0 && (
               <p className="text-center text-slate-400 text-sm py-8">Nenhuma categoria cadastrada neste programa.</p>
             )}
+          </div>
+        )}
+
+        {view === 'delete_confirm' && indexToDelete !== null && (
+          <div className="text-center py-6 animate-in zoom-in-95 duration-300">
+            <div className="w-16 h-16 bg-red-50 rounded-2xl flex items-center justify-center mx-auto mb-6 text-red-600">
+              <AlertTriangle size={32} />
+            </div>
+            <h2 className="text-2xl font-bold text-slate-900 mb-2">Tem certeza que deseja excluir esta categoria?</h2>
+            <p className="text-slate-500 text-sm font-medium mb-8">
+              Os editais associados a ela não serão apagados e continuarão visíveis na aba "Todos".
+            </p>
+            <div className="flex flex-col gap-3">
+              <Button 
+                onClick={confirmDelete} 
+                className="w-full h-14 bg-red-600 hover:bg-red-700 text-white rounded-2xl font-bold text-lg shadow-xl shadow-red-100"
+              >
+                Confirmar
+              </Button>
+              <Button 
+                variant="ghost" 
+                onClick={() => {
+                  setIndexToDelete(null);
+                  setView('edit_list');
+                }} 
+                className="w-full h-12 rounded-xl font-bold text-slate-500"
+              >
+                Cancelar
+              </Button>
+            </div>
           </div>
         )}
       </DialogContent>
