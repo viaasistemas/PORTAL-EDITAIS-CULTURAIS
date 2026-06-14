@@ -53,7 +53,7 @@ const AdminEditalDetalhes = () => {
   const { id } = useParams();
   const { session, loading } = useSession();
   const navigate = useNavigate();
-  const [activeView, setActiveView] = useState<'overview' | 'inscricoes' | 'recursos' | 'documentacao'>('overview');
+  const [activeView, setActiveView] = useState<'overview' | 'inscricoes' | 'recursos' | 'documentacao'>('inscricoes');
   const [data, setData] = useState<any[]>([]);
   const [fetching, setFetching] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');

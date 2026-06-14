@@ -18,6 +18,8 @@ export interface EditalDetail {
   tipo: 'PNAB' | 'LPG' | 'FM';
   prazoAtual: string;
   vagas: string;
+  createdAt?: string; // ISO String for precise sorting
+  maxInscricoes?: number; // Max registrations per CPF/CNPJ (0 = unlimited)
 }
 
 export const editaisData: EditalDetail[] = [
@@ -40,7 +42,9 @@ export const editaisData: EditalDetail[] = [
     status: "Aberto",
     tipo: "PNAB",
     prazoAtual: "PERÍODO DE INSCRIÇÃO",
-    vagas: "10"
+    vagas: "10",
+    createdAt: "2026-03-10T08:00:00.000Z",
+    maxInscricoes: 0
   },
   {
     id: "032026",
@@ -61,7 +65,9 @@ export const editaisData: EditalDetail[] = [
     status: "Aberto",
     tipo: "PNAB",
     prazoAtual: "PERÍODO DE INSCRIÇÃO",
-    vagas: "10"
+    vagas: "10",
+    createdAt: "2026-03-05T08:00:00.000Z",
+    maxInscricoes: 0
   },
   {
     id: "022026",
@@ -82,7 +88,9 @@ export const editaisData: EditalDetail[] = [
     status: "Aberto",
     tipo: "PNAB",
     prazoAtual: "EM ANÁLISE",
-    vagas: "N/A"
+    vagas: "N/A",
+    createdAt: "2024-03-15T08:00:00.000Z",
+    maxInscricoes: 0
   },
   {
     id: "012026",
@@ -103,6 +111,8 @@ export const editaisData: EditalDetail[] = [
     status: "Encerrado",
     tipo: "PNAB",
     prazoAtual: "ENCERRADO",
-    vagas: "N/A"
+    vagas: "N/A",
+    createdAt: "2024-04-01T08:00:00.000Z",
+    maxInscricoes: 0
   }
 ];

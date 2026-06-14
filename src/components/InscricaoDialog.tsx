@@ -21,6 +21,7 @@ import {
 import { CheckCircle2, Copy, Printer, Upload, Loader2, FileCheck } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
+import { editaisData } from '@/data/editais';
 
 interface InscricaoDialogProps {
   edital: { id: string; title: string; number: string };
@@ -77,6 +78,45 @@ const InscricaoDialog = ({ edital, open, onOpenChange }: InscricaoDialogProps) =
     if (!files.anexo1 || !files.anexo2) {
       toast.error("Os anexos 1 e 2 são obrigatórios.");
       return;
+    }
+
+    // Validação de limite de inscrições por CPF/CNPJ
+    const savedEditais = localStorage.getItem('admin_editais_list');
+    const allEditais = savedEditais ? JSON.parse(savedEditais) : editaisData;
+    const fullEdital = allEditais.find((e: any) => e.id === edital.id);
+    const maxInscricoes = fullEdital?.maxInscricoes || 0;
+
+    if (maxInscricoes > 0) {
+      const cleanCpfCnpj = idField.replace(/\D/g, '');
+
+      // Conta inscrições locais
+      const localInscriptions = JSON.parse(localStorage.getItem('local_inscricoes') || '[]');
+      let count = localInscriptions.filter((ins: any) => 
+        ins.edital_id === edital.id && 
+        ins.cpf.replace(/\D/g, '') === cleanCpfCnpj
+      ).length;
+
+      // Conta inscrições de teste se for o edital 042026
+      if (edital.id === '042026') {
+        const testInscriptions = [
+          { cpf: '123.456.789-00' },
+          { cpf: '222.333.444-55' },
+          { cpf: '333.444.555-66' },
+          { cpf: '444.555.666-77' },
+          { cpf: '12.345.678/0001-99' },
+          { cpf: '555.666.777-88' },
+          { cpf: '666.777.888-99' },
+          { cpf: '777.888.999-00' },
+          { cpf: '98.765.432/0001-11' }
+        ];
+        const testCount = testInscriptions.filter(ins => ins.cpf.replace(/\D/g, '') === cleanCpfCnpj).length;
+        count += testCount;
+      }
+
+      if (count >= maxInscricoes) {
+        toast.error(`Limite de inscrições atingido! Este CPF/CNPJ já possui ${count} inscrição(ões) neste edital (limite máximo: ${maxInscricoes}).`);
+        return;
+      }
     }
 
     setStep('confirm');

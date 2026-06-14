@@ -59,6 +59,7 @@ const AdminEditaisDialog = ({ open, onOpenChange }: AdminEditaisDialogProps) => 
     etapas: '',
     requisitos: '',
     documentos: '',
+    maxInscricoes: '0',
   });
   const [editingId, setEditingId] = useState<string | null>(null);
 
@@ -134,7 +135,8 @@ const AdminEditaisDialog = ({ open, onOpenChange }: AdminEditaisDialogProps) => 
             categories: [formData.category],
             etapas: etapasArray,
             requisitos: formData.requisitos,
-            documentos: formData.documentos
+            documentos: formData.documentos,
+            maxInscricoes: Number(formData.maxInscricoes) || 0
           };
         }
         return item;
@@ -160,7 +162,9 @@ const AdminEditaisDialog = ({ open, onOpenChange }: AdminEditaisDialogProps) => 
         vagas: formData.vagas,
         etapas: etapasArray,
         requisitos: formData.requisitos,
-        documentos: formData.documentos
+        documentos: formData.documentos,
+        createdAt: new Date().toISOString(),
+        maxInscricoes: Number(formData.maxInscricoes) || 0
       };
 
       // Inicializa as configurações do edital com a visibilidade desativada por padrão
@@ -212,6 +216,7 @@ const AdminEditaisDialog = ({ open, onOpenChange }: AdminEditaisDialogProps) => 
       etapas: '',
       requisitos: '',
       documentos: '',
+      maxInscricoes: '0',
     });
     setEditingId(null);
   };
@@ -228,6 +233,7 @@ const AdminEditaisDialog = ({ open, onOpenChange }: AdminEditaisDialogProps) => 
       etapas: item.etapas ? item.etapas.join('\n') : '',
       requisitos: item.requisitos || '',
       documentos: item.documentos || '',
+      maxInscricoes: String(item.maxInscricoes || 0),
     });
     setSelectedProgram(item.tipo);
     setEditingId(item.id);
@@ -259,7 +265,10 @@ const AdminEditaisDialog = ({ open, onOpenChange }: AdminEditaisDialogProps) => 
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={(val) => {
+      onOpenChange(val);
+      if (!val) resetForm();
+    }}>
       <DialogContent className="max-w-xl rounded-[2.5rem] p-8 max-h-[90vh] overflow-y-auto">
         <DialogHeader className="mb-6">
           <div className="flex items-center gap-3">
@@ -377,9 +386,15 @@ const AdminEditaisDialog = ({ open, onOpenChange }: AdminEditaisDialogProps) => 
               </div>
             </div>
 
-            <div className="space-y-2">
-              <Label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Vagas</Label>
-              <Input name="vagas" value={formData.vagas} onChange={handleInputChange} placeholder="Ex: 15" className="h-11 rounded-xl border-slate-200" />
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Vagas</Label>
+                <Input name="vagas" value={formData.vagas} onChange={handleInputChange} placeholder="Ex: 15" className="h-11 rounded-xl border-slate-200" />
+              </div>
+              <div className="space-y-2">
+                <Label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Limite de Inscrições por CPF/CNPJ</Label>
+                <Input type="number" name="maxInscricoes" value={formData.maxInscricoes} onChange={handleInputChange} placeholder="0 para ilimitado" className="h-11 rounded-xl border-slate-200" />
+              </div>
             </div>
 
             <div className="space-y-2">

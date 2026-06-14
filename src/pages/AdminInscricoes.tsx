@@ -123,6 +123,13 @@ const AdminInscricoes = () => {
     return matchesTab && matchesStatus && matchesSearch && matchesCategory;
   });
 
+  // Ordena os editais do mais novo para o mais antigo com base na data de criação
+  const sortedEditais = [...filteredEditais].sort((a, b) => {
+    const dateA = a.createdAt ? new Date(a.createdAt).getTime() : new Date(a.dataAbertura || 0).getTime();
+    const dateB = b.createdAt ? new Date(b.createdAt).getTime() : new Date(b.dataAbertura || 0).getTime();
+    return dateB - dateA;
+  });
+
   const tabs = ["Todos", "Fomento Municipal", "LPG", "PNAB"];
 
   return (
@@ -215,8 +222,8 @@ const AdminInscricoes = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredEditais.length > 0 ? (
-              filteredEditais.map((edital) => (
+            {sortedEditais.length > 0 ? (
+              sortedEditais.map((edital) => (
                 <AdminEditalCard key={edital.id} edital={edital} />
               ))
             ) : (

@@ -25,7 +25,7 @@ const Admin = () => {
   
   // Inicializa o estado com valores padrão para garantir exibição imediata
   const [stats, setStats] = useState<any[]>([
-    { label: "Inscrições Totais", value: "0", icon: Users, color: "bg-blue-50 text-blue-600", trend: "Aberto" },
+    { label: "Inscrições Totais", value: "0", icon: Users, color: "bg-blue-50 text-blue-600", trend: "Total" },
     { label: "Editais Ativos", value: "0", icon: FileText, color: "bg-green-50 text-green-600", trend: "Aberto" },
     { label: "EDITAIS ENCERRADOS", value: "0", icon: Archive, color: "bg-rose-50 text-rose-600", trend: "Encerrados" },
     { label: "FINALIZADOS", value: "0", icon: TrendingUp, color: "bg-purple-50 text-purple-600", trend: "Finalizado" },
@@ -126,7 +126,7 @@ const Admin = () => {
     });
 
     setStats([
-      { label: "Inscrições Totais", value: totalCount.toString(), icon: Users, color: "bg-blue-50 text-blue-600", trend: "Aberto" },
+      { label: "Inscrições Totais", value: totalCount.toString(), icon: Users, color: "bg-blue-50 text-blue-600", trend: "Total" },
       { label: "Editais Ativos", value: ativos.toString(), icon: FileText, color: "bg-green-50 text-green-600", trend: "Aberto" },
       { label: "EDITAIS ENCERRADOS", value: encerrados.toString(), icon: Archive, color: "bg-rose-50 text-rose-600", trend: "Encerrados" },
       { label: "FINALIZADOS", value: finalizados.toString(), icon: TrendingUp, color: "bg-purple-50 text-purple-600", trend: "Finalizado" },
@@ -169,6 +169,7 @@ const Admin = () => {
                     <stat.icon size={24} />
                   </div>
                   <span className={`text-xs font-bold px-3 py-1 rounded-lg ${
+                    stat.trend === 'Total' ? 'bg-blue-50 text-blue-600' :
                     stat.trend === 'Aberto' ? 'bg-green-50 text-green-600' : 
                     stat.trend === 'Encerrados' ? 'bg-rose-50 text-rose-600' : 
                     stat.trend === 'Finalizado' ? 'bg-purple-50 text-purple-600' : 'bg-slate-50 text-slate-400'
