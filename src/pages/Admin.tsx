@@ -31,92 +31,119 @@ const Admin = () => {
     { label: "FINALIZADOS", value: "0", icon: TrendingUp, color: "bg-purple-50 text-purple-600", trend: "Finalizado" },
   ]);
 
+  const fetchData = async () => {
+    // Total Inscriptions from Supabase
+    const { count } = await supabase
+      .from('inscricoes')
+      .select('*', { count: 'exact', head: true });
+    
+    // Carrega inscrições locais do localStorage
+    const localInscriptions = JSON.parse(localStorage.getItem('local_inscricoes') || '[]');
+    const totalCount = (count !== null ? count : 0) + localInscriptions.length;
+    setTotalInscriptions(totalCount);
+
+    // Recent Inscriptions from Supabase
+    const { data } = await supabase
+      .from('inscricoes')
+      .select('id, full_name, created_at, edital_id')
+      .order('created_at', { ascending: false })
+      .limit(4);
+    
+    let combinedRecent = data ? [...data] : [];
+    
+    // Mescla com as inscrições locais recentes
+    localInscriptions.forEach((localItem: any) => {
+      if (!combinedRecent.some(item => item.protocol === localItem.protocol)) {
+        combinedRecent.push({
+          id: localItem.id,
+          full_name: localItem.full_name,
+          created_at: localItem.created_at,
+          edital_id: localItem.edital_id,
+          protocol: localItem.protocol
+        });
+      }
+    });
+
+    // Ordena por data de criação decrescente e limita a 4 itens
+    combinedRecent.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+    setRecentInscriptions(combinedRecent.slice(0, 4));
+
+    // Carrega editais dinâmicos e calcula status dinamicamente
+    const savedEditais = localStorage.getItem('admin_editais_list');
+    const list: EditalDetail[] = savedEditais ? JSON.parse(savedEditais) : editaisData;
+
+    let ativos = 0;
+    let encerrados = 0;
+    let finalizados = 0;
+
+    const now = new Date();
+
+    list.forEach(edital => {
+      const savedSettings = localStorage.getItem(`edital_settings_${edital.id}`);
+      const settings = savedSettings ? JSON.parse(savedSettings) : null;
+
+      if (settings?.isFinalized) {
+        finalizados++;
+        return;
+      }
+
+      // Verifica se a prorrogação está ativa
+      let isProrrogado = false;
+      if (settings?.isProrrogacao && settings?.dates?.prorrogacaoInicio) {
+        const start = new Date(`${settings.dates.prorrogacaoInicio}T${settings.dates.prorrogacaoHoraInicio}`);
+        const end = new Date(`${settings.dates.prorrogacaoFim}T${settings.dates.prorrogacaoHoraFim}`);
+        if (now >= start && now <= end) {
+          isProrrogado = true;
+        }
+      }
+
+      if (isProrrogado) {
+        ativos++;
+        return;
+      }
+
+      const startStr = settings?.dates?.abertura && settings?.dates?.horaAbertura 
+        ? `${settings.dates.abertura}T${settings.dates.horaAbertura}` 
+        : edital.dataAbertura;
+      const endStr = settings?.dates?.encerramento && settings?.dates?.horaEncerramento 
+        ? `${settings.dates.encerramento}T${settings.dates.horaEncerramento}` 
+        : edital.dataEncerramento;
+
+      const start = startStr ? new Date(startStr) : null;
+      const end = endStr ? new Date(endStr) : null;
+
+      const status = (() => {
+        if (start && now < start) return 'Em breve';
+        if (start && end && now >= start && now <= end) return 'Aberto';
+        return 'Encerrado';
+      })();
+
+      if (status === 'Aberto') {
+        ativos++;
+      } else if (status === 'Encerrado') {
+        encerrados++;
+      }
+    });
+
+    setStats([
+      { label: "Inscrições Totais", value: totalCount.toString(), icon: Users, color: "bg-blue-50 text-blue-600", trend: "Aberto" },
+      { label: "Editais Ativos", value: ativos.toString(), icon: FileText, color: "bg-green-50 text-green-600", trend: "Aberto" },
+      { label: "EDITAIS ENCERRADOS", value: encerrados.toString(), icon: Archive, color: "bg-rose-50 text-rose-600", trend: "Encerrados" },
+      { label: "FINALIZADOS", value: finalizados.toString(), icon: TrendingUp, color: "bg-purple-50 text-purple-600", trend: "Finalizado" },
+    ]);
+  };
+
   useEffect(() => {
     if (!loading && !session) navigate('/login');
     
-    const fetchData = async () => {
-      // Total Inscriptions
-      const { count } = await supabase
-        .from('inscricoes')
-        .select('*', { count: 'exact', head: true });
-      
-      if (count !== null) setTotalInscriptions(count);
+    if (session) {
+      fetchData();
+      window.addEventListener('storage', fetchData);
+    }
 
-      // Recent Inscriptions
-      const { data } = await supabase
-        .from('inscricoes')
-        .select('id, full_name, created_at, edital_id')
-        .order('created_at', { ascending: false })
-        .limit(4);
-      
-      if (data) setRecentInscriptions(data);
-
-      // Carrega editais dinâmicos e calcula status dinamicamente
-      const savedEditais = localStorage.getItem('admin_editais_list');
-      const list: EditalDetail[] = savedEditais ? JSON.parse(savedEditais) : editaisData;
-
-      let ativos = 0;
-      let encerrados = 0;
-      let finalizados = 0;
-
-      const now = new Date();
-
-      list.forEach(edital => {
-        const savedSettings = localStorage.getItem(`edital_settings_${edital.id}`);
-        const settings = savedSettings ? JSON.parse(savedSettings) : null;
-
-        if (settings?.isFinalized) {
-          finalizados++;
-          return;
-        }
-
-        // Verifica se a prorrogação está ativa
-        let isProrrogado = false;
-        if (settings?.isProrrogacao && settings?.dates?.prorrogacaoInicio) {
-          const start = new Date(`${settings.dates.prorrogacaoInicio}T${settings.dates.prorrogacaoHoraInicio}`);
-          const end = new Date(`${settings.dates.prorrogacaoFim}T${settings.dates.prorrogacaoHoraFim}`);
-          if (now >= start && now <= end) {
-            isProrrogado = true;
-          }
-        }
-
-        if (isProrrogado) {
-          ativos++;
-          return;
-        }
-
-        const startStr = settings?.dates?.abertura && settings?.dates?.horaAbertura 
-          ? `${settings.dates.abertura}T${settings.dates.horaAbertura}` 
-          : edital.dataAbertura;
-        const endStr = settings?.dates?.encerramento && settings?.dates?.horaEncerramento 
-          ? `${settings.dates.encerramento}T${settings.dates.horaEncerramento}` 
-          : edital.dataEncerramento;
-
-        const start = startStr ? new Date(startStr) : null;
-        const end = endStr ? new Date(endStr) : null;
-
-        const status = (() => {
-          if (start && now < start) return 'Em breve';
-          if (start && end && now >= start && now <= end) return 'Aberto';
-          return 'Encerrado';
-        })();
-
-        if (status === 'Aberto') {
-          ativos++;
-        } else if (status === 'Encerrado') {
-          encerrados++;
-        }
-      });
-
-      setStats([
-        { label: "Inscrições Totais", value: (count !== null ? count : 0).toString(), icon: Users, color: "bg-blue-50 text-blue-600", trend: "Aberto" },
-        { label: "Editais Ativos", value: ativos.toString(), icon: FileText, color: "bg-green-50 text-green-600", trend: "Aberto" },
-        { label: "EDITAIS ENCERRADOS", value: encerrados.toString(), icon: Archive, color: "bg-rose-50 text-rose-600", trend: "Encerrados" },
-        { label: "FINALIZADOS", value: finalizados.toString(), icon: TrendingUp, color: "bg-purple-50 text-purple-600", trend: "Finalizado" },
-      ]);
+    return () => {
+      window.removeEventListener('storage', fetchData);
     };
-
-    if (session) fetchData();
   }, [session, loading, navigate]);
 
   if (loading || !session) return null;
