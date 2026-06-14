@@ -87,6 +87,17 @@ const AdminEditalDetalhes = () => {
       }
     }
 
+    // Carrega e mescla dados locais do localStorage para simulação instantânea
+    const localKey = `local_${view}`;
+    const localItems = JSON.parse(localStorage.getItem(localKey) || '[]');
+    const filteredLocalItems = localItems.filter((item: any) => item.edital_id === id);
+    
+    filteredLocalItems.forEach((localItem: any) => {
+      if (!fetchedData.some(item => item.protocol === localItem.protocol)) {
+        fetchedData.push(localItem);
+      }
+    });
+
     // Injeta dados de teste se o edital for o 042026
     if (id === '042026') {
       if (view === 'inscricoes') {
@@ -129,6 +140,39 @@ const AdminEditalDetalhes = () => {
             cpf: '12.345.678/0001-99',
             protocol: '2026042030',
             created_at: '2026-04-24T11:30:00.000Z',
+            status: 'CONFIRMADA'
+          },
+          // 4 novas inscrições de teste adicionadas conforme solicitado
+          {
+            id: 'test-id-6',
+            full_name: 'Fernanda Ribeiro',
+            cpf: '555.666.777-88',
+            protocol: '2026042031',
+            created_at: '2026-04-24T15:20:00.000Z',
+            status: 'CONFIRMADA'
+          },
+          {
+            id: 'test-id-7',
+            full_name: 'Roberto Alencar',
+            cpf: '666.777.888-99',
+            protocol: '2026042032',
+            created_at: '2026-04-25T08:45:00.000Z',
+            status: 'CONFIRMADA'
+          },
+          {
+            id: 'test-id-8',
+            full_name: 'Juliana Mendes',
+            cpf: '777.888.999-00',
+            protocol: '2026042033',
+            created_at: '2026-04-25T11:10:00.000Z',
+            status: 'CONFIRMADA'
+          },
+          {
+            id: 'test-id-9',
+            full_name: 'Associação Cultural Extremoz',
+            cpf: '98.765.432/0001-11',
+            protocol: '2026042034',
+            created_at: '2026-04-25T16:30:00.000Z',
             status: 'CONFIRMADA'
           }
         ];
@@ -201,6 +245,17 @@ const AdminEditalDetalhes = () => {
     }
   }, [activeView, id]);
 
+  // Escuta eventos de storage para atualizar a lista instantaneamente quando houver novos envios
+  useEffect(() => {
+    const handleStorageChange = () => {
+      if (activeView !== 'overview') {
+        fetchData(activeView);
+      }
+    };
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, [activeView, id]);
+
   const handleStatusChange = async (protocol: string, newStatus: string, itemId: string, cpfCnpj: string) => {
     const cleanCpfCnpj = cpfCnpj ? cpfCnpj.replace(/\D/g, '') : '';
     if (cleanCpfCnpj) {
@@ -208,7 +263,7 @@ const AdminEditalDetalhes = () => {
     }
     localStorage.setItem(`inscription_status_${protocol}`, newStatus);
     
-    if (itemId !== 'test-id' && !itemId.startsWith('test-id-') && !itemId.startsWith('test-doc-')) {
+    if (itemId !== 'test-id' && !itemId.startsWith('test-id-') && !itemId.startsWith('test-doc-') && !itemId.startsWith('local-')) {
       try {
         await supabase
           .from('inscricoes')
@@ -232,6 +287,7 @@ const AdminEditalDetalhes = () => {
       return item;
     }));
     toast.success("Status atualizado com sucesso!");
+    window.dispatchEvent(new Event('storage'));
   };
 
   const filteredData = data.filter(item => {
@@ -260,7 +316,8 @@ const AdminEditalDetalhes = () => {
   const isCNPJ = (val: string) => val.replace(/\D/g, '').length > 11;
 
   const handleViewFiles = (item: any) => {
-    const mockFiles = [
+    // Se o item tiver arquivos locais salvos, exibe-os. Caso contrário, exibe os mockados padrão.
+    const mockFiles = item.files && item.files.length > 0 ? item.files : [
       { name: 'Documento_Identificacao.pdf', size: '1.2 MB' },
       { name: 'Projeto_Cultural.pdf', size: '3.5 MB' },
       { name: 'Comprovante_Residencia.pdf', size: '0.8 MB' }
