@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { Search, Loader2, FileText, Calendar, CheckCircle2, Clock, Download, Printer } from 'lucide-react';
+import { Search, Loader2, FileText, Calendar, CheckCircle2, Clock, Download, Printer, ChevronRight } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
@@ -12,7 +12,8 @@ import { toast } from 'sonner';
 const Inscricoes = () => {
   const [searchValue, setSearchValue] = useState('');
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<any>(null);
+  const [results, setResults] = useState<any[]>([]);
+  const [selectedResult, setSelectedResult] = useState<any>(null);
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,31 +23,52 @@ const Inscricoes = () => {
     }
 
     setLoading(true);
-    setResult(null);
+    setResults([]);
+    setSelectedResult(null);
 
     const cleanValue = searchValue.trim();
+    const cleanCpfCnpj = cleanValue.replace(/\D/g, '');
 
-    // Interceptação para dados de teste simulados
+    let combinedResults: any[] = [];
+
+    // 1. Carrega inscrições locais do localStorage
+    const localInscriptions = JSON.parse(localStorage.getItem('local_inscricoes') || '[]');
+    const matchingLocal = localInscriptions.filter((ins: any) => 
+      ins.protocol === cleanValue || 
+      ins.cpf.replace(/\D/g, '') === cleanCpfCnpj
+    );
+
+    matchingLocal.forEach((localItem: any) => {
+      combinedResults.push({
+        id: localItem.id,
+        full_name: localItem.full_name,
+        cpf: localItem.cpf,
+        protocol: localItem.protocol,
+        created_at: localItem.created_at,
+        status: localItem.status,
+        editais: {
+          title: 'Edital Local'
+        }
+      });
+    });
+
+    // 2. Interceptação para dados de teste simulados
     if (cleanValue === '123.456.789-00' || cleanValue === '2026042026') {
-      setTimeout(() => {
-        setResult({
-          id: 'test-id',
-          full_name: 'João da Silva',
-          cpf: '123.456.789-00',
-          protocol: '2026042026',
-          created_at: '2026-04-20T14:30:00.000Z',
-          status: 'CONFIRMADA',
-          editais: {
-            title: 'PNAB - Fomento à Literatura 2026'
-          }
-        });
-        setLoading(false);
-      }, 600);
-      return;
+      combinedResults.push({
+        id: 'test-id',
+        full_name: 'João da Silva',
+        cpf: '123.456.789-00',
+        protocol: '2026042026',
+        created_at: '2026-04-20T14:30:00.000Z',
+        status: 'CONFIRMADA',
+        editais: {
+          title: 'PNAB - Fomento à Literatura 2026'
+        }
+      });
     }
 
     try {
-      // Busca por protocolo OU cpf no Supabase
+      // 3. Busca no Supabase
       const { data, error } = await supabase
         .from('inscricoes')
         .select(`
@@ -55,22 +77,28 @@ const Inscricoes = () => {
             title
           )
         `)
-        .or(`protocol.eq.${cleanValue},cpf.eq.${cleanValue}`)
-        .maybeSingle();
+        .or(`protocol.eq.${cleanValue},cpf.eq.${cleanValue}`);
 
-      if (error) throw error;
-
-      if (!data) {
-        toast.error("Inscrição não encontrada.");
-      } else {
-        setResult(data);
+      if (!error && data) {
+        data.forEach((item: any) => {
+          if (!combinedResults.some(r => r.protocol === item.protocol)) {
+            combinedResults.push(item);
+          }
+        });
       }
     } catch (error: any) {
       console.error("Erro ao buscar inscrição:", error);
-      toast.error("Ocorreu um erro ao buscar os dados.");
-    } finally {
-      setLoading(false);
     }
+
+    if (combinedResults.length === 0) {
+      toast.error("Nenhuma inscrição encontrada.");
+    } else {
+      setResults(combinedResults);
+      if (combinedResults.length === 1) {
+        setSelectedResult(combinedResults[0]);
+      }
+    }
+    setLoading(false);
   };
 
   const getStatusBadge = (status: string, protocol: string) => {
@@ -155,16 +183,51 @@ const Inscricoes = () => {
                 </Button>
               </form>
 
-              {result && (
+              {/* Seletor de Inscrições se houver mais de uma */}
+              {results.length > 1 && !selectedResult && (
+                <div className="mt-12 space-y-6 animate-in fade-in slide-in-from-top-4 duration-500">
+                  <div className="border-b border-slate-100 pb-4">
+                    <h3 className="text-lg font-bold text-slate-900">Múltiplas Inscrições Encontradas</h3>
+                    <p className="text-sm text-slate-400 mt-1">Selecione qual inscrição deseja visualizar:</p>
+                  </div>
+                  <div className="grid grid-cols-1 gap-3">
+                    {results.map((res) => (
+                      <button
+                        key={res.protocol}
+                        onClick={() => setSelectedResult(res)}
+                        className="flex items-center justify-between p-5 bg-slate-50 hover:bg-blue-50/30 border border-slate-100 hover:border-blue-200 rounded-2xl transition-all text-left group"
+                      >
+                        <div>
+                          <p className="font-bold text-slate-900 text-base">{res.editais?.title || 'Edital'}</p>
+                          <p className="text-xs text-slate-400 font-mono mt-1">Protocolo: {res.protocol}</p>
+                        </div>
+                        <ChevronRight size={20} className="text-slate-400 group-hover:text-blue-600 transition-colors" />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {selectedResult && (
                 <div className="mt-12 pt-12 border-t border-slate-50 animate-in fade-in slide-in-from-top-4 duration-500 space-y-8">
+                  {results.length > 1 && (
+                    <Button 
+                      variant="ghost" 
+                      onClick={() => setSelectedResult(null)}
+                      className="text-blue-600 font-bold text-xs hover:bg-blue-50 rounded-xl"
+                    >
+                      ← Voltar para a lista de inscrições
+                    </Button>
+                  )}
+
                   <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                     <div>
                       <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Status da Inscrição</p>
-                      {getStatusBadge(result.status, result.protocol)}
+                      {getStatusBadge(selectedResult.status, selectedResult.protocol)}
                     </div>
                     <div className="text-left md:text-right">
                       <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Protocolo</p>
-                      <p className="text-2xl font-mono font-bold text-[#2b59c3]">{result.protocol}</p>
+                      <p className="text-2xl font-mono font-bold text-[#2b59c3]">{selectedResult.protocol}</p>
                     </div>
                   </div>
 
@@ -174,7 +237,7 @@ const Inscricoes = () => {
                         <FileText size={18} />
                         <h3 className="text-xs font-bold uppercase tracking-wider">Edital</h3>
                       </div>
-                      <p className="text-slate-900 font-bold text-sm">{result.editais?.title || 'Edital não identificado'}</p>
+                      <p className="text-slate-900 font-bold text-sm">{selectedResult.editais?.title || 'Edital não identificado'}</p>
                     </div>
 
                     <div className="bg-slate-50 p-6 rounded-xl border border-slate-100">
@@ -183,7 +246,7 @@ const Inscricoes = () => {
                         <h3 className="text-xs font-bold uppercase tracking-wider">Data de Envio</h3>
                       </div>
                       <p className="text-slate-900 font-bold text-sm">
-                        {new Date(result.created_at).toLocaleDateString('pt-BR', {
+                        {new Date(selectedResult.created_at).toLocaleDateString('pt-BR', {
                           day: '2-digit',
                           month: 'long',
                           year: 'numeric'
@@ -205,19 +268,19 @@ const Inscricoes = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                       <div>
                         <p className="text-xs text-slate-400 font-bold uppercase">Proponente</p>
-                        <p className="font-bold text-slate-800 mt-0.5">{result.full_name}</p>
+                        <p className="font-bold text-slate-800 mt-0.5">{selectedResult.full_name}</p>
                       </div>
                       <div>
                         <p className="text-xs text-slate-400 font-bold uppercase">CPF / CNPJ</p>
-                        <p className="font-bold text-slate-800 mt-0.5">{result.cpf}</p>
+                        <p className="font-bold text-slate-800 mt-0.5">{selectedResult.cpf}</p>
                       </div>
                       <div>
                         <p className="text-xs text-slate-400 font-bold uppercase">Protocolo</p>
-                        <p className="font-mono font-bold text-[#2b59c3] mt-0.5">{result.protocol}</p>
+                        <p className="font-mono font-bold text-[#2b59c3] mt-0.5">{selectedResult.protocol}</p>
                       </div>
                       <div>
                         <p className="text-xs text-slate-400 font-bold uppercase">Data de Emissão</p>
-                        <p className="font-bold text-slate-800 mt-0.5">{new Date(result.created_at).toLocaleString('pt-BR')}</p>
+                        <p className="font-bold text-slate-800 mt-0.5">{new Date(selectedResult.created_at).toLocaleString('pt-BR')}</p>
                       </div>
                     </div>
 

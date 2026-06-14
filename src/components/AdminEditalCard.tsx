@@ -144,7 +144,7 @@ const AdminEditalCard = ({ edital }: AdminEditalCardProps) => {
   const handleFinalConfirm = () => {
     setSettings(draft);
     localStorage.setItem(storageKey, JSON.stringify(draft));
-    toast.success("Configurações do edital atualizadas com sucesso!");
+    toast.success("Configurações do edital updated com sucesso!");
     setShowConfirm(false);
     setScheduleOpen(false);
     window.dispatchEvent(new Event('storage'));
@@ -423,7 +423,7 @@ const AdminEditalCard = ({ edital }: AdminEditalCardProps) => {
         editalTitle={edital.title} 
       />
 
-      <EditalDetailsDialog edital={edital} open={detailsOpen} onOpenChange={setDetailsOpen} />
+      <EditalDetailsDialog edital={edital} open={detailsOpen} onOpenChange={setDetailsOpen} editable={true} />
     </div>
   );
 };
