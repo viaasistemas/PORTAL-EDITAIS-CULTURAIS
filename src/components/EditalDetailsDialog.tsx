@@ -35,6 +35,7 @@ const EditalDetailsDialog = ({ edital, open, onOpenChange, editable = false }: E
     vagas: '',
     requisitos: '',
     documentos: '',
+    etapas: '',
   });
 
   useEffect(() => {
@@ -48,6 +49,7 @@ const EditalDetailsDialog = ({ edital, open, onOpenChange, editable = false }: E
         vagas: edital.vagas || '',
         requisitos: edital.requisitos || '',
         documentos: edital.documentos || '',
+        etapas: edital.etapas ? edital.etapas.join('\n') : '',
       });
     }
   }, [edital, open]);
@@ -61,6 +63,10 @@ const EditalDetailsDialog = ({ edital, open, onOpenChange, editable = false }: E
     const savedEditais = localStorage.getItem('admin_editais_list');
     const currentEditais: EditalDetail[] = savedEditais ? JSON.parse(savedEditais) : [];
     
+    const etapasArray = formData.etapas 
+      ? formData.etapas.split('\n').filter(line => line.trim() !== '')
+      : [];
+
     const updatedEditais = currentEditais.map(item => {
       if (item.id === edital.id) {
         return {
@@ -73,6 +79,7 @@ const EditalDetailsDialog = ({ edital, open, onOpenChange, editable = false }: E
           vagas: formData.vagas,
           requisitos: formData.requisitos,
           documentos: formData.documentos,
+          etapas: etapasArray,
         };
       }
       return item;
@@ -192,19 +199,25 @@ const EditalDetailsDialog = ({ edital, open, onOpenChange, editable = false }: E
 
           <Separator className="bg-slate-100" />
 
-          {edital.etapas && edital.etapas.length > 0 && (
-            <section>
-              <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">Etapas do Processo</h4>
-              <ul className="space-y-3">
-                {edital.etapas.map((etapa, i) => (
-                  <li key={i} className="text-base text-slate-600 flex items-center gap-3">
-                    <div className="w-2 h-2 rounded-full bg-blue-600" />
-                    {etapa}
-                  </li>
-                ))}
-              </ul>
-            </section>
-          )}
+          <section>
+            <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">Etapas do Processo</h4>
+            {editable ? (
+              <Textarea name="etapas" value={formData.etapas} onChange={handleInputChange} placeholder="Ex:&#10;1. Inscrição online&#10;2. Análise documental" className="rounded-xl border-slate-200 min-h-[100px]" />
+            ) : (
+              edital.etapas && edital.etapas.length > 0 ? (
+                <ul className="space-y-3">
+                  {edital.etapas.map((etapa, i) => (
+                    <li key={i} className="text-base text-slate-600 flex items-center gap-3">
+                      <div className="w-2 h-2 rounded-full bg-blue-600" />
+                      {etapa}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-base text-slate-600 leading-relaxed">Não informado</p>
+              )
+            )}
+          </section>
 
           <section>
             <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Requisitos</h4>

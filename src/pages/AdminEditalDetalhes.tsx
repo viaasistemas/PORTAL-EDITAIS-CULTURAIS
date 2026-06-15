@@ -107,6 +107,7 @@ const AdminEditalDetalhes = () => {
             full_name: 'João da Silva',
             cpf: '123.456.789-00',
             protocol: '2026042026',
+            projectName: 'Poesia na Praça',
             created_at: '2026-04-20T14:30:00.000Z',
             status: 'CONFIRMADA'
           },
@@ -115,6 +116,7 @@ const AdminEditalDetalhes = () => {
             full_name: 'Maria Souza',
             cpf: '222.333.444-55',
             protocol: '2026042027',
+            projectName: 'Contos de Extremoz',
             created_at: '2026-04-21T10:15:00.000Z',
             status: 'CONFIRMADA'
           },
@@ -123,6 +125,7 @@ const AdminEditalDetalhes = () => {
             full_name: 'Pedro Santos',
             cpf: '333.444.555-66',
             protocol: '2026042028',
+            projectName: 'Teatro de Bonecos',
             created_at: '2026-04-22T16:45:00.000Z',
             status: 'DOCUMENTAÇÃO'
           },
@@ -131,6 +134,7 @@ const AdminEditalDetalhes = () => {
             full_name: 'Ana Oliveira',
             cpf: '444.555.666-77',
             protocol: '2026042029',
+            projectName: 'Slam da Resistência',
             created_at: '2026-04-23T09:00:00.000Z',
             status: 'APROVADO'
           },
@@ -139,6 +143,7 @@ const AdminEditalDetalhes = () => {
             full_name: 'Carlos Lima Ltda',
             cpf: '12.345.678/0001-99',
             protocol: '2026042030',
+            projectName: 'Feira Literária',
             created_at: '2026-04-24T11:30:00.000Z',
             status: 'CONFIRMADA'
           },
@@ -148,6 +153,7 @@ const AdminEditalDetalhes = () => {
             full_name: 'Fernanda Ribeiro',
             cpf: '555.666.777-88',
             protocol: '2026042031',
+            projectName: 'Oficina de Cordel',
             created_at: '2026-04-24T15:20:00.000Z',
             status: 'CONFIRMADA'
           },
@@ -156,6 +162,7 @@ const AdminEditalDetalhes = () => {
             full_name: 'Roberto Alencar',
             cpf: '666.777.888-99',
             protocol: '2026042032',
+            projectName: 'Histórias do Mar',
             created_at: '2026-04-25T08:45:00.000Z',
             status: 'CONFIRMADA'
           },
@@ -164,6 +171,7 @@ const AdminEditalDetalhes = () => {
             full_name: 'Juliana Mendes',
             cpf: '777.888.999-00',
             protocol: '2026042033',
+            projectName: 'Poemas ao Vento',
             created_at: '2026-04-25T11:10:00.000Z',
             status: 'CONFIRMADA'
           },
@@ -172,6 +180,7 @@ const AdminEditalDetalhes = () => {
             full_name: 'Associação Cultural Extremoz',
             cpf: '98.765.432/0001-11',
             protocol: '2026042034',
+            projectName: 'Biblioteca Comunitária',
             created_at: '2026-04-25T16:30:00.000Z',
             status: 'CONFIRMADA'
           }
@@ -189,6 +198,7 @@ const AdminEditalDetalhes = () => {
             full_name: 'João da Silva',
             cpf: '123.456.789-00',
             protocol: '2026042026',
+            projectName: 'Poesia na Praça',
             created_at: '2026-04-25T14:30:00.000Z',
             status: 'CONFIRMADA'
           },
@@ -197,6 +207,7 @@ const AdminEditalDetalhes = () => {
             full_name: 'Maria Souza',
             cpf: '222.333.444-55',
             protocol: '2026042027',
+            projectName: 'Contos de Extremoz',
             created_at: '2026-04-26T10:15:00.000Z',
             status: 'CONFIRMADA'
           },
@@ -205,6 +216,7 @@ const AdminEditalDetalhes = () => {
             full_name: 'Carlos Lima Ltda',
             cpf: '12.345.678/0001-99',
             protocol: '2026042030',
+            projectName: 'Feira Literária',
             created_at: '2026-04-27T11:30:00.000Z',
             status: 'CONFIRMADA'
           }
@@ -222,6 +234,7 @@ const AdminEditalDetalhes = () => {
             full_name: 'Pedro Santos',
             cpf: '333.444.555-66',
             protocol: '2026042028',
+            projectName: 'Teatro de Bonecos',
             created_at: '2026-04-28T16:45:00.000Z',
             status: 'PENDENTE'
           }
@@ -286,7 +299,7 @@ const AdminEditalDetalhes = () => {
       }
       return item;
     }));
-    toast.success("Status atualizado com sucesso!");
+    toast.success("Status updated com sucesso!");
     window.dispatchEvent(new Event('storage'));
   };
 
@@ -296,6 +309,7 @@ const AdminEditalDetalhes = () => {
     
     const matchesSearch = item.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          item.protocol.includes(searchTerm) ||
+                         (item.projectName && item.projectName.toLowerCase().includes(searchTerm.toLowerCase())) ||
                          (cleanSearch && itemCpfClean.includes(cleanSearch)) ||
                          item.cpf.includes(searchTerm);
     
@@ -408,7 +422,7 @@ const AdminEditalDetalhes = () => {
                   <div className="relative flex-grow md:w-64">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
                     <Input 
-                      placeholder="Pesquisar por nome, CPF ou CNPJ..." 
+                      placeholder="Pesquisar por nome, projeto, CPF ou CNPJ..." 
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                       className="pl-10 h-11 rounded-xl border-slate-200"
@@ -450,6 +464,7 @@ const AdminEditalDetalhes = () => {
                 <Table>
                   <TableHeader className="bg-slate-50">
                     <TableRow>
+                      <TableHead className="font-bold text-slate-900">Nome do Projeto</TableHead>
                       <TableHead className="font-bold text-slate-900">Proponente</TableHead>
                       <TableHead className="font-bold text-slate-900">CPF</TableHead>
                       <TableHead className="font-bold text-slate-900">CNPJ</TableHead>
@@ -464,13 +479,14 @@ const AdminEditalDetalhes = () => {
                   <TableBody>
                     {filteredData.length === 0 ? (
                       <TableRow>
-                        <TableCell colSpan={activeView === 'inscricoes' || activeView === 'documentacao' ? 7 : 6} className="text-center py-20 text-slate-400 font-medium">
+                        <TableCell colSpan={activeView === 'inscricoes' || activeView === 'documentacao' ? 8 : 7} className="text-center py-20 text-slate-400 font-medium">
                           {getEmptyMessage()}
                         </TableCell>
                       </TableRow>
                     ) : (
                       filteredData.map((item) => (
                         <TableRow key={item.id} className="hover:bg-slate-50/50 transition-colors">
+                          <TableCell className="font-bold text-slate-900">{item.projectName || 'Sem Projeto'}</TableCell>
                           <TableCell className="font-bold text-slate-900">{item.full_name}</TableCell>
                           <TableCell className="text-sm text-slate-600">
                             {!isCNPJ(item.cpf) ? item.cpf : '-'}

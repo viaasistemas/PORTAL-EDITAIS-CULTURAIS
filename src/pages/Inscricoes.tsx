@@ -18,7 +18,7 @@ const Inscricoes = () => {
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!searchValue.trim()) {
-      toast.error("Por favor, insira um CPF ou Protocolo.");
+      toast.error("Por favor, insira um número de protocolo.");
       return;
     }
 
@@ -27,16 +27,11 @@ const Inscricoes = () => {
     setSelectedResult(null);
 
     const cleanValue = searchValue.trim();
-    const cleanCpfCnpj = cleanValue.replace(/\D/g, '');
-
     let combinedResults: any[] = [];
 
     // 1. Carrega inscrições locais do localStorage
     const localInscriptions = JSON.parse(localStorage.getItem('local_inscricoes') || '[]');
-    const matchingLocal = localInscriptions.filter((ins: any) => 
-      ins.protocol === cleanValue || 
-      ins.cpf.replace(/\D/g, '') === cleanCpfCnpj
-    );
+    const matchingLocal = localInscriptions.filter((ins: any) => ins.protocol === cleanValue);
 
     matchingLocal.forEach((localItem: any) => {
       combinedResults.push({
@@ -53,7 +48,7 @@ const Inscricoes = () => {
     });
 
     // 2. Interceptação para dados de teste simulados
-    if (cleanValue === '123.456.789-00' || cleanValue === '2026042026') {
+    if (cleanValue === '2026042026') {
       combinedResults.push({
         id: 'test-id',
         full_name: 'João da Silva',
@@ -68,7 +63,7 @@ const Inscricoes = () => {
     }
 
     try {
-      // 3. Busca no Supabase
+      // 3. Busca no Supabase apenas por protocolo
       const { data, error } = await supabase
         .from('inscricoes')
         .select(`
@@ -77,7 +72,7 @@ const Inscricoes = () => {
             title
           )
         `)
-        .or(`protocol.eq.${cleanValue},cpf.eq.${cleanValue}`);
+        .eq('protocol', cleanValue);
 
       if (!error && data) {
         data.forEach((item: any) => {
@@ -137,6 +132,22 @@ const Inscricoes = () => {
     window.print();
   };
 
+  const maskCpfCnpj = (val: string) => {
+    if (!val) return '';
+    const clean = val.replace(/\D/g, '');
+    if (clean.length <= 11) {
+      // CPF: ***.***.***-XX -> mask all except last 3 digits
+      const lastThree = val.substring(val.length - 3);
+      const prefix = val.substring(0, val.length - 3).replace(/\d/g, '*');
+      return prefix + lastThree;
+    } else {
+      // CNPJ: **.***.***/****-XX -> mask all except last 3 digits
+      const lastThree = val.substring(val.length - 3);
+      const prefix = val.substring(0, val.length - 3).replace(/\d/g, '*');
+      return prefix + lastThree;
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <Navbar />
@@ -153,7 +164,7 @@ const Inscricoes = () => {
               <div className="w-12 h-1 bg-red-500 rounded-full" />
             </div>
             <p className="text-base md:text-lg text-black font-bold">
-              Utilize o CPF ou número do seu protocolo para verificar a sua inscrição.
+              Utilize o número do protocolo para verificar a inscrição.
             </p>
           </div>
         </section>
@@ -168,7 +179,7 @@ const Inscricoes = () => {
                   <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
                   <Input 
                     type="text" 
-                    placeholder="CPF ou Protocolo" 
+                    placeholder="Digite seu número de protocolo" 
                     className="pl-12 h-14 rounded-xl border-slate-200 focus:ring-[#2b59c3] text-lg font-medium"
                     value={searchValue}
                     onChange={(e) => setSearchValue(e.target.value)}
@@ -272,7 +283,7 @@ const Inscricoes = () => {
                       </div>
                       <div>
                         <p className="text-xs text-slate-400 font-bold uppercase">CPF / CNPJ</p>
-                        <p className="font-bold text-slate-800 mt-0.5">{selectedResult.cpf}</p>
+                        <p className="font-bold text-slate-800 mt-0.5">{maskCpfCnpj(selectedResult.cpf)}</p>
                       </div>
                       <div>
                         <p className="text-xs text-slate-400 font-bold uppercase">Protocolo</p>

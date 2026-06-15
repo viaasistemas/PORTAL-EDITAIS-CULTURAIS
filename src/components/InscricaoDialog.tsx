@@ -43,6 +43,7 @@ const InscricaoDialog = ({ edital, open, onOpenChange }: InscricaoDialogProps) =
     razaoSocial: '',
     cpf: '',
     cnpj: '',
+    projectName: '',
   });
 
   const [files, setFiles] = useState<Record<string, string>>({
@@ -70,7 +71,7 @@ const InscricaoDialog = ({ edital, open, onOpenChange }: InscricaoDialogProps) =
     const nameField = isPJ ? formData.razaoSocial : formData.fullName;
     const idField = isPJ ? formData.cnpj : formData.cpf;
 
-    if (!nameField || !idField) {
+    if (!nameField || !idField || !formData.projectName) {
       toast.error("Por favor, preencha todos os campos obrigatórios.");
       return;
     }
@@ -158,6 +159,7 @@ const InscricaoDialog = ({ edital, open, onOpenChange }: InscricaoDialogProps) =
       protocol: generatedProtocol,
       full_name: fullName,
       cpf: cpfCnpj,
+      projectName: formData.projectName,
       status: 'CONFIRMADA',
       created_at: new Date().toISOString(),
       files: Object.entries(files)
@@ -186,7 +188,7 @@ const InscricaoDialog = ({ edital, open, onOpenChange }: InscricaoDialogProps) =
       if (!val) {
         setTimeout(() => {
           setStep('form');
-          setFormData({ fullName: '', razaoSocial: '', cpf: '', cnpj: '' });
+          setFormData({ fullName: '', razaoSocial: '', cpf: '', cnpj: '', projectName: '' });
           setFiles({ anexo1: '', anexo2: '', anexo3: '', portfolio: '' });
           setTipoInscricao('PF');
         }, 300);
@@ -218,6 +220,18 @@ const InscricaoDialog = ({ edital, open, onOpenChange }: InscricaoDialogProps) =
                       <SelectItem value="GC">Grupo/Coletivo</SelectItem>
                     </SelectContent>
                   </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label className="text-xs font-bold text-slate-500 uppercase">Nome do Projeto *</Label>
+                  <Input 
+                    name="projectName"
+                    value={formData.projectName}
+                    onChange={handleInputChange}
+                    placeholder="Digite o nome do projeto" 
+                    className="rounded-xl border-slate-200 h-12" 
+                    required 
+                  />
                 </div>
 
                 {tipoInscricao === 'PJ' ? (
@@ -328,6 +342,10 @@ const InscricaoDialog = ({ edital, open, onOpenChange }: InscricaoDialogProps) =
             
             <div className="space-y-4 mb-8 bg-slate-50 p-6 rounded-2xl border border-slate-100">
               <div className="grid grid-cols-1 gap-4">
+                <div>
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Nome do Projeto</p>
+                  <p className="text-sm font-bold text-slate-900">{formData.projectName}</p>
+                </div>
                 <div>
                   <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Proponente</p>
                   <p className="text-sm font-bold text-slate-900">{tipoInscricao === 'PJ' ? formData.razaoSocial : formData.fullName}</p>
