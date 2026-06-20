@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -24,7 +24,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { editaisData } from '@/data/editais';
 
 interface InscricaoDialogProps {
-  edital: { id: string; title: string; number: string };
+  edital: { id: string; title: string; number: string; customAttachments?: { id: string; title: string }[] };
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
@@ -46,12 +46,36 @@ const InscricaoDialog = ({ edital, open, onOpenChange }: InscricaoDialogProps) =
     projectName: '',
   });
 
-  const [files, setFiles] = useState<Record<string, string>>({
-    anexo1: '',
-    anexo2: '',
-    anexo3: '',
-    portfolio: ''
-  });
+  const [files, setFiles] = useState<Record<string, string>>({});
+  const [attachments, setAttachments] = useState<{ id: string; title: string; required: boolean }[]>([]);
+
+  useEffect(() => {
+    if (open && edital) {
+      // Carrega edital completo para obter anexos customizados atualizados
+      const savedEditais = localStorage.getItem('admin_editais_list');
+      const allEditais = savedEditais ? JSON.parse(savedEditais) : editaisData;
+      const fullEdital = allEditais.find((e: any) => e.id === edital.id);
+      
+      const customAtts = fullEdital?.customAttachments || edital.customAttachments || [];
+      
+      if (customAtts.length > 0) {
+        setAttachments(customAtts.map((att: any) => ({
+          id: att.id,
+          title: att.title,
+          required: true
+        })));
+      } else {
+        // Fallback para anexos padrão se nenhum anexo customizado for definido
+        setAttachments([
+          { id: 'anexo1', title: 'Anexo 1 *', required: true },
+          { id: 'anexo2', title: 'Anexo 2 *', required: true },
+          { id: 'anexo3', title: 'Anexo 3', required: false },
+          { id: 'portfolio', title: 'Portfolio', required: false }
+        ]);
+      }
+      setFiles({});
+    }
+  }, [open, edital]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -76,8 +100,10 @@ const InscricaoDialog = ({ edital, open, onOpenChange }: InscricaoDialogProps) =
       return;
     }
 
-    if (!files.anexo1 || !files.anexo2) {
-      toast.error("Os anexos 1 e 2 são obrigatórios.");
+    // Valida se todos os anexos obrigatórios foram enviados
+    const missingRequired = attachments.filter(att => att.required && !files[att.id]);
+    if (missingRequired.length > 0) {
+      toast.error(`Por favor, envie os anexos obrigatórios: ${missingRequired.map(m => m.title).join(', ')}`);
       return;
     }
 
@@ -189,21 +215,22 @@ const InscricaoDialog = ({ edital, open, onOpenChange }: InscricaoDialogProps) =
         setTimeout(() => {
           setStep('form');
           setFormData({ fullName: '', razaoSocial: '', cpf: '', cnpj: '', projectName: '' });
-          setFiles({ anexo1: '', anexo2: '', anexo3: '', portfolio: '' });
+          setFiles({});
           setTipoInscricao('PF');
         }, 300);
       }
       onOpenChange(val);
     }}>
-      <DialogContent className="max-w-xl rounded-[2.5rem] p-8">
+      <DialogContent className="max-w-xl rounded-[2.5rem] p-6 md:p-8 max-h-[95vh] overflow-y-auto">
         {step === 'form' && (
           <>
-            <DialogHeader className="mb-6">
-              <p className="text-[10px] font-bold text-[#2b59c3] uppercase tracking-widest mb-2">Inscrição no Edital</p>
-              <DialogTitle className="text-2xl font-bold text-slate-900">Edital: {edital.title}</DialogTitle>
+            <DialogHeader className="mb-4 md:mb-6">
+              <p className="text-[10px] font-bold text-[#2b59c3] uppercase tracking-widest mb-1">Inscrição no Edital</p>
+              <DialogTitle className="text-xl md:text-2xl font-bold text-slate-900 leading-tight">Edital: {edital.title}</DialogTitle>
+              <p className="text-xs font-bold text-slate-400 mt-1">#{edital.number}</p>
             </DialogHeader>
 
-            <form onSubmit={handleNext} className="space-y-6">
+            <form onSubmit={handleNext} className="space-y-4 md:space-y-6">
               <div className="space-y-4">
                 <div className="space-y-2">
                   <Label className="text-xs font-bold text-slate-500 uppercase">Tipo de Proponente *</Label>
@@ -211,7 +238,7 @@ const InscricaoDialog = ({ edital, open, onOpenChange }: InscricaoDialogProps) =
                     value={tipoInscricao} 
                     onValueChange={(val: TipoInscricao) => setTipoInscricao(val)}
                   >
-                    <SelectTrigger className="h-12 rounded-xl border-slate-200">
+                    <SelectTrigger className="h-11 md:h-12 rounded-xl border-slate-200">
                       <SelectValue placeholder="Selecione o tipo" />
                     </SelectTrigger>
                     <SelectContent className="rounded-xl">
@@ -229,7 +256,7 @@ const InscricaoDialog = ({ edital, open, onOpenChange }: InscricaoDialogProps) =
                     value={formData.projectName}
                     onChange={handleInputChange}
                     placeholder="Digite o nome do projeto" 
-                    className="rounded-xl border-slate-200 h-12" 
+                    className="rounded-xl border-slate-200 h-11 md:h-12" 
                     required 
                   />
                 </div>
@@ -243,7 +270,7 @@ const InscricaoDialog = ({ edital, open, onOpenChange }: InscricaoDialogProps) =
                         value={formData.razaoSocial}
                         onChange={handleInputChange}
                         placeholder="Nome da empresa" 
-                        className="rounded-xl border-slate-200 h-12" 
+                        className="rounded-xl border-slate-200 h-11 md:h-12" 
                         required 
                       />
                     </div>
@@ -254,7 +281,7 @@ const InscricaoDialog = ({ edital, open, onOpenChange }: InscricaoDialogProps) =
                         value={formData.cnpj}
                         onChange={handleInputChange}
                         placeholder="00.000.000/0000-00" 
-                        className="rounded-xl border-slate-200 h-12" 
+                        className="rounded-xl border-slate-200 h-11 md:h-12" 
                         required 
                       />
                     </div>
@@ -268,7 +295,7 @@ const InscricaoDialog = ({ edital, open, onOpenChange }: InscricaoDialogProps) =
                         value={formData.fullName}
                         onChange={handleInputChange}
                         placeholder="Seu nome completo" 
-                        className="rounded-xl border-slate-200 h-12" 
+                        className="rounded-xl border-slate-200 h-11 md:h-12" 
                         required 
                       />
                     </div>
@@ -279,7 +306,7 @@ const InscricaoDialog = ({ edital, open, onOpenChange }: InscricaoDialogProps) =
                         value={formData.cpf}
                         onChange={handleInputChange}
                         placeholder="000.000.000-00" 
-                        className="rounded-xl border-slate-200 h-12" 
+                        className="rounded-xl border-slate-200 h-11 md:h-12" 
                         required 
                       />
                     </div>
@@ -287,15 +314,10 @@ const InscricaoDialog = ({ edital, open, onOpenChange }: InscricaoDialogProps) =
                 )}
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                {[
-                  { id: 'anexo1', label: 'Anexo 1 *', required: true },
-                  { id: 'anexo2', label: 'Anexo 2 *', required: true },
-                  { id: 'anexo3', label: 'Anexo 3', required: false },
-                  { id: 'portfolio', label: 'Portfolio', required: false },
-                ].map((field) => (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {attachments.map((field) => (
                   <div key={field.id} className="space-y-2">
-                    <Label className="text-xs font-bold text-slate-500 uppercase">{field.label}</Label>
+                    <Label className="text-xs font-bold text-slate-500 uppercase">{field.title}</Label>
                     <div className="relative">
                       <Input 
                         type="file" 
@@ -306,13 +328,13 @@ const InscricaoDialog = ({ edital, open, onOpenChange }: InscricaoDialogProps) =
                       />
                       <label 
                         htmlFor={field.id} 
-                        className={`flex items-center justify-between px-4 h-12 rounded-xl border transition-all cursor-pointer ${
+                        className={`flex items-center justify-between px-4 h-11 md:h-12 rounded-xl border transition-all cursor-pointer ${
                           files[field.id] 
                             ? 'border-emerald-200 bg-emerald-50' 
                             : 'border-slate-200 bg-slate-50 hover:bg-slate-100'
                         }`}
                       >
-                        <span className={`text-xs truncate max-w-[120px] ${files[field.id] ? 'text-emerald-700 font-bold' : 'text-slate-400'}`}>
+                        <span className={`text-xs truncate max-w-[150px] ${files[field.id] ? 'text-emerald-700 font-bold' : 'text-slate-400'}`}>
                           {files[field.id] || "Selecionar"}
                         </span>
                         {files[field.id] ? (
@@ -326,9 +348,9 @@ const InscricaoDialog = ({ edital, open, onOpenChange }: InscricaoDialogProps) =
                 ))}
               </div>
 
-              <DialogFooter className="gap-3 pt-4">
-                <Button type="button" variant="ghost" onClick={() => onOpenChange(false)} className="rounded-xl font-bold text-slate-500">Cancelar</Button>
-                <Button type="submit" className="bg-[#2b59c3] hover:bg-[#1e44a3] text-white rounded-xl px-8 font-bold shadow-lg shadow-blue-100">Enviar Documentação</Button>
+              <DialogFooter className="gap-3 pt-4 flex-col sm:flex-row">
+                <Button type="button" variant="ghost" onClick={() => onOpenChange(false)} className="rounded-xl font-bold text-slate-500 w-full sm:w-auto">Cancelar</Button>
+                <Button type="submit" className="bg-[#2b59c3] hover:bg-[#1e44a3] text-white rounded-xl px-8 font-bold shadow-lg shadow-blue-100 w-full sm:w-auto">Enviar Documentação</Button>
               </DialogFooter>
             </form>
           </>

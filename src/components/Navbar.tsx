@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { useSession } from './SessionContextProvider';
 import { Menu } from 'lucide-react';
 import {
   Sheet,
@@ -12,7 +11,6 @@ import {
 } from "@/components/ui/sheet";
 
 const Navbar = () => {
-  const { session, logoutFake } = useSession();
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -52,19 +50,6 @@ const Navbar = () => {
                     </Link>
                   ))}
                 </div>
-                <div className="p-6 border-t border-slate-50">
-                  {!session ? (
-                    <Link to="/login" onClick={() => setIsOpen(false)}>
-                      <Button className="w-full bg-[#2b59c3] hover:bg-[#1e44a3] text-white font-bold rounded-xl h-12">
-                        ENTRAR
-                      </Button>
-                    </Link>
-                  ) : (
-                    <Button onClick={logoutFake} variant="outline" className="w-full h-12 rounded-xl font-bold text-slate-500">
-                      SAIR
-                    </Button>
-                  )}
-                </div>
               </div>
             </SheetContent>
           </Sheet>
@@ -93,24 +78,8 @@ const Navbar = () => {
           ))}
         </div>
 
-        {/* Auth - Direita no Desktop (Oculto no Mobile) */}
-        <div className="hidden md:flex items-center gap-4">
-          {session ? (
-            <Button 
-              variant="ghost" 
-              className="text-xs font-bold uppercase tracking-wider text-slate-500"
-              onClick={logoutFake}
-            >
-              Sair
-            </Button>
-          ) : (
-            <Link to="/login">
-              <Button className="bg-[#2b59c3] hover:bg-[#1e44a3] text-white px-8 h-11 rounded-xl font-bold uppercase text-[11px] tracking-wider shadow-md shadow-blue-100">
-                ENTRAR
-              </Button>
-            </Link>
-          )}
-        </div>
+        {/* Espaço vazio para manter o alinhamento sem os botões de Auth */}
+        <div className="hidden md:block w-20"></div>
 
       </div>
     </nav>

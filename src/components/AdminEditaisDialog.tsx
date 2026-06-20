@@ -19,7 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Plus, Pencil, Trash2, ArrowLeft, FilePlus, FileEdit, ChevronRight } from 'lucide-react';
+import { Plus, Pencil, Trash2, ArrowLeft, FilePlus, FileEdit, ChevronRight, Paperclip } from 'lucide-react';
 import { toast } from 'sonner';
 import { editaisData, EditalDetail } from '@/data/editais';
 
@@ -42,6 +42,11 @@ const defaultCategories = {
   PNAB: ["Cultura Popular", "Música", "Dança", "Artes Visuais", "Artes Cênicas", "Audiovisual", "Literatura", "Artesanato"]
 };
 
+interface CustomAttachment {
+  id: string;
+  title: string;
+}
+
 const AdminEditaisDialog = ({ open, onOpenChange }: AdminEditaisDialogProps) => {
   const [view, setView] = useState<ViewState>('menu');
   const [editais, setEditais] = useState<EditalDetail[]>([]);
@@ -61,6 +66,9 @@ const AdminEditaisDialog = ({ open, onOpenChange }: AdminEditaisDialogProps) => 
     documentos: '',
     maxInscricoes: '0',
   });
+  
+  const [customAttachments, setCustomAttachments] = useState<CustomAttachment[]>([]);
+  const [newAttachmentTitle, setNewAttachmentTitle] = useState('');
   const [editingId, setEditingId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -109,6 +117,24 @@ const AdminEditaisDialog = ({ open, onOpenChange }: AdminEditaisDialogProps) => 
     return `${seqStr}${currentYear}`;
   };
 
+  const handleAddAttachment = () => {
+    if (!newAttachmentTitle.trim()) return;
+    const newAttachment: CustomAttachment = {
+      id: `att-${Date.now()}`,
+      title: newAttachmentTitle.trim()
+    };
+    setCustomAttachments(prev => [...prev, newAttachment]);
+    setNewAttachmentTitle('');
+  };
+
+  const handleRemoveAttachment = (id: string) => {
+    setCustomAttachments(prev => prev.filter(att => att.id !== id));
+  };
+
+  const handleUpdateAttachmentTitle = (id: string, newTitle: string) => {
+    setCustomAttachments(prev => prev.map(att => att.id === id ? { ...att, title: newTitle } : att));
+  };
+
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.title || !formData.subtitle || !formData.category) {
@@ -136,8 +162,9 @@ const AdminEditaisDialog = ({ open, onOpenChange }: AdminEditaisDialogProps) => 
             etapas: etapasArray,
             requisitos: formData.requisitos,
             documentos: formData.documentos,
-            maxInscricoes: Number(formData.maxInscricoes) || 0
-          };
+            maxInscricoes: Number(formData.maxInscricoes) || 0,
+            customAttachments: customAttachments
+          } as any;
         }
         return item;
       });
@@ -164,8 +191,9 @@ const AdminEditaisDialog = ({ open, onOpenChange }: AdminEditaisDialogProps) => 
         requisitos: formData.requisitos,
         documentos: formData.documentos,
         createdAt: new Date().toISOString(),
-        maxInscricoes: Number(formData.maxInscricoes) || 0
-      };
+        maxInscricoes: Number(formData.maxInscricoes) || 0,
+        customAttachments: customAttachments
+      } as any;
 
       // Inicializa as configurações do edital com a visibilidade desativada por padrão
       const settingsKey = `edital_settings_${generatedNumber}`;
@@ -218,10 +246,12 @@ const AdminEditaisDialog = ({ open, onOpenChange }: AdminEditaisDialogProps) => 
       documentos: '',
       maxInscricoes: '0',
     });
+    setCustomAttachments([]);
+    setNewAttachmentTitle('');
     setEditingId(null);
   };
 
-  const startEdit = (item: EditalDetail) => {
+  const startEdit = (item: any) => {
     setFormData({
       title: item.title,
       subtitle: item.subtitle,
@@ -235,6 +265,7 @@ const AdminEditaisDialog = ({ open, onOpenChange }: AdminEditaisDialogProps) => 
       documentos: item.documentos || '',
       maxInscricoes: String(item.maxInscricoes || 0),
     });
+    setCustomAttachments(item.customAttachments || []);
     setSelectedProgram(item.tipo);
     setEditingId(item.id);
     setView('add_form');
@@ -391,10 +422,6 @@ const AdminEditaisDialog = ({ open, onOpenChange }: AdminEditaisDialogProps) => 
                 <Label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Vagas</Label>
                 <Input name="vagas" value={formData.vagas} onChange={handleInputChange} placeholder="Ex: 15" className="h-11 rounded-xl border-slate-200" />
               </div>
-              <div className="space-y-2">
-                <Label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Limite de Inscrições por CPF/CNPJ</Label>
-                <Input type="number" name="maxInscricoes" value={formData.maxInscricoes} onChange={handleInputChange} placeholder="0 para ilimitado" className="h-11 rounded-xl border-slate-200" />
-              </div>
             </div>
 
             <div className="space-y-2">
@@ -410,6 +437,55 @@ const AdminEditaisDialog = ({ open, onOpenChange }: AdminEditaisDialogProps) => 
             <div className="space-y-2">
               <Label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Documentos Necessários</Label>
               <Textarea name="documentos" value={formData.documentos} onChange={handleInputChange} placeholder="Documentos exigidos..." className="rounded-xl border-slate-200 min-h-[80px]" />
+            </div>
+
+            {/* Nova Seção: INSCRIÇÃO NO EDITAL */}
+            <div className="pt-6 border-t border-slate-100 space-y-6">
+              <h3 className="text-sm font-black text-slate-900 tracking-wider uppercase">INSCRIÇÃO NO EDITAL</h3>
+              
+              <div className="space-y-2">
+                <Label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Limite de Inscrições por CPF/CNPJ</Label>
+                <Input type="number" name="maxInscricoes" value={formData.maxInscricoes} onChange={handleInputChange} placeholder="0 para ilimitado" className="h-11 rounded-xl border-slate-200" />
+              </div>
+
+              <div className="space-y-4">
+                <Label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Anexos</Label>
+                <div className="flex gap-2">
+                  <Input 
+                    value={newAttachmentTitle} 
+                    onChange={(e) => setNewAttachmentTitle(e.target.value)} 
+                    placeholder="Nome do anexo (ex: Anexo 1 - Declaração)" 
+                    className="h-11 rounded-xl border-slate-200"
+                  />
+                  <Button type="button" onClick={handleAddAttachment} className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl h-11 px-4">
+                    <Plus size={18} />
+                  </Button>
+                </div>
+
+                <div className="space-y-2">
+                  {customAttachments.map((att) => (
+                    <div key={att.id} className="flex items-center justify-between p-3 bg-slate-50 rounded-xl border border-slate-100 gap-3">
+                      <div className="flex items-center gap-2 flex-grow">
+                        <Paperclip size={16} className="text-blue-600 shrink-0" />
+                        <Input 
+                          value={att.title} 
+                          onChange={(e) => handleUpdateAttachmentTitle(att.id, e.target.value)}
+                          className="h-9 rounded-lg border-slate-200 bg-white text-sm font-medium"
+                        />
+                      </div>
+                      <Button 
+                        type="button" 
+                        variant="ghost" 
+                        size="icon" 
+                        onClick={() => handleRemoveAttachment(att.id)}
+                        className="h-9 w-9 rounded-lg text-slate-400 hover:text-red-600 hover:bg-white"
+                      >
+                        <Trash2 size={16} />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
 
             <DialogFooter className="gap-3 pt-4">

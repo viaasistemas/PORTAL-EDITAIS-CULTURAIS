@@ -118,6 +118,8 @@ const EditalDetailsDialog = ({ edital, open, onOpenChange, editable = false }: E
 
   if (!edital) return null;
 
+  const hasValorMaximo = formData.valorMaximo && formData.valorMaximo.trim() !== "" && formData.valorMaximo.trim() !== "Não informado";
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto rounded-[2.5rem] p-8">
@@ -176,14 +178,16 @@ const EditalDetailsDialog = ({ edital, open, onOpenChange, editable = false }: E
                 <p className="text-xl font-bold text-blue-600">{edital.valorTotal || "Não informado"}</p>
               )}
             </section>
-            <section>
-              <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Valor Máximo por Projeto</h4>
-              {editable ? (
-                <Input name="valorMaximo" value={formData.valorMaximo} onChange={handleInputChange} className="h-11 rounded-xl border-slate-200" />
-              ) : (
-                <p className="text-xl font-bold text-blue-600">{edital.valorMaximo || "Não informado"}</p>
-              )}
-            </section>
+            {(editable || hasValorMaximo) && (
+              <section>
+                <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Valor Máximo por Projeto</h4>
+                {editable ? (
+                  <Input name="valorMaximo" value={formData.valorMaximo} onChange={handleInputChange} className="h-11 rounded-xl border-slate-200" />
+                ) : (
+                  <p className="text-xl font-bold text-blue-600">{edital.valorMaximo}</p>
+                )}
+              </section>
+            )}
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
