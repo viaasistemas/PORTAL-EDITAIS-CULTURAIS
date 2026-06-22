@@ -142,8 +142,8 @@ const AdminInscricoes = () => {
         <div className="p-4 md:px-8 lg:px-12 w-full space-y-8 py-8">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
             <div>
-              <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900">Gestão de Inscrições</h2>
-              <p className="text-slate-500 text-base md:text-lg font-medium mt-1">Visualizar e gerenciar as inscrições recebidas por edital</p>
+              <h1 className="text-3xl font-bold text-slate-900">Gestão de Inscrições</h1>
+              <p className="text-slate-500 text-lg mt-1">Visualizar e gerenciar as inscrições recebidas por edital</p>
             </div>
             
             <div className="flex flex-col items-end gap-3 w-full md:w-auto">
