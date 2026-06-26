@@ -43,7 +43,7 @@ const Editais = () => {
               <div className="w-12 h-1 bg-yellow-400 rounded-full" />
               <div className="w-12 h-1 bg-red-500 rounded-full" />
             </div>
-            <p className="text-base md:text-lg text-black font-bold">
+            <p className="text-xs md:text-lg text-black font-bold px-4">
               Explore as oportunidades de fomento disponíveis e encontre o edital perfeito para o seu projeto cultural.
             </p>
           </div>

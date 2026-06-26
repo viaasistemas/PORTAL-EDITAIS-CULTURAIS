@@ -175,7 +175,23 @@ const EditaisLPG = () => {
 
         <section className="py-8 container mx-auto px-4">
           <div className="flex flex-col lg:flex-row justify-between items-center gap-8 max-w-7xl mx-auto">
-            <div className="flex flex-wrap justify-center gap-2 bg-slate-50 p-1.5 rounded-2xl border border-slate-100">
+            {/* Mobile Category Select */}
+            <div className="block lg:hidden w-full max-w-xs mx-auto">
+              <select
+                value={categoryFilter}
+                onChange={(e) => setCategoryFilter(e.target.value)}
+                className="w-full h-12 px-4 rounded-xl border border-slate-200 bg-slate-50 font-bold text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#2b59c3]"
+              >
+                {categories.map((cat) => (
+                  <option key={cat} value={cat}>
+                    {cat}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Desktop Category Buttons */}
+            <div className="hidden lg:flex flex-wrap justify-center gap-2 bg-slate-50 p-1.5 rounded-2xl border border-slate-100">
               {categories.map((cat) => (
                 <button
                   key={cat}

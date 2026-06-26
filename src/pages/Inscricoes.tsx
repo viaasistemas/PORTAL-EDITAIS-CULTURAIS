@@ -163,7 +163,7 @@ const Inscricoes = () => {
               <div className="w-12 h-1 bg-yellow-400 rounded-full" />
               <div className="w-12 h-1 bg-red-500 rounded-full" />
             </div>
-            <p className="text-base md:text-lg text-black font-bold">
+            <p className="text-xs md:text-lg text-black font-bold px-4">
               Utilize o número do protocolo para verificar a inscrição.
             </p>
           </div>
