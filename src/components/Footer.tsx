@@ -3,7 +3,7 @@
 import React from 'react';
 import { Mail, Phone, MapPin, Clock, Instagram, Facebook, Youtube } from 'lucide-react';
 import footerLogo from '@/assets/footer-logo.png';
-import logo from '@/assets/logo.png';
+import logoFooter from '@/assets/logo-footer.png';
 
 const Footer = () => {
   return (
@@ -12,12 +12,12 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
           
           {/* Logo Section - order-1 no mobile */}
-          <div className="flex flex-col order-1">
-            <div className="bg-white p-3 rounded-xl inline-block max-w-[220px]">
+          <div className="flex flex-col order-1 justify-center">
+            <div className="max-w-[220px]">
               <img 
-                src={logo} 
+                src={logoFooter} 
                 alt="Cultura - Portal de Editais de Extremoz" 
-                className="h-12 w-auto object-contain"
+                className="w-full h-auto object-contain"
               />
             </div>
           </div>
