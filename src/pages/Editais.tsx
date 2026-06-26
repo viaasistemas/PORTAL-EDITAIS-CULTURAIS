@@ -6,7 +6,6 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { ArrowRight } from 'lucide-react';
 import fomentoMunicipalImg from '@/assets/fomento-municipal-original.png';
-import lpgImg from '@/assets/lei-paulo-gustavo-original.png';
 
 const Editais = () => {
   const categories = [
@@ -20,9 +19,8 @@ const Editais = () => {
     {
       title: "Lei Paulo Gustavo",
       description: "Recursos federais para o setor cultural",
-      image: lpgImg,
-      link: "/editais/lpg",
-      originalColor: true
+      image: "https://images.unsplash.com/photo-1460666819451-7410f5ef139a?q=80&w=800&auto=format&fit=crop",
+      link: "/editais/lpg"
     },
     {
       title: "PNAB",
