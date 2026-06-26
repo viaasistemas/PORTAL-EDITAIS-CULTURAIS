@@ -10,8 +10,8 @@ const Footer = () => {
     <footer className="bg-[#0a0f1c] text-white pb-12 pt-16">
       <div className="container mx-auto px-4 max-w-7xl">
         
-        {/* Columns Grid - Deslocado para a direita com padding-left em telas maiores */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16 lg:pl-20">
+        {/* Columns Grid - Deslocado para a direita com padding-left em telas maiores e gap reduzido */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16 lg:pl-20">
           
           {/* ENDEREÇO */}
           <div className="space-y-4">
@@ -66,8 +66,8 @@ const Footer = () => {
 
         </div>
 
-        {/* Logos Section - Centered side-by-side without top border */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-12 mb-12 pt-8">
+        {/* Logos Section - Centered side-by-side with reduced gap */}
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-12 pt-8">
           <div className="max-w-[200px] h-[60px] flex items-center justify-center">
             <img 
               src={logoFooter} 
