@@ -48,7 +48,6 @@ const Biblioteca = () => {
   }, []);
 
   const getItemsByCategory = (catTitle: string) => {
-    // Mapeia o título exibido para o título salvo no banco (caso haja divergência)
     return data.filter(item => item.category === catTitle || (catTitle === "Vídeos Tutoriais" && item.category === "Legislação"));
   };
 
@@ -57,7 +56,8 @@ const Biblioteca = () => {
       <Navbar />
       
       <main className="flex-grow">
-        <section className="pt-32 pb-16 bg-white text-center relative overflow-hidden">
+        {/* Reduzimos o padding vertical da seção hero de pt-32 pb-16 para pt-28 pb-8 para subir o conteúdo na versão web */}
+        <section className="pt-28 pb-8 bg-white text-center relative overflow-hidden">
           <div className="container mx-auto px-4 relative z-10">
             <h1 className="text-4xl md:text-6xl font-extrabold mb-4 tracking-tight text-[#2b59c3]">
               Biblioteca Digital
@@ -68,18 +68,20 @@ const Biblioteca = () => {
               <div className="w-12 h-1 bg-red-500 rounded-full" />
             </div>
             <p className="text-xs md:text-lg text-black font-bold px-4">
-              Acesse a Vídeos Tutoriais, manuais, modelos de documentos e materiais de apoio para artistas e produtores culturais.
+              Acesse a Vídeos Tutoriais, manuais, modelos de documentos e materiais de apoio para artists e produtores culturais.
             </p>
           </div>
         </section>
 
-        <section className="py-16 container mx-auto px-4">
+        {/* Reduzimos o padding vertical de py-16 para py-6 para subir ainda mais o conteúdo */}
+        <section className="py-6 container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
             {categories.map((cat, idx) => {
               const items = getItemsByCategory(cat.title);
               return (
                 <div key={idx} className="space-y-6">
-                  <div className="flex items-center gap-4 mb-8">
+                  {/* Centralizamos o título e o ícone no mobile usando flex-col items-center sm:flex-row sm:items-start */}
+                  <div className="flex flex-col items-center sm:flex-row sm:items-start gap-4 mb-8 text-center sm:text-left">
                     <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${cat.color}`}>
                       <cat.icon size={24} />
                     </div>
@@ -126,7 +128,8 @@ const Biblioteca = () => {
           </div>
         </section>
 
-        <section className="pb-24 container mx-auto px-4">
+        {/* Reduzimos o padding inferior de pb-24 para pb-12 para manter o layout compacto e elegante */}
+        <section className="pb-12 container mx-auto px-4">
           <div className="max-w-4xl mx-auto bg-white rounded-[2.5rem] p-10 md:p-16 border border-slate-100 shadow-xl text-center">
             <h3 className="text-2xl font-bold text-slate-900 mb-4">Não encontrou o que procurava?</h3>
             <p className="text-slate-500 mb-10 font-medium">

@@ -21,6 +21,13 @@ import InscricaoDialog from '@/components/InscricaoDialog';
 import RecursoDialog from '@/components/RecursoDialog';
 import DocumentacaoDialog from '@/components/DocumentacaoDialog';
 import PublicFileUploadDialog from '@/components/PublicFileUploadDialog';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const EditaisPNAB = () => {
   const navigate = useNavigate();
@@ -178,19 +185,20 @@ const EditaisPNAB = () => {
 
         <section className="py-8 container mx-auto px-4">
           <div className="flex flex-col lg:flex-row justify-between items-center gap-8 max-w-7xl mx-auto">
-            {/* Mobile Category Select */}
+            {/* Mobile Category Select - Usando o Select padrão do sistema (Shadcn) */}
             <div className="block lg:hidden w-full max-w-xs mx-auto">
-              <select
-                value={categoryFilter}
-                onChange={(e) => setCategoryFilter(e.target.value)}
-                className="w-full h-12 px-4 rounded-xl border border-slate-200 bg-slate-50 font-bold text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#2b59c3]"
-              >
-                {categories.map((cat) => (
-                  <option key={cat} value={cat}>
-                    {cat}
-                  </option>
-                ))}
-              </select>
+              <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                <SelectTrigger className="w-full h-12 px-4 rounded-xl border border-slate-200 bg-slate-50 font-bold text-sm text-slate-700">
+                  <SelectValue placeholder="Selecione uma categoria" />
+                </SelectTrigger>
+                <SelectContent className="rounded-xl">
+                  {categories.map((cat) => (
+                    <SelectItem key={cat} value={cat} className="font-bold text-sm text-slate-700">
+                      {cat}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
             {/* Desktop Category Buttons */}

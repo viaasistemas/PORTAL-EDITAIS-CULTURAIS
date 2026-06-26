@@ -51,7 +51,8 @@ const Index = () => {
             alt="Background" 
             className="w-full h-full object-cover object-center" 
           />
-          <div className="absolute inset-0 bg-white/40 md:bg-transparent"></div>
+          {/* Aumentamos a opacidade do overlay no mobile para bg-white/80 para garantir contraste perfeito e manter as cores originais das letras */}
+          <div className="absolute inset-0 bg-white/80 md:bg-transparent"></div>
         </div>
 
         <div className="container mx-auto px-4 relative z-10 text-center max-w-5xl -mt-32 md:-mt-48">
