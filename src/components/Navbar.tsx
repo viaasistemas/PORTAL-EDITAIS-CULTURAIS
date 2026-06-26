@@ -9,6 +9,7 @@ import {
   SheetContent,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import logo from '@/assets/logo.png';
 
 const Navbar = () => {
   const location = useLocation();
@@ -58,10 +59,11 @@ const Navbar = () => {
         {/* Logo - Centralizado no Mobile, Esquerda no Desktop */}
         <div className="flex items-center absolute left-1/2 -translate-x-1/2 md:relative md:left-0 md:translate-x-0 md:order-first">
           <Link to="/" className="flex items-center gap-2 group">
-            <div className="flex flex-col items-center md:items-start">
-              <span className="text-2xl font-black tracking-tight text-[#2b59c3] leading-none text-center md:text-left">CULTURA</span>
-              <span className="text-[8px] font-bold text-slate-400 uppercase tracking-[0.2em] text-center md:text-left">Portal de Editais de Extremoz</span>
-            </div>
+            <img 
+              src={logo} 
+              alt="Cultura - Portal de Editais de Extremoz" 
+              className="h-12 md:h-14 w-auto object-contain"
+            />
           </Link>
         </div>
 
