@@ -7,7 +7,6 @@ import Footer from '@/components/Footer';
 import { ArrowRight } from 'lucide-react';
 import fomentoMunicipalImg from '@/assets/fomento-municipal-original.png';
 import lpgImg from '@/assets/lei-paulo-gustavo-original.png';
-import pnabImg from '@/assets/pnab-original.png';
 
 const Editais = () => {
   const categories = [
@@ -28,9 +27,8 @@ const Editais = () => {
     {
       title: "PNAB",
       description: "Política Nacional Aldir Blanc",
-      image: pnabImg,
-      link: "/editais/pnab",
-      originalColor: true
+      image: "https://images.unsplash.com/photo-1499781350541-7783f6c6a0c8?q=80&w=800&auto=format&fit=crop",
+      link: "/editais/pnab"
     }
   ];
 
