@@ -10,13 +10,13 @@ const Footer = () => {
     <footer className="bg-[#0a0f1c] text-white pb-12 pt-16">
       <div className="container mx-auto px-4 max-w-7xl">
         
-        {/* Columns Grid - Deslocado para a direita com padding-left em telas maiores e gap reduzido */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16 lg:pl-20">
+        {/* Columns Grid - Centralizado no mobile (text-center) e alinhado à esquerda no desktop */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16 lg:pl-20 text-center md:text-left">
           
           {/* ENDEREÇO */}
-          <div className="space-y-4">
+          <div className="space-y-4 flex flex-col items-center md:items-start">
             <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Endereço</p>
-            <div className="flex items-start gap-3">
+            <div className="flex items-start gap-3 justify-center md:justify-start">
               <MapPin size={18} className="text-blue-400 shrink-0 mt-0.5" />
               <span className="text-xs text-slate-300 font-medium leading-relaxed">
                 Rua Lagoa, 2110, Centro -<br />Extremoz - RN - 59575-000
@@ -25,23 +25,23 @@ const Footer = () => {
           </div>
 
           {/* HORÁRIO DE FUNCIONAMENTO */}
-          <div className="space-y-4">
+          <div className="space-y-4 flex flex-col items-center md:items-start">
             <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Horário de Funcionamento</p>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 justify-center md:justify-start">
               <Clock size={18} className="text-blue-400 shrink-0" />
               <span className="text-xs text-slate-300 font-medium">Seg à Sex das 07h às 13h</span>
             </div>
           </div>
 
           {/* CONTATO */}
-          <div className="space-y-4">
+          <div className="space-y-4 flex flex-col items-center md:items-start">
             <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Contato</p>
             <div className="space-y-3">
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 justify-center md:justify-start">
                 <Phone size={16} className="text-blue-400 shrink-0" />
                 <span className="text-xs text-slate-300 font-medium">(84) 3279-4910</span>
               </div>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 justify-center md:justify-start">
                 <Mail size={16} className="text-blue-400 shrink-0" />
                 <span className="text-xs text-slate-300 font-medium">gabinetecivilextremoz@gmail.com</span>
               </div>
@@ -49,9 +49,9 @@ const Footer = () => {
           </div>
 
           {/* SIGA-NOS */}
-          <div className="space-y-4">
+          <div className="space-y-4 flex flex-col items-center md:items-start">
             <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Siga-nos</p>
-            <div className="flex gap-3">
+            <div className="flex gap-3 justify-center md:justify-start">
               <a href="#" className="w-10 h-10 rounded-xl bg-slate-900/50 flex items-center justify-center hover:bg-blue-600 transition-all border border-slate-800">
                 <Instagram size={18} />
               </a>
@@ -66,7 +66,7 @@ const Footer = () => {
 
         </div>
 
-        {/* Logos Section - Centered side-by-side with reduced gap */}
+        {/* Logos Section */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-12 pt-8">
           <div className="max-w-[200px] h-[60px] flex items-center justify-center">
             <img 
@@ -86,7 +86,7 @@ const Footer = () => {
 
         {/* Copyright */}
         <div className="pt-8 border-t border-slate-900/50 text-center">
-          <p className="text-[10px] text-slate-500 font-bold tracking-widest uppercase">
+          <p className="text-[10px] text-slate-500 font-bold tracking-widest uppercase px-4">
             © PREFEITURA MUNICIPAL DE EXTREMOZ - RN | DESENVOLVIDO POR VIAA SISTEMAS
           </p>
         </div>
