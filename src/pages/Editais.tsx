@@ -5,14 +5,12 @@ import { Link } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { ArrowRight } from 'lucide-react';
-import fomentoMunicipalImg from '@/assets/fomento-municipal.png';
 
 const Editais = () => {
   const categories = [
     {
       title: "Fomento Municipal",
       description: "Editais de Extremoz-RN",
-      image: fomentoMunicipalImg,
       link: "/editais/fm"
     },
     {
@@ -56,18 +54,27 @@ const Editais = () => {
               <Link 
                 key={index} 
                 to={cat.link}
-                className="bg-white rounded-[2rem] overflow-hidden border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-500 group"
+                className="bg-white rounded-[2rem] overflow-hidden border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-500 group flex flex-col justify-between"
               >
-                <div className="h-48 overflow-hidden relative">
-                  <img src={cat.image} alt={cat.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                  <div className="absolute bottom-6 left-8">
-                    <h3 className="text-2xl font-bold text-white">{cat.title}</h3>
+                {cat.image ? (
+                  <div className="h-48 overflow-hidden relative">
+                    <img src={cat.image} alt={cat.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                    <div className="absolute bottom-6 left-8">
+                      <h3 className="text-2xl font-bold text-white">{cat.title}</h3>
+                    </div>
                   </div>
-                </div>
-                <div className="p-8">
-                  <h4 className="text-lg font-bold text-slate-900 mb-1">{cat.title}</h4>
-                  <p className="text-slate-500 font-medium mb-6">{cat.description}</p>
+                ) : (
+                  <div className="h-48 bg-gradient-to-br from-blue-50 to-indigo-50 flex items-center justify-center relative p-8 border-b border-slate-50">
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent" />
+                    <h3 className="text-2xl font-black text-[#2b59c3] text-center">{cat.title}</h3>
+                  </div>
+                )}
+                <div className="p-8 flex-grow flex flex-col justify-between">
+                  <div>
+                    <h4 className="text-lg font-bold text-slate-900 mb-1">{cat.title}</h4>
+                    <p className="text-slate-500 font-medium mb-6">{cat.description}</p>
+                  </div>
                   <div className="flex items-center gap-2 text-[#2b59c3] font-bold text-sm group-hover:gap-4 transition-all">
                     Ver Editais <ArrowRight size={18} />
                   </div>
