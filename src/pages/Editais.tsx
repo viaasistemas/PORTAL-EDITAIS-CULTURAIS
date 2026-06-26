@@ -19,17 +19,17 @@ const Editais = () => {
       originalColor: true
     },
     {
-      title: "Lei Paulo Gustavo",
-      description: "Recursos federais para o setor cultural",
-      image: lpgImg,
-      link: "/editais/lpg",
-      originalColor: true
-    },
-    {
       title: "PNAB",
       description: "Política Nacional Aldir Blanc",
       image: pnabImg,
       link: "/editais/pnab",
+      originalColor: true
+    },
+    {
+      title: "Lei Paulo Gustavo",
+      description: "Recursos federais para o setor cultural",
+      image: lpgImg,
+      link: "/editais/lpg",
       originalColor: true
     }
   ];

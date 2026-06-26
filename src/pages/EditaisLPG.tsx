@@ -30,7 +30,7 @@ import {
 const EditaisLPG = () => {
   const navigate = useNavigate();
   const [filter, setFilter] = useState('Todos');
-  const [categoryFilter, setCategoryFilter] = useState('Todas');
+  const [categoryFilter, setCategoryFilter] = useState('Todas as Categorias');
   const [selectedEdital, setSelectedEdital] = useState<EditalDetail | null>(null);
   const [inscricaoEdital, setInscricaoEdital] = useState<EditalDetail | null>(null);
   const [recursoEdital, setRecursoEdital] = useState<EditalDetail | null>(null);
@@ -38,7 +38,7 @@ const EditaisLPG = () => {
   const [viewAnexos, setViewAnexos] = useState<EditalDetail | null>(null);
   const [viewResultados, setViewResultados] = useState<EditalDetail | null>(null);
   const [currentTime, setCurrentTime] = useState(new Date());
-  const [categories, setCategories] = useState<string[]>(["Todas", "Audiovisual", "Artes Cênicas", "Música"]);
+  const [categories, setCategories] = useState<string[]>(["Todas as Categorias", "Audiovisual", "Artes Cênicas", "Música"]);
   const [dynamicEditais, setDynamicEditais] = useState<EditalDetail[]>(editaisData);
   const [editalSettings, setEditalSettings] = useState<Record<string, any>>({});
 
@@ -65,7 +65,7 @@ const EditaisLPG = () => {
       const savedCats = localStorage.getItem('admin_categories_by_program');
       if (savedCats) {
         const parsed = JSON.parse(savedCats);
-        setCategories(["Todas", ...(parsed.LPG || [])]);
+        setCategories(["Todas as Categorias", ...(parsed.LPG || [])]);
       }
     };
 
@@ -154,7 +154,7 @@ const EditaisLPG = () => {
                          (filter === 'Aberto' && (status === 'Aberto' || status === 'Prorrogado')) || 
                          (filter === 'Encerrado' && status === 'Encerrado');
     
-    const matchesCategory = categoryFilter === 'Todas' || e.categories.includes(categoryFilter);
+    const matchesCategory = categoryFilter === 'Todas as Categorias' || e.categories.includes(categoryFilter);
 
     return matchesStatus && matchesCategory;
   });
@@ -164,7 +164,8 @@ const EditaisLPG = () => {
       <Navbar />
       
       <main className="flex-grow">
-        <section className="pt-32 pb-16 bg-white text-center relative overflow-hidden">
+        {/* Reduzimos o padding vertical da seção hero para subir o conteúdo */}
+        <section className="pt-28 pb-6 bg-white text-center relative overflow-hidden">
           <div className="container mx-auto px-4 relative z-10">
             <h1 className="text-4xl md:text-6xl font-extrabold mb-4 tracking-tight text-[#2b59c3]">
               Editais: LPG
@@ -174,13 +175,14 @@ const EditaisLPG = () => {
               <div className="w-12 h-1 bg-yellow-400 rounded-full" />
               <div className="w-12 h-1 bg-red-500 rounded-full" />
             </div>
-            <p className="text-base md:text-lg text-[#2b59c3] font-bold">
+            <p className="text-base md:text-lg text-black font-bold">
               Lei Paulo Gustavo
             </p>
           </div>
         </section>
 
-        <section className="py-8 container mx-auto px-4">
+        {/* Reduzimos o padding vertical de py-8 para py-2 para subir os filtros */}
+        <section className="py-2 container mx-auto px-4">
           <div className="flex flex-col lg:flex-row justify-between items-center gap-8 max-w-7xl mx-auto">
             {/* Mobile Category Select - Usando o Select padrão do sistema (Shadcn) */}
             <div className="block lg:hidden w-full max-w-xs mx-auto">
@@ -235,7 +237,8 @@ const EditaisLPG = () => {
           </div>
         </section>
 
-        <section className="pb-24 container mx-auto px-4">
+        {/* Reduzimos o padding superior de pb-24 para pt-4 pb-12 para subir os editais */}
+        <section className="pt-4 pb-12 container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-7xl mx-auto">
             {filteredEditais.map((edital) => {
               const settings = editalSettings[edital.id];
