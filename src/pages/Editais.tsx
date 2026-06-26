@@ -5,13 +5,14 @@ import { Link } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { ArrowRight } from 'lucide-react';
+import fomentoMunicipalImg from '@/assets/fomento-municipal.png';
 
 const Editais = () => {
   const categories = [
     {
       title: "Fomento Municipal",
       description: "Editais de Extremoz-RN",
-      image: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?q=80&w=800&auto=format&fit=crop",
+      image: fomentoMunicipalImg,
       link: "/editais/fm"
     },
     {
