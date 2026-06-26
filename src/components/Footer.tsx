@@ -3,6 +3,7 @@
 import React from 'react';
 import { Mail, Phone, MapPin, Clock, Instagram, Facebook, Youtube } from 'lucide-react';
 import footerLogo from '@/assets/footer-logo.png';
+import logo from '@/assets/logo.png';
 
 const Footer = () => {
   return (
@@ -12,8 +13,13 @@ const Footer = () => {
           
           {/* Logo Section - order-1 no mobile */}
           <div className="flex flex-col order-1">
-            <span className="text-3xl font-black tracking-tight text-white leading-none">CULTURA</span>
-            <span className="text-[9px] font-bold text-blue-400 uppercase tracking-[0.2em] mt-1">Portal de Editais de Extremoz</span>
+            <div className="bg-white p-3 rounded-xl inline-block max-w-[220px]">
+              <img 
+                src={logo} 
+                alt="Cultura - Portal de Editais de Extremoz" 
+                className="h-12 w-auto object-contain"
+              />
+            </div>
           </div>
 
           {/* Social Section - order-2 no mobile, order-4 no desktop */}
@@ -63,7 +69,7 @@ const Footer = () => {
             </div>
             <div className="space-y-4 pt-4">
               {/* Imagem oficial da prefeitura e secretaria */}
-              <div className="w-full max-w-[240px] h-[60px] flex items-center justify-start">
+              <div className="w-full max-w-[280px] h-[70px] flex items-center justify-start">
                 <img 
                   src={footerLogo} 
                   alt="SECULT e Prefeitura de Extremoz" 
