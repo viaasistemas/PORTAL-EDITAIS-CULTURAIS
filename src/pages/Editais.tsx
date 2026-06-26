@@ -5,13 +5,16 @@ import { Link } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { ArrowRight } from 'lucide-react';
+import fomentoMunicipalImg from '@/assets/fomento-municipal-original.png';
 
 const Editais = () => {
   const categories = [
     {
       title: "Fomento Municipal",
       description: "Editais de Extremoz-RN",
-      link: "/editais/fm"
+      link: "/editais/fm",
+      image: fomentoMunicipalImg,
+      originalColor: true
     },
     {
       title: "Lei Paulo Gustavo",
@@ -59,10 +62,12 @@ const Editais = () => {
                 {cat.image ? (
                   <div className="h-48 overflow-hidden relative">
                     <img src={cat.image} alt={cat.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                    <div className="absolute bottom-6 left-8">
-                      <h3 className="text-2xl font-bold text-white">{cat.title}</h3>
-                    </div>
+                    {!cat.originalColor && <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />}
+                    {!cat.originalColor && (
+                      <div className="absolute bottom-6 left-8">
+                        <h3 className="text-2xl font-bold text-white">{cat.title}</h3>
+                      </div>
+                    )}
                   </div>
                 ) : (
                   <div className="h-48 bg-gradient-to-br from-blue-50 to-indigo-50 flex items-center justify-center relative p-8 border-b border-slate-50">
