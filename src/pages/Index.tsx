@@ -71,7 +71,7 @@ const Index = () => {
       </section>
 
       {/* Categories Section */}
-      <section className="pt-12 pb-20 bg-white relative z-20 mt-12">
+      <section className="pt-4 md:pt-12 pb-20 bg-white relative z-20 mt-2 md:mt-12">
         <div className="container mx-auto px-4 max-w-7xl">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-3">Oportunidades para Todos os Artistas</h2>
@@ -97,7 +97,7 @@ const Index = () => {
       </section>
 
       {/* Stats Section */}
-      <section className="py-24 bg-slate-50/50 border-y border-slate-100">
+      <section className="py-12 md:py-24 bg-slate-50/50 border-y border-slate-100">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-4">Investimento</h2>
@@ -127,7 +127,7 @@ const Index = () => {
       </section>
 
       {/* Tracking Section */}
-      <section className="relative py-28 bg-white overflow-hidden">
+      <section className="relative py-12 md:py-28 bg-white overflow-hidden">
         <div className="absolute bottom-0 left-0 w-[45%] max-w-[480px] pointer-events-none select-none z-0 hidden sm:block">
           <img src={waveLeft} alt="" className="w-full h-auto object-contain object-bottom" />
         </div>
