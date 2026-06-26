@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { Mail, Phone, MapPin, Clock, Instagram, Facebook, Youtube } from 'lucide-react';
-import footerLogo from '@/assets/footer-logo.png';
 
 const Footer = () => {
   return (
@@ -62,13 +61,9 @@ const Footer = () => {
               <span className="text-xs text-slate-300 font-medium">Seg à Sex das 07h às 13h</span>
             </div>
             <div className="space-y-4 pt-4">
-              {/* Imagem oficial da prefeitura e secretaria */}
-              <div className="w-full max-w-[240px] rounded-xl overflow-hidden bg-white p-2 flex items-center justify-center">
-                <img 
-                  src={footerLogo} 
-                  alt="SECULT e Prefeitura de Extremoz" 
-                  className="w-full h-auto object-contain"
-                />
+              {/* Espaço reservado para imagem/logo. Dimensões recomendadas: 240px de largura por 60px de altura (proporção 4:1) */}
+              <div className="w-full max-w-[240px] h-[60px] border border-dashed border-slate-800 rounded-xl flex items-center justify-center text-[10px] text-slate-500 font-bold uppercase tracking-wider bg-slate-950/50">
+                Imagem (240x60 px)
               </div>
             </div>
           </div>
