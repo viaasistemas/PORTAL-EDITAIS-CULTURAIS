@@ -61,8 +61,10 @@ const Footer = () => {
               <span className="text-xs text-slate-300 font-medium">Seg à Sex das 07h às 13h</span>
             </div>
             <div className="space-y-4 pt-4">
-              <p className="text-xs font-bold text-slate-200 uppercase tracking-wider">PREFEITURA MUNICIPAL DE EXTREMOZ</p>
-              <p className="text-xs font-bold text-slate-200 uppercase tracking-wider">SECRETARIA MUNICIPAL DE CULTURA - SECULT</p>
+              {/* Espaço reservado para imagem/logo. Dimensões recomendadas: 240px de largura por 60px de altura (proporção 4:1) */}
+              <div className="w-full max-w-[240px] h-[60px] border border-dashed border-slate-800 rounded-xl flex items-center justify-center text-[10px] text-slate-500 font-bold uppercase tracking-wider bg-slate-950/50">
+                Imagem (240x60 px)
+              </div>
             </div>
           </div>
 
