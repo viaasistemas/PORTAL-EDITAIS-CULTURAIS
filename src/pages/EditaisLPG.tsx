@@ -47,56 +47,6 @@ const EditaisLPG = () => {
       const settings: Record<string, any> = {};
       
       // Carrega editais dinâmicos primeiro para obter todos os IDs
-      const saved<dyad-write path="src/pages/EditaisLPG.tsx" description="Substituindo o select nativo pelo componente Select padrão do sistema (Shadcn) na versão mobile">
-"use client";
-
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { 
-  Calendar, 
-  Users, 
-  Paperclip, 
-  AlertTriangle, 
-  CheckCircle2,
-  Clock
-} from 'lucide-react';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
-import { Button } from '@/components/ui/button';
-import { editaisData, EditalDetail } from '@/data/editais';
-import EditalDetailsDialog from '@/components/EditalDetailsDialog';
-import InscricaoDialog from '@/components/InscricaoDialog';
-import RecursoDialog from '@/components/RecursoDialog';
-import DocumentacaoDialog from '@/components/DocumentacaoDialog';
-import PublicFileUploadDialog from '@/components/PublicFileUploadDialog';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-
-const EditaisLPG = () => {
-  const navigate = useNavigate();
-  const [filter, setFilter] = useState('Todos');
-  const [categoryFilter, setCategoryFilter] = useState('Todas');
-  const [selectedEdital, setSelectedEdital] = useState<EditalDetail | null>(null);
-  const [inscricaoEdital, setInscricaoEdital] = useState<EditalDetail | null>(null);
-  const [recursoEdital, setRecursoEdital] = useState<EditalDetail | null>(null);
-  const [docEdital, setDocEdital] = useState<EditalDetail | null>(null);
-  const [viewAnexos, setViewAnexos] = useState<EditalDetail | null>(null);
-  const [viewResultados, setViewResultados] = useState<EditalDetail | null>(null);
-  const [currentTime, setCurrentTime] = useState(new Date());
-  const [categories, setCategories] = useState<string[]>(["Todas", "Audiovisual", "Artes Cênicas", "Música"]);
-  const [dynamicEditais, setDynamicEditais] = useState<EditalDetail[]>(editaisData);
-  const [editalSettings, setEditalSettings] = useState<Record<string, any>>({});
-
-  useEffect(() => {
-    const loadSettingsAndCategories = () => {
-      const settings: Record<string, any> = {};
-      
-      // Carrega editais dinâmicos primeiro para obter todos os IDs
       const savedEditais = localStorage.getItem('admin_editais_list');
       const allEditais = savedEditais ? JSON.parse(savedEditais) : editaisData;
       setDynamicEditais(allEditais);
