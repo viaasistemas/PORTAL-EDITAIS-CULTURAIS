@@ -10,8 +10,8 @@ const Footer = () => {
     <footer className="bg-[#0a0f1c] text-white pb-12 pt-16">
       <div className="container mx-auto px-4 max-w-7xl">
         
-        {/* Columns Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+        {/* Columns Grid - Deslocado para a direita com padding-left em telas maiores */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16 lg:pl-20">
           
           {/* ENDEREÇO */}
           <div className="space-y-4">
