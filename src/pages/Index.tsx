@@ -45,15 +45,15 @@ const Index = () => {
       {/* Hero Section */}
       <section className="relative pt-20 md:pt-48 pb-20 overflow-hidden min-h-[85vh] flex items-center bg-slate-50/30">
         {/* Background Image */}
-        <div className="absolute inset-0 z-0 opacity-90 overflow-hidden">
+        <div className="absolute inset-0 z-0 opacity-90">
           <img 
             src={heroBg} 
             alt="Background" 
-            className="w-full h-full object-cover object-center md:object-bottom translate-y-32 md:translate-y-0" 
+            className="w-full h-full object-cover object-center md:object-bottom" 
           />
         </div>
 
-        <div className="container mx-auto px-4 relative z-10 text-center max-w-5xl mt-10 md:mt-0">
+        <div className="container mx-auto px-4 relative z-10 text-center max-w-5xl -mt-24 md:mt-0">
           <h1 className="text-[2.2rem] md:text-7xl font-extrabold mb-4 tracking-tight leading-[1.15] text-[#3c64c1]">
             Transforme sua ideia em <br />
             <span className="text-[#f9b233] italic">Realidade</span>
