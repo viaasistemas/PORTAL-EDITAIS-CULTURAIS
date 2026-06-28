@@ -49,14 +49,12 @@ const Index = () => {
           <img 
             src={heroBg} 
             alt="Background" 
-            className="w-full h-full object-cover object-center md:object-[center_35%]" 
+            className="w-full h-full object-cover object-center md:object-bottom" 
           />
         </div>
 
-        {/* -mt-40 no mobile para subir bem o conteúdo, md:mt-0 no desktop */}
-        <div className="container mx-auto px-4 relative z-10 text-center max-w-5xl -mt-40 md:mt-0">
-          {/* text-[1.8rem] no mobile para garantir que caiba em uma linha, md:text-7xl no desktop */}
-          <h1 className="text-[1.8rem] xs:text-[2rem] sm:text-[2.2rem] md:text-7xl font-extrabold mb-4 tracking-tight leading-[1.15] text-[#3c64c1]">
+        <div className="container mx-auto px-4 relative z-10 text-center max-w-5xl -mt-24 md:mt-0">
+          <h1 className="text-[2.2rem] md:text-7xl font-extrabold mb-4 tracking-tight leading-[1.15] text-[#3c64c1]">
             Transforme sua ideia em <br />
             <span className="text-[#f9b233] italic">Realidade</span>
           </h1>
