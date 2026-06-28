@@ -49,7 +49,7 @@ const Index = () => {
           <img 
             src={heroBg} 
             alt="Background" 
-            className="w-full h-full object-cover object-center md:object-bottom translate-y-16 md:translate-y-0" 
+            className="w-full h-full object-cover object-center md:object-bottom translate-y-32 md:translate-y-0" 
           />
         </div>
 
