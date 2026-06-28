@@ -11,7 +11,6 @@ import { useIsMobile } from '@/hooks/use-mobile';
 
 // Imagens de fundo
 import heroBg from '@/assets/hero-bg.png';
-import heroMobileBg from '@/assets/hero-mobile-bg.png';
 import waveLeft from '@/assets/wave-left.png';
 import waveRight from '@/assets/wave-right.png';
 
@@ -44,26 +43,26 @@ const Index = () => {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="relative pt-32 md:pt-48 pb-20 overflow-hidden min-h-[90vh] flex items-center">
+      <section className="relative pt-32 md:pt-48 pb-20 overflow-hidden min-h-[85vh] flex items-center bg-slate-50/30">
         {/* Background Image */}
-        <div className="absolute inset-0 z-0">
+        <div className="absolute inset-0 z-0 opacity-90">
           <img 
-            src={isMobile ? heroMobileBg : heroBg} 
+            src={heroBg} 
             alt="Background" 
-            className="w-full h-full object-cover object-bottom" 
+            className="w-full h-full object-cover object-center md:object-bottom" 
           />
         </div>
 
-        <div className="container mx-auto px-4 relative z-10 text-center max-w-5xl -mt-20 md:-mt-48">
-          <h1 className="text-[2.6rem] md:text-7xl font-extrabold mb-2 tracking-tight leading-[1.1] text-[#3c64c1]">
+        <div className="container mx-auto px-4 relative z-10 text-center max-w-5xl">
+          <h1 className="text-[2.4rem] md:text-7xl font-extrabold mb-4 tracking-tight leading-[1.15] text-[#3c64c1]">
             Transforme sua ideia em <br />
             <span className="text-[#f9b233] italic">Realidade</span>
           </h1>
-          <p className="text-black mb-8 text-[1.15rem] md:text-lg font-bold leading-snug max-w-2xl mx-auto px-4 md:px-0">
+          <p className="text-slate-700 mb-8 text-base md:text-lg font-semibold leading-relaxed max-w-2xl mx-auto px-4 md:px-0">
             O Portal de Editais Culturais de Extremoz-RN é a sua ponte para oportunidades, fomento e reconhecimento.
           </p>
           <Link to="/editais">
-            <Button className="bg-[#2b59c3] hover:bg-[#1e44a3] text-white font-bold px-12 py-8 text-lg rounded-[1.25rem] shadow-lg shadow-blue-900/20 transition-all active:scale-95">
+            <Button className="bg-[#2b59c3] hover:bg-[#1e44a3] text-white font-bold px-8 md:px-12 py-6 md:py-8 text-base md:text-lg rounded-2xl shadow-lg shadow-blue-900/10 transition-all active:scale-95">
               Inscreva-se em nossos editais
             </Button>
           </Link>
@@ -71,7 +70,7 @@ const Index = () => {
       </section>
 
       {/* Categories Section */}
-      <section className="pt-4 md:pt-12 pb-20 bg-white relative z-20 mt-2 md:mt-12">
+      <section className="pt-12 pb-20 bg-white relative z-20">
         <div className="container mx-auto px-4 max-w-7xl">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-3">Oportunidades para Todos os Artistas</h2>
