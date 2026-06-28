@@ -45,11 +45,11 @@ const Index = () => {
       {/* Hero Section */}
       <section className="relative pt-20 md:pt-48 pb-20 overflow-hidden min-h-[85vh] flex items-center bg-slate-50/30">
         {/* Background Image */}
-        <div className="absolute inset-0 md:top-16 z-0 opacity-90">
+        <div className="absolute inset-0 z-0 opacity-90">
           <img 
             src={heroBg} 
             alt="Background" 
-            className="w-full h-full object-cover object-center md:object-[center_15%]" 
+            className="w-full h-full object-cover object-center md:object-[center_80%]" 
           />
         </div>
 
@@ -162,6 +162,8 @@ const Index = () => {
           </Link>
         </div>
       </section>
+
+      {/* Removido o div md:top-16 que estava deslocando o fundo */}
 
       <Footer />
     </div>
