@@ -10,7 +10,7 @@ const Footer = () => {
     <footer className="bg-[#0a0f1c] text-white pb-12 pt-16">
       <div className="container mx-auto px-4 max-w-7xl">
         
-        {/* Columns Grid - Centralizado no mobile (text-center) e alinhado à esquerda no desktop */}
+        {/* Columns Grid - Centralizado no mobile e alinhado à esquerda no desktop */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16 lg:pl-20 text-center md:text-left">
           
           {/* ENDEREÇO */}
@@ -67,15 +67,15 @@ const Footer = () => {
         </div>
 
         {/* Logos Section */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-12 pt-8">
-          <div className="max-w-[200px] h-[60px] flex items-center justify-center">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-8 mb-12 pt-8 border-t border-slate-900/50">
+          <div className="max-w-[200px] h-[70px] flex items-center justify-center">
             <img 
               src={logoFooter} 
               alt="Cultura - Portal de Editais de Extremoz" 
               className="max-w-full max-h-full object-contain"
             />
           </div>
-          <div className="max-w-[240px] h-[60px] flex items-center justify-center">
+          <div className="max-w-[240px] h-[70px] flex items-center justify-center">
             <img 
               src={footerLogo} 
               alt="SECULT e Prefeitura de Extremoz" 
@@ -86,7 +86,7 @@ const Footer = () => {
 
         {/* Copyright */}
         <div className="pt-8 border-t border-slate-900/50 text-center">
-          <p className="text-[10px] text-slate-500 font-bold tracking-widest uppercase px-4">
+          <p className="text-[10px] text-slate-500 font-bold tracking-widest uppercase px-4 leading-relaxed">
             © PREFEITURA MUNICIPAL DE EXTREMOZ - RN | DESENVOLVIDO POR VIAA SISTEMAS
           </p>
         </div>

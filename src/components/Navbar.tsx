@@ -62,7 +62,7 @@ const Navbar = () => {
             <img 
               src={logo} 
               alt="Cultura - Portal de Editais de Extremoz" 
-              className="h-12 md:h-14 w-auto object-contain"
+              className="h-12 md:h-16 w-auto object-contain"
             />
           </Link>
         </div>
