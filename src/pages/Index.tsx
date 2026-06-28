@@ -28,7 +28,7 @@ const Index = () => {
   const isMobile = useIsMobile();
   
   const categories = [
-    { imageIcon: iconMusica, title: "Música", description: "Produção, shows e formation musical. Estímulo à production cultural brasileira em seus diferentes segmentos e à circulação de projetos." },
+    { imageIcon: iconMusica, title: "Música", description: "Produção, shows and formation musical. Estímulo à production cultural brasileira em seus diferentes segmentos e à circulação de projetos." },
     { imageIcon: iconVisuais, title: "Artes Visuais", description: "Exposições, murais e arte digital. Projetos que mobilizam grande público e realizadores de todo o país valorizando a cultura regional." },
     { imageIcon: iconCenicas, title: "Artes Cênicas", description: "Teatro, dança, circo e performance. Abrange a criação, production e apresentação de projetos culturais para os mais diversos públicos." },
     { imageIcon: iconAudiovisual, title: "Audiovisual", description: "Cinema, documentários e web séries. Fomento à production de conteúdo audiovisual e novas mídias digitais." },
@@ -49,7 +49,7 @@ const Index = () => {
           <img 
             src={heroBg} 
             alt="Background" 
-            className="w-full h-full object-cover object-center md:object-[center_80%]" 
+            className="w-full h-full object-cover object-center md:object-[center_90%]" 
           />
         </div>
 
@@ -162,8 +162,6 @@ const Index = () => {
           </Link>
         </div>
       </section>
-
-      {/* Removido o div md:top-16 que estava deslocando o fundo */}
 
       <Footer />
     </div>
