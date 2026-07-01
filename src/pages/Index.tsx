@@ -42,19 +42,22 @@ const Index = () => {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="relative pt-28 md:pt-36 pb-20 md:pb-28 overflow-hidden min-h-[70vh] flex items-center bg-white">
+      <section className="relative pt-24 md:pt-32 pb-20 md:pb-28 overflow-hidden min-h-[75vh] flex items-center bg-white">
         {/* Content Container */}
-        <div className="container mx-auto px-4 relative z-20 max-w-5xl w-full">
-          <div className="text-center flex flex-col items-center justify-center">
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold mb-6 tracking-tight leading-[1.15] text-[#3c64c1]">
-              Transforme sua ideia em<br />
+        <div className="container mx-auto px-4 relative z-20 max-w-7xl w-full">
+          <div className="max-w-2xl text-left p-6 md:p-0 rounded-3xl md:-ml-8 lg:-ml-12 -mt-4 md:-mt-8">
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold mb-6 tracking-tight leading-[1.15] text-[#3c64c1] text-left">
+              Transforme<br />
+              sua ideia em<br />
               <span className="text-5xl md:text-7xl lg:text-8xl text-[#f9b233] italic block mt-2">Realidade</span>
             </h1>
-            <p className="text-slate-700 mb-8 text-base md:text-lg font-semibold leading-relaxed max-w-2xl">
-              Oportunidade, fomento e fortalecimento da cultura em Extremoz-RN para criar, inspirar e transformar nossa comunidade.
+            <p className="text-slate-700 mb-6 text-base md:text-lg font-semibold leading-relaxed max-w-xl text-left">
+              Oportunidade, fomento e fortalecimento<br />
+              da cultura em Extremoz-RN para criar,<br />
+              inspirar e transformar nossa comunidade.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center w-full sm:w-auto">
-              <Link to="/editais" className="w-full sm:w-auto">
+            <div className="flex flex-col sm:flex-row gap-4 justify-start">
+              <Link to="/editais">
                 <Button className="bg-[#2b59c3] hover:bg-[#1e44a3] text-white font-bold px-10 py-7 text-base rounded-2xl shadow-lg shadow-blue-900/10 transition-all active:scale-95 w-full sm:w-auto">
                   Inscreva-se em nossos editais
                 </Button>
