@@ -55,21 +55,24 @@ const Index = () => {
 
         {/* Content Container */}
         <div className="container mx-auto px-4 relative z-20 max-w-7xl w-full">
-          <div className="max-w-2xl text-center md:text-left bg-white/80 md:bg-transparent p-6 md:p-0 rounded-3xl backdrop-blur-sm md:backdrop-blur-none">
-            <div className="flex justify-center md:justify-start gap-1.5 mb-6">
+          <div className="max-w-2xl text-left bg-white/80 md:bg-transparent p-6 md:p-0 rounded-3xl backdrop-blur-sm md:backdrop-blur-none">
+            <div className="flex justify-start gap-1.5 mb-6">
               <div className="w-12 h-1.5 bg-[#2b59c3] rounded-full" />
               <div className="w-12 h-1.5 bg-[#f9b233] rounded-full" />
               <div className="w-12 h-1.5 bg-[#ef4444] rounded-full" />
             </div>
             
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold mb-6 tracking-tight leading-[1.15] text-[#3c64c1]">
-              Transforme sua ideia em <br />
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold mb-6 tracking-tight leading-[1.15] text-[#3c64c1] text-left">
+              Transforme<br />
+              sua ideia em<br />
               <span className="text-[#f9b233] italic">Realidade</span>
             </h1>
-            <p className="text-slate-700 mb-10 text-lg md:text-xl font-semibold leading-relaxed max-w-xl">
-              O Portal de Editais Culturais de Extremoz-RN é a sua ponte para oportunidades, fomento e reconhecimento.
+            <p className="text-slate-700 mb-10 text-lg md:text-xl font-semibold leading-relaxed max-w-xl text-left">
+              Oportunidade, fomento e fortalecimento<br />
+              da cultura em Extremoz-RN para criar,<br />
+              inspirar e transformar nossa comunidade.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+            <div className="flex flex-col sm:flex-row gap-4 justify-start">
               <Link to="/editais">
                 <Button className="bg-[#2b59c3] hover:bg-[#1e44a3] text-white font-bold px-10 py-7 text-base rounded-2xl shadow-lg shadow-blue-900/10 transition-all active:scale-95 w-full sm:w-auto">
                   Inscreva-se em nossos editais
