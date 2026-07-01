@@ -46,12 +46,12 @@ const Index = () => {
 
       {/* Hero Section */}
       <section className="relative pt-20 md:pt-24 pb-28 md:pb-36 overflow-hidden min-h-[80vh] flex items-center bg-white">
-        {/* Imagem de Fundo Ilustrativa Original deslocada para baixo */}
+        {/* Imagem de Fundo Ilustrativa Original deslocada ainda mais para baixo */}
         <div className="absolute inset-0 z-0 overflow-hidden">
           <img 
             src={heroIllustration} 
             alt="Ilustração Cultural de Extremoz" 
-            className="w-full h-full object-cover object-right-bottom md:object-right-bottom translate-y-12 md:translate-y-16"
+            className="w-full h-full object-cover object-right-bottom md:object-right-bottom translate-y-24 md:translate-y-36"
           />
         </div>
 
