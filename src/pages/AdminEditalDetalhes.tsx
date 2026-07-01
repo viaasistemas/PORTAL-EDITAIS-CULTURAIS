@@ -372,41 +372,41 @@ const AdminEditalDetalhes = () => {
           <div className="bg-white p-6 md:p-10 rounded-2xl border border-slate-100 shadow-sm">
             <h2 className="text-xl font-bold text-slate-900 mb-6 text-center sm:text-left">Ações de Gestão</h2>
             
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="grid grid-cols-3 gap-2 sm:gap-4">
               <Button 
                 onClick={() => setActiveView('inscricoes')}
-                className={`h-20 sm:h-24 rounded-xl flex flex-col gap-2 font-bold transition-all ${
+                className={`h-14 sm:h-24 rounded-xl flex flex-col items-center justify-center gap-1 sm:gap-2 font-bold transition-all ${
                   activeView === 'inscricoes' 
                     ? 'bg-blue-600 text-white shadow-xl' 
                     : 'bg-white border border-slate-100 text-slate-600 hover:bg-slate-50'
                 }`}
               >
-                <FileText size={22} />
-                Inscrições
+                <FileText className="h-4 w-4 sm:h-6 sm:w-6" />
+                <span className="text-[10px] sm:text-sm">Inscrições</span>
               </Button>
               
               <Button 
                 onClick={() => setActiveView('recursos')}
-                className={`h-20 sm:h-24 rounded-xl flex flex-col gap-2 font-bold transition-all ${
+                className={`h-14 sm:h-24 rounded-xl flex flex-col items-center justify-center gap-1 sm:gap-2 font-bold transition-all ${
                   activeView === 'recursos' 
                     ? 'bg-red-600 text-white shadow-xl' 
                     : 'bg-white border border-rose-100 text-rose-600 hover:bg-rose-50'
                 }`}
               >
-                <AlertTriangle size={22} />
-                Recursos
+                <AlertTriangle className="h-4 w-4 sm:h-6 sm:w-6" />
+                <span className="text-[10px] sm:text-sm">Recursos</span>
               </Button>
               
               <Button 
                 onClick={() => setActiveView('documentacao')}
-                className={`h-20 sm:h-24 rounded-xl flex flex-col gap-2 font-bold transition-all ${
+                className={`h-14 sm:h-24 rounded-xl flex flex-col items-center justify-center gap-1 sm:gap-2 font-bold transition-all ${
                   activeView === 'documentacao' 
                     ? 'bg-emerald-600 text-white shadow-xl' 
                     : 'bg-white border border-emerald-100 text-emerald-600 hover:bg-emerald-50'
                 }`}
               >
-                <Folder size={22} />
-                Documentação
+                <Folder className="h-4 w-4 sm:h-6 sm:w-6" />
+                <span className="text-[10px] sm:text-sm">Documentação</span>
               </Button>
             </div>
           </div>
@@ -580,14 +580,13 @@ const AdminEditalDetalhes = () => {
                         </div>
                       </div>
 
-                      {(activeView === 'inscricoes' || activeView === 'documentacao') && (
-                        <div className="flex items-center justify-between gap-4 pt-1">
-                          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Status</span>
+                      <div className="flex items-center justify-between gap-2 pt-2">
+                        {(activeView === 'inscricoes' || activeView === 'documentacao') ? (
                           <Select 
                             value={getStatusValue(item)} 
                             onValueChange={(val) => handleStatusChange(item.protocol, val, item.id, item.cpf)}
                           >
-                            <SelectTrigger className="w-[160px] h-10 rounded-xl border-slate-200 font-bold text-xs">
+                            <SelectTrigger className="w-[140px] h-10 rounded-xl border-slate-200 font-bold text-xs">
                               <SelectValue />
                             </SelectTrigger>
                             <SelectContent className="rounded-xl">
@@ -596,15 +595,15 @@ const AdminEditalDetalhes = () => {
                               <SelectItem value="APROVADO" className="text-emerald-600 font-bold">APROVADO</SelectItem>
                             </SelectContent>
                           </Select>
-                        </div>
-                      )}
+                        ) : (
+                          <div />
+                        )}
 
-                      <div className="flex justify-end pt-2">
                         <Button 
                           variant="outline" 
                           size="sm" 
                           onClick={() => handleViewFiles(item)}
-                          className="rounded-xl flex gap-2 text-xs font-bold border-slate-200 text-slate-600 h-10 px-4"
+                          className="rounded-xl flex gap-2 text-xs font-bold border-slate-200 text-slate-600 h-10 px-3 shrink-0"
                         >
                           <Eye size={16} /> Ver Arquivos
                         </Button>
