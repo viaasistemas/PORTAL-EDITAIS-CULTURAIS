@@ -45,13 +45,13 @@ const Index = () => {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="relative pt-20 md:pt-24 pb-20 md:pb-24 overflow-hidden min-h-[80vh] flex items-center bg-white">
+      <section className="relative pt-20 md:pt-24 pb-28 md:pb-36 overflow-hidden min-h-[80vh] flex items-center bg-white">
         {/* Imagem de Fundo Ilustrativa Original */}
         <div className="absolute inset-0 z-0">
           <img 
             src={heroIllustration} 
             alt="Ilustração Cultural de Extremoz" 
-            className="w-full h-full object-cover object-right md:object-right"
+            className="w-full h-full object-cover object-right-bottom md:object-right-bottom"
           />
         </div>
 
