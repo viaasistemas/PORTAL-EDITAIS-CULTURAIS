@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 // Imagens de fundo
-import heroBg from '@/assets/hero-bg.png';
+import heroBgNew from '@/assets/hero-bg-new.png';
 import waveLeft from '@/assets/wave-left.png';
 import waveRight from '@/assets/wave-right.png';
 
@@ -43,29 +43,32 @@ const Index = () => {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="relative pt-24 md:pt-36 pb-20 overflow-hidden min-h-[85vh] flex items-start justify-center bg-slate-50/30">
+      <section className="relative pt-20 md:pt-28 pb-12 overflow-hidden min-h-[85vh] flex items-center justify-center bg-white">
         {/* Background Image */}
-        <div className="absolute inset-0 z-0 opacity-90">
+        <div className="absolute inset-0 z-0">
           <img 
-            src={heroBg} 
+            src={heroBgNew} 
             alt="Background" 
-            className="w-full h-full object-cover object-center md:object-[center_60%]" 
+            className="w-full h-full object-cover object-center md:object-right" 
           />
         </div>
 
-        <div className="container mx-auto px-4 relative z-10 text-center max-w-5xl mt-4 md:mt-8">
-          <h1 className="text-[2.2rem] md:text-7xl font-extrabold mb-4 tracking-tight leading-[1.15] text-[#3c64c1]">
-            Transforme sua ideia em <br />
-            <span className="text-[#f9b233] italic">Realidade</span>
-          </h1>
-          <p className="text-slate-700 mb-8 text-base md:text-lg font-semibold leading-relaxed max-w-2xl mx-auto px-4 md:px-0">
-            O Portal de Editais Culturais de Extremoz-RN é a sua ponte para oportunidades, fomento e reconhecimento.
-          </p>
-          <Link to="/editais">
-            <Button className="bg-[#2b59c3] hover:bg-[#1e44a3] text-white font-bold px-8 md:px-12 py-6 md:py-8 text-base md:text-lg rounded-2xl shadow-lg shadow-blue-900/10 transition-all active:scale-95">
-              Inscreva-se em nossos editais
-            </Button>
-          </Link>
+        {/* Content Container - Alinhado à esquerda no desktop para aproveitar o espaço em branco da imagem */}
+        <div className="container mx-auto px-4 relative z-10 text-center md:text-left max-w-7xl mt-8 md:mt-12">
+          <div className="max-w-2xl bg-white/80 md:bg-transparent p-6 md:p-0 rounded-3xl backdrop-blur-sm md:backdrop-blur-none">
+            <h1 className="text-[2.2rem] md:text-6xl font-extrabold mb-4 tracking-tight leading-[1.15] text-[#3c64c1]">
+              Transforme sua ideia em <br />
+              <span className="text-[#f9b233] italic">Realidade</span>
+            </h1>
+            <p className="text-slate-700 mb-8 text-base md:text-lg font-semibold leading-relaxed max-w-xl">
+              O Portal de Editais Culturais de Extremoz-RN é a sua ponte para oportunidades, fomento e reconhecimento.
+            </p>
+            <Link to="/editais">
+              <Button className="bg-[#2b59c3] hover:bg-[#1e44a3] text-white font-bold px-8 md:px-10 py-6 md:py-7 text-base rounded-2xl shadow-lg shadow-blue-900/10 transition-all active:scale-95">
+                Inscreva-se em nossos editais
+              </Button>
+            </Link>
+          </div>
         </div>
       </section>
 
