@@ -55,7 +55,7 @@ const Index = () => {
 
         {/* Content Container */}
         <div className="container mx-auto px-4 relative z-20 max-w-7xl w-full">
-          <div className="max-w-2xl text-left bg-white/80 md:bg-transparent p-6 md:p-0 rounded-3xl backdrop-blur-sm md:backdrop-blur-none">
+          <div className="max-w-2xl text-left bg-white/80 md:bg-transparent p-6 md:p-0 rounded-3xl backdrop-blur-sm md:backdrop-blur-none md:-ml-10">
             <div className="flex justify-start gap-1.5 mb-6">
               <div className="w-12 h-1.5 bg-[#2b59c3] rounded-full" />
               <div className="w-12 h-1.5 bg-[#f9b233] rounded-full" />
