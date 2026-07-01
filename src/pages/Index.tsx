@@ -11,20 +11,6 @@ import { useIsMobile } from '@/hooks/use-mobile';
 
 // Imagens de fundo e ilustrações
 import waveLeft from '@/assets/wave-left.png';
-import waveRight from '@/assets/wave-<dyad-write path="src/pages/Index.tsx" description="Removendo a sobreposição do Hero e alinhando o conteúdo à esquerda.">
-"use client";
-
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { ArrowRight, Search } from 'lucide-react';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
-import CategoryCard from '@/components/CategoryCard';
-import { Button } from '@/components/ui/button';
-import { useIsMobile } from '@/hooks/use-mobile';
-
-// Imagens de fundo e ilustrações
-import waveLeft from '@/assets/wave-left.png';
 import waveRight from '@/assets/wave-right.png';
 import heroBg from '../../.dyad/media/e842e2832067ac91aa7af724c537d9777a3066abfb5a8c63e98676da60106d92.png';
 
