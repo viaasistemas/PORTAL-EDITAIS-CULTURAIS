@@ -9,9 +9,10 @@ import CategoryCard from '@/components/CategoryCard';
 import { Button } from '@/components/ui/button';
 import { useIsMobile } from '@/hooks/use-mobile';
 
-// Imagens de fundo
+// Imagens de fundo e ilustrações
 import waveLeft from '@/assets/wave-left.png';
 import waveRight from '@/assets/wave-right.png';
+import heroIllustration from '@/assets/hero-illustration.png';
 
 // Ícones atualizados via mídias do projeto
 import iconMusica from '../../.dyad/media/89788568739c2801b420fc906edcac85b18bc344486da53b8290c2a0c1a7167b.png';
@@ -42,27 +43,42 @@ const Index = () => {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="relative pt-24 md:pt-36 pb-24 md:pb-36 overflow-hidden min-h-[80vh] flex items-center justify-center bg-slate-50/50">
-        {/* Content Container - Centralizado para melhor harmonia visual sem imagem de fundo */}
-        <div className="container mx-auto px-4 relative z-10 text-center max-w-4xl">
-          <div className="flex justify-center gap-1.5 mb-6">
-            <div className="w-12 h-1.5 bg-[#2b59c3] rounded-full" />
-            <div className="w-12 h-1.5 bg-[#f9b233] rounded-full" />
-            <div className="w-12 h-1.5 bg-[#ef4444] rounded-full" />
+      <section className="relative pt-24 md:pt-32 pb-24 md:pb-32 overflow-hidden min-h-[85vh] flex items-center bg-white">
+        {/* Imagem de Fundo Ilustrativa */}
+        <div className="absolute inset-0 z-0">
+          <img 
+            src={heroIllustration} 
+            alt="Ilustração Cultural de Extremoz" 
+            className="w-full h-full object-cover object-center md:object-right"
+          />
+          {/* Overlay para garantir contraste e legibilidade do texto em telas menores */}
+          <div className="absolute inset-0 bg-white/90 md:bg-transparent md:bg-gradient-to-r md:from-white md:via-white/85 md:to-transparent z-10" />
+        </div>
+
+        {/* Content Container */}
+        <div className="container mx-auto px-4 relative z-20 max-w-7xl w-full">
+          <div className="max-w-2xl text-center md:text-left">
+            <div className="flex justify-center md:justify-start gap-1.5 mb-6">
+              <div className="w-12 h-1.5 bg-[#2b59c3] rounded-full" />
+              <div className="w-12 h-1.5 bg-[#f9b233] rounded-full" />
+              <div className="w-12 h-1.5 bg-[#ef4444] rounded-full" />
+            </div>
+            
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold mb-6 tracking-tight leading-[1.15] text-[#3c64c1]">
+              Transforme sua ideia em <br />
+              <span className="text-[#f9b233] italic">Realidade</span>
+            </h1>
+            <p className="text-slate-700 mb-10 text-lg md:text-xl font-semibold leading-relaxed max-w-xl">
+              O Portal de Editais Culturais de Extremoz-RN é a sua ponte para oportunidades, fomento e reconhecimento.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+              <Link to="/editais">
+                <Button className="bg-[#2b59c3] hover:bg-[#1e44a3] text-white font-bold px-10 py-7 text-base rounded-2xl shadow-lg shadow-blue-900/10 transition-all active:scale-95 w-full sm:w-auto">
+                  Inscreva-se em nossos editais
+                </Button>
+              </Link>
+            </div>
           </div>
-          
-          <h1 className="text-4xl md:text-7xl font-extrabold mb-6 tracking-tight leading-[1.15] text-[#3c64c1]">
-            Transforme sua ideia em <br />
-            <span className="text-[#f9b233] italic">Realidade</span>
-          </h1>
-          <p className="text-slate-600 mb-10 text-lg md:text-xl font-medium leading-relaxed max-w-2xl mx-auto">
-            O Portal de Editais Culturais de Extremoz-RN é a sua ponte para oportunidades, fomento e reconhecimento.
-          </p>
-          <Link to="/editais">
-            <Button className="bg-[#2b59c3] hover:bg-[#1e44a3] text-white font-bold px-10 py-7 text-base rounded-2xl shadow-lg shadow-blue-900/10 transition-all active:scale-95">
-              Inscreva-se em nossos editais
-            </Button>
-          </Link>
         </div>
       </section>
 
