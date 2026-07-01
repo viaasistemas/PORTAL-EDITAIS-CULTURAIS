@@ -147,6 +147,7 @@ const AdminEditalDetalhes = () => {
             created_at: '2026-04-24T11:30:00.000Z',
             status: 'CONFIRMADA'
           },
+          // 4 novas inscrições de teste adicionadas conforme solicitado
           {
             id: 'test-id-6',
             full_name: 'Fernanda Ribeiro',
@@ -298,7 +299,7 @@ const AdminEditalDetalhes = () => {
       }
       return item;
     }));
-    toast.success("Status atualizado com sucesso!");
+    toast.success("Status updated com sucesso!");
     window.dispatchEvent(new Event('storage'));
   };
 
@@ -329,6 +330,7 @@ const AdminEditalDetalhes = () => {
   const isCNPJ = (val: string) => val.replace(/\D/g, '').length > 11;
 
   const handleViewFiles = (item: any) => {
+    // Se o item tiver arquivos locais salvos, exibe-os. Caso contrário, exibe os mockados padrão.
     const mockFiles = item.files && item.files.length > 0 ? item.files : [
       { name: 'Documento_Identificacao.pdf', size: '1.2 MB' },
       { name: 'Projeto_Cultural.pdf', size: '3.5 MB' },
@@ -356,86 +358,80 @@ const AdminEditalDetalhes = () => {
         <AdminHeader title={`Edital #${id?.substring(0, 8)}`} />
 
         <div className="p-4 md:p-8 max-w-7xl mx-auto w-full space-y-8">
-          
-          {/* Cabeçalho Responsivo */}
-          <div className="flex flex-col sm:flex-row items-center text-center sm:text-left gap-4 mb-4">
-            <Button variant="ghost" size="icon" onClick={() => navigate('/admin/inscricoes')} className="rounded-xl shrink-0">
+          <div className="flex items-center gap-4 mb-4">
+            <Button variant="ghost" size="icon" onClick={() => navigate('/admin/inscricoes')} className="rounded-xl">
               <ArrowLeft size={20} />
             </Button>
             <div>
-              <h1 className="text-2xl font-bold text-slate-900">Gestão de Propostas</h1>
+              <h1 className="text-xl font-bold text-slate-900">Gestão de Propostas</h1>
               <p className="text-xs text-slate-400">Acompanhamento detalhado do edital</p>
             </div>
           </div>
 
-          {/* Ações de Gestão */}
           <div className="bg-white p-6 md:p-10 rounded-xl border border-slate-100 shadow-sm">
-            <h2 className="text-xl font-bold text-slate-900 mb-6 text-center sm:text-left">Ações de Gestão</h2>
+            <h2 className="text-2xl font-bold text-slate-900 mb-8">Ações de Gestão</h2>
             
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <Button 
                 onClick={() => setActiveView('inscricoes')}
-                className={`h-20 sm:h-24 rounded-xl flex flex-col gap-2 font-bold transition-all ${
+                className={`h-24 rounded-xl flex flex-col gap-2 font-bold transition-all ${
                   activeView === 'inscricoes' 
                     ? 'bg-blue-600 text-white shadow-xl' 
                     : 'bg-white border border-slate-100 text-slate-600 hover:bg-slate-50'
                 }`}
               >
-                <FileText size={22} />
+                <FileText size={24} />
                 Inscrições
               </Button>
               
               <Button 
                 onClick={() => setActiveView('recursos')}
-                className={`h-20 sm:h-24 rounded-xl flex flex-col gap-2 font-bold transition-all ${
+                className={`h-24 rounded-xl flex flex-col gap-2 font-bold transition-all ${
                   activeView === 'recursos' 
                     ? 'bg-red-600 text-white shadow-xl' 
                     : 'bg-white border border-rose-100 text-rose-600 hover:bg-rose-50'
                 }`}
               >
-                <AlertTriangle size={22} />
+                <AlertTriangle size={24} />
                 Recursos
               </Button>
               
               <Button 
                 onClick={() => setActiveView('documentacao')}
-                className={`h-20 sm:h-24 rounded-xl flex flex-col gap-2 font-bold transition-all ${
+                className={`h-24 rounded-xl flex flex-col gap-2 font-bold transition-all ${
                   activeView === 'documentacao' 
                     ? 'bg-emerald-600 text-white shadow-xl' 
                     : 'bg-white border border-emerald-100 text-emerald-600 hover:bg-emerald-50'
                 }`}
               >
-                <Folder size={22} />
+                <Folder size={24} />
                 Documentação
               </Button>
             </div>
           </div>
 
-          {/* Lista de Propostas */}
           {activeView !== 'overview' && (
             <div className="bg-white rounded-xl border border-slate-100 shadow-sm overflow-hidden">
-              
-              {/* Filtros e Busca */}
-              <div className="p-6 border-b border-slate-50 flex flex-col lg:flex-row justify-between items-center gap-4">
-                <h3 className="text-lg font-bold text-slate-900 text-center lg:text-left">
+              <div className="p-6 md:p-8 border-b border-slate-50 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <h3 className="text-xl font-bold text-slate-900">
                   {activeView === 'inscricoes' ? 'Lista de Inscrições' : 
                    activeView === 'recursos' ? 'Lista de Recursos' : 'Lista de Documentações'}
                 </h3>
                 
-                <div className="flex flex-col sm:flex-row items-center gap-3 w-full lg:w-auto">
-                  <div className="relative w-full sm:flex-grow lg:w-64">
+                <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
+                  <div className="relative flex-grow md:w-64">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
                     <Input 
                       placeholder="Pesquisar por nome, projeto, CPF ou CNPJ..." 
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-10 h-11 rounded-xl border-slate-200 text-center sm:text-left"
+                      className="pl-10 h-11 rounded-xl border-slate-200"
                     />
                   </div>
 
                   <Popover>
                     <PopoverTrigger asChild>
-                      <Button variant="outline" className="w-full sm:w-auto h-11 rounded-xl border-slate-200 flex gap-2 text-slate-600 font-medium justify-center">
+                      <Button variant="outline" className="h-11 rounded-xl border-slate-200 flex gap-2 text-slate-600 font-medium">
                         <CalendarIcon size={18} />
                         {dateRange.from ? (
                           dateRange.to ? (
@@ -456,7 +452,7 @@ const AdminEditalDetalhes = () => {
                         mode="range"
                         selected={{ from: dateRange.from, to: dateRange.to }}
                         onSelect={(range: any) => setDateRange({ from: range?.from, to: range?.to })}
-                        numberOfMonths={1}
+                        numberOfMonths={2}
                         locale={ptBR}
                       />
                     </PopoverContent>
@@ -464,8 +460,7 @@ const AdminEditalDetalhes = () => {
                 </div>
               </div>
               
-              {/* Versão Desktop: Tabela */}
-              <div className="hidden md:block overflow-x-auto">
+              <div className="overflow-x-auto">
                 <Table>
                   <TableHeader className="bg-slate-50">
                     <TableRow>
@@ -547,84 +542,16 @@ const AdminEditalDetalhes = () => {
                   </TableBody>
                 </Table>
               </div>
+            </div>
+          )}
 
-              {/* Versão Mobile: Cartões Elegantes */}
-              <div className="block md:hidden p-4 space-y-4">
-                {filteredData.length === 0 ? (
-                  <div className="text-center py-12 text-slate-400 font-medium">
-                    {getEmptyMessage()}
-                  </div>
-                ) : (
-                  filteredData.map((item) => (
-                    <div key={item.id} className="bg-slate-50 p-5 rounded-2xl border border-slate-100 space-y-4">
-                      <div className="flex justify-between items-start gap-2">
-                        <div>
-                          <h4 className="font-bold text-slate-900 text-base">{item.projectName || 'Sem Projeto'}</h4>
-                          <p className="text-xs text-slate-400 mt-0.5">Proponente: {item.full_name}</p>
-                        </div>
-                        <Button 
-                          variant="ghost" 
-                          size="icon" 
-                          onClick={() => handleViewFiles(item)}
-                          className="rounded-xl bg-white text-slate-500 hover:bg-blue-50 hover:text-blue-600 h-10 w-10 border border-slate-100 shrink-0"
-                        >
-                          <Eye size={18} />
-                        </Button>
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-3 text-xs border-t border-slate-200/60 pt-3">
-                        <div>
-                          <p className="text-slate-400 font-bold uppercase tracking-wider text-[9px]">Documento</p>
-                          <p className="font-medium text-slate-700 mt-0.5">{item.cpf}</p>
-                        </div>
-                        <div>
-                          <p className="text-slate-400 font-bold uppercase tracking-wider text-[9px]">Protocolo</p>
-                          <p className="font-mono font-bold text-blue-600 mt-0.5">{item.protocol}</p>
-                        </div>
-                        <div className="col-span-2">
-                          <p className="text-slate-400 font-bold uppercase tracking-wider text-[9px]">Data de Envio</p>
-                          <p className="font-medium text-slate-700 mt-0.5">
-                            {new Date(item.created_at).toLocaleDateString('pt-BR')} às {new Date(item.created_at).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
-                          </p>
-                        </div>
-                      </div>
-
-                      {(activeView === 'inscricoes' || activeView === 'documentacao') && (
-                        <div className="border-t border-slate-200/60 pt-3">
-                          <p className="text-slate-400 font-bold uppercase tracking-wider text-[9px] mb-1.5">Status da Proposta</p>
-                          <Select 
-                            value={getStatusValue(item)} 
-                            onValueChange={(val) => handleStatusChange(item.protocol, val, item.id, item.cpf)}
-                          >
-                            <SelectTrigger className={`w-full h-11 rounded-xl border-slate-200 bg-white font-bold text-xs ${
-                              getStatusValue(item) === 'APROVADO' ? 'text-emerald-600 border-emerald-200 bg-emerald-50/30' : ''
-                            }`}>
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent className="rounded-xl">
-                              <SelectItem value="CONFIRMADA" className="text-emerald-600 font-bold">
-                                CONFIRMADA
-                              </SelectItem>
-                              <SelectItem value="DOCUMENTAÇÃO" className="text-amber-600 font-bold">
-                                DOCUMENTAÇÃO
-                              </SelectItem>
-                              <SelectItem value="APROVADO" className="text-emerald-600 font-bold">
-                                APROVADO
-                              </SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                      )}
-                    </div>
-                  ))
-                )}
-              </div>
-
+          {activeView === 'overview' && (
+            <div className="bg-slate-50 border-2 border-dashed border-slate-200 rounded-xl p-20 text-center">
+              <p className="text-slate-400 font-medium">Selecione uma ação acima para visualizar os dados.</p>
             </div>
           )}
         </div>
 
-        {/* Diálogo de Arquivos */}
         <Dialog open={!!selectedFiles} onOpenChange={(open) => !open && setSelectedFiles(null)}>
           <DialogContent className="max-w-md rounded-[2.5rem] p-8">
             <DialogHeader className="mb-6">
