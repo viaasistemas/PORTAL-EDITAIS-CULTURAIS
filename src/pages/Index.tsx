@@ -43,7 +43,7 @@ const Index = () => {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="relative pt-20 md:pt-24 pb-20 md:pb-24 overflow-hidden min-h-[80vh] flex items-center bg-white">
+      <section className="relative pt-24 md:pt-32 pb-24 md:pb-32 overflow-hidden min-h-[85vh] flex items-center bg-white">
         {/* Imagem de Fundo Ilustrativa Original */}
         <div className="absolute inset-0 z-0">
           <img 
@@ -55,13 +55,13 @@ const Index = () => {
 
         {/* Content Container */}
         <div className="container mx-auto px-4 relative z-20 max-w-7xl w-full">
-          <div className="max-w-2xl text-left bg-white/80 md:bg-transparent p-6 md:p-0 rounded-3xl backdrop-blur-sm md:backdrop-blur-none md:-ml-8 lg:-ml-12 -mt-4 md:-mt-10">
+          <div className="max-w-2xl text-left bg-white/80 md:bg-transparent p-6 md:p-0 rounded-3xl backdrop-blur-sm md:backdrop-blur-none md:-ml-8 lg:-ml-12">
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold mb-6 tracking-tight leading-[1.15] text-[#3c64c1] text-left">
               Transforme<br />
               sua ideia em<br />
               <span className="text-5xl md:text-7xl lg:text-8xl text-[#f9b233] italic block mt-2">Realidade</span>
             </h1>
-            <p className="text-slate-700 mb-6 text-base md:text-lg font-semibold leading-relaxed max-w-xl text-left">
+            <p className="text-slate-700 mb-10 text-base md:text-lg font-semibold leading-relaxed max-w-xl text-left">
               Oportunidade, fomento e fortalecimento<br />
               da cultura em Extremoz-RN para criar,<br />
               inspirar e transformar nossa comunidade.
