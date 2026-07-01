@@ -61,7 +61,7 @@ const Index = () => {
               sua ideia em<br />
               <span className="text-5xl md:text-7xl lg:text-8xl text-[#f9b233] italic block mt-2">Realidade</span>
             </h1>
-            <p className="text-slate-700 mb-10 text-base md:text-lg font-semibold leading-relaxed max-w-xl text-left">
+            <p className="text-slate-700 mb-6 text-base md:text-lg font-semibold leading-relaxed max-w-xl text-left">
               Oportunidade, fomento e fortalecimento<br />
               da cultura em Extremoz-RN para criar,<br />
               inspirar e transformar nossa comunidade.
