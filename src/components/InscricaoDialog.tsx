@@ -24,7 +24,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { editaisData } from '@/data/editais';
 
 interface InscricaoDialogProps {
-  edital: { id: string; title: string; number: string; customAttachments?: { id: string; title: string }[] };
+  edital: { id: string; title: string; number: string; customAttachments?: { id: string; title: string; required?: boolean }[] };
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
@@ -61,8 +61,8 @@ const InscricaoDialog = ({ edital, open, onOpenChange }: InscricaoDialogProps) =
       if (customAtts.length > 0) {
         setAttachments(customAtts.map((att: any) => ({
           id: att.id,
-          title: att.title,
-          required: true
+          title: att.title + (att.required ? ' *' : ''),
+          required: !!att.required
         })));
       } else {
         // Fallback para anexos padrão se nenhum anexo customizado for definido

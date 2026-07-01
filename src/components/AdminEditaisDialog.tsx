@@ -45,6 +45,7 @@ const defaultCategories = {
 interface CustomAttachment {
   id: string;
   title: string;
+  required?: boolean;
 }
 
 const AdminEditaisDialog = ({ open, onOpenChange }: AdminEditaisDialogProps) => {
@@ -121,7 +122,8 @@ const AdminEditaisDialog = ({ open, onOpenChange }: AdminEditaisDialogProps) => 
     if (!newAttachmentTitle.trim()) return;
     const newAttachment: CustomAttachment = {
       id: `att-${Date.now()}`,
-      title: newAttachmentTitle.trim()
+      title: newAttachmentTitle.trim(),
+      required: false
     };
     setCustomAttachments(prev => [...prev, newAttachment]);
     setNewAttachmentTitle('');
@@ -133,6 +135,17 @@ const AdminEditaisDialog = ({ open, onOpenChange }: AdminEditaisDialogProps) => 
 
   const handleUpdateAttachmentTitle = (id: string, newTitle: string) => {
     setCustomAttachments(prev => prev.map(att => att.id === id ? { ...att, title: newTitle } : att));
+  };
+
+  const handleToggleRequired = (id: string) => {
+    setCustomAttachments(prev => prev.map(att => {
+      if (att.id === id) {
+        const nextState = !att.required;
+        toast.info(`Anexo definido como ${nextState ? 'Obrigatório' : 'Opcional'}`);
+        return { ...att, required: nextState };
+      }
+      return att;
+    }));
   };
 
   const handleSave = (e: React.FormEvent) => {
@@ -473,15 +486,31 @@ const AdminEditaisDialog = ({ open, onOpenChange }: AdminEditaisDialogProps) => 
                           className="h-9 rounded-lg border-slate-200 bg-white text-sm font-medium"
                         />
                       </div>
-                      <Button 
-                        type="button" 
-                        variant="ghost" 
-                        size="icon" 
-                        onClick={() => handleRemoveAttachment(att.id)}
-                        className="h-9 w-9 rounded-lg text-slate-400 hover:text-red-600 hover:bg-white"
-                      >
-                        <Trash2 size={16} />
-                      </Button>
+                      <div className="flex items-center gap-1 shrink-0">
+                        <Button 
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleToggleRequired(att.id)}
+                          className={`h-9 w-9 rounded-lg font-black text-lg transition-all ${
+                            att.required 
+                              ? 'text-red-600 bg-red-50 hover:bg-red-100 hover:text-red-700' 
+                              : 'text-slate-400 hover:bg-slate-100 hover:text-slate-600'
+                          }`}
+                          title={att.required ? "Obrigatório" : "Opcional"}
+                        >
+                          *
+                        </Button>
+                        <Button 
+                          type="button" 
+                          variant="ghost" 
+                          size="icon" 
+                          onClick={() => handleRemoveAttachment(att.id)}
+                          className="h-9 w-9 rounded-lg text-slate-400 hover:text-red-600 hover:bg-white"
+                        >
+                          <Trash2 size={16} />
+                        </Button>
+                      </div>
                     </div>
                   ))}
                 </div>

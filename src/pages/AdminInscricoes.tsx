@@ -140,27 +140,27 @@ const AdminInscricoes = () => {
         <AdminHeader title="Gestão de Editais" />
 
         <div className="p-4 md:px-8 lg:px-12 w-full space-y-8 py-8">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-            <div>
+          <div className="flex flex-col md:flex-row justify-between items-center md:items-center text-center md:text-left gap-6">
+            <div className="flex flex-col items-center md:items-start">
               <h1 className="text-3xl font-bold text-slate-900">Gestão de Inscrições</h1>
               <p className="text-slate-500 text-lg mt-1">Visualizar e gerenciar as inscrições recebidas por edital</p>
             </div>
             
-            <div className="flex flex-col items-end gap-3 w-full md:w-auto">
-              <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
-                <div className="relative flex-grow md:w-64">
+            <div className="flex flex-col items-center md:items-end gap-3 w-full md:w-auto">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 w-full md:w-auto">
+                <div className="relative w-full sm:w-64">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
                   <Input 
                     placeholder="Buscar edital (ex: #012026)..." 
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10 h-11 rounded-xl border-slate-200 bg-white"
+                    className="pl-10 h-11 rounded-xl border-slate-200 bg-white text-center sm:text-left"
                   />
                 </div>
                 
                 {activeTab !== 'Todos' && dynamicCategories.length > 0 && (
                   <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-                    <SelectTrigger className="w-[180px] bg-white border-slate-200 rounded-xl h-11">
+                    <SelectTrigger className="w-full sm:w-[180px] bg-white border-slate-200 rounded-xl h-11">
                       <SelectValue placeholder="Categoria" />
                     </SelectTrigger>
                     <SelectContent className="rounded-xl">
@@ -173,7 +173,7 @@ const AdminInscricoes = () => {
                 )}
 
                 <Select value={statusFilter} onValueChange={setStatusFilter}>
-                  <SelectTrigger className="w-[180px] bg-white border-slate-200 rounded-xl h-11">
+                  <SelectTrigger className="w-full sm:w-[180px] bg-white border-slate-200 rounded-xl h-11">
                     <SelectValue placeholder="Status" />
                   </SelectTrigger>
                   <SelectContent className="rounded-xl">
@@ -185,7 +185,7 @@ const AdminInscricoes = () => {
                 </Select>
               </div>
               
-              <div className="flex gap-2">
+              <div className="flex gap-2 justify-center w-full sm:w-auto">
                 <Button 
                   onClick={() => setIsCategoriasOpen(true)}
                   className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl h-10 font-bold px-6 flex gap-2 shadow-lg shadow-blue-100"
@@ -202,7 +202,7 @@ const AdminInscricoes = () => {
             </div>
           </div>
 
-          <div className="flex gap-2 overflow-x-auto pb-2 border-b border-slate-100">
+          <div className="flex gap-2 overflow-x-auto pb-2 border-b border-slate-100 justify-center md:justify-start">
             {tabs.map((tab) => (
               <Button
                 key={tab}
