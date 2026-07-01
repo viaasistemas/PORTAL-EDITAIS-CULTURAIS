@@ -43,7 +43,7 @@ const Index = () => {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="relative pt-24 md:pt-32 pb-16 md:pb-24 overflow-hidden min-h-[80vh] flex items-center bg-white">
+      <section className="relative pt-24 md:pt-32 pb-16 md:pb-24 flex items-center bg-white">
         {/* Content Container */}
         <div className="container mx-auto px-4 relative z-20 max-w-7xl w-full">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
@@ -74,7 +74,7 @@ const Index = () => {
               <img 
                 src={heroIllustration} 
                 alt="Ilustração Cultural de Extremoz" 
-                className="w-full max-w-2xl h-auto max-h-[500px] object-contain rounded-2xl"
+                className="w-full h-auto object-contain rounded-2xl"
               />
             </div>
 
