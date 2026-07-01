@@ -44,15 +44,13 @@ const Index = () => {
 
       {/* Hero Section */}
       <section className="relative pt-24 md:pt-32 pb-24 md:pb-32 overflow-hidden min-h-[85vh] flex items-center bg-white">
-        {/* Imagem de Fundo Ilustrativa */}
+        {/* Imagem de Fundo Ilustrativa sem efeitos ou overlays */}
         <div className="absolute inset-0 z-0">
           <img 
             src={heroIllustration} 
             alt="Ilustração Cultural de Extremoz" 
             className="w-full h-full object-cover object-center md:object-right"
           />
-          {/* Overlay para garantir contraste e legibilidade do texto em telas menores */}
-          <div className="absolute inset-0 bg-white/90 md:bg-transparent md:bg-gradient-to-r md:from-white md:via-white/85 md:to-transparent z-10" />
         </div>
 
         {/* Content Container */}
