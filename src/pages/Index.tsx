@@ -74,7 +74,7 @@ const Index = () => {
               <img 
                 src={heroIllustration} 
                 alt="Ilustração Cultural de Extremoz" 
-                className="w-full max-w-2xl lg:max-w-none h-auto object-contain rounded-2xl"
+                className="w-full max-w-2xl h-auto max-h-[500px] object-contain rounded-2xl"
               />
             </div>
 
