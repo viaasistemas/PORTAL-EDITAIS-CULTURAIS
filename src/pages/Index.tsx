@@ -12,6 +12,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 // Imagens de fundo e ilustrações
 import waveLeft from '@/assets/wave-left.png';
 import waveRight from '@/assets/wave-right.png';
+import heroBg from '../../.dyad/media/e842e2832067ac91aa7af724c537d9777a3066abfb5a8c63e98676da60106d92.png';
 
 // Ícones atualizados via mídias do projeto
 import iconMusica from '../../.dyad/media/89788568739c2801b420fc906edcac85b18bc344486da53b8290c2a0c1a7167b.png';
@@ -42,7 +43,13 @@ const Index = () => {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="relative pt-24 md:pt-32 pb-16 md:pb-24 flex items-center bg-white">
+      <section 
+        className="relative pt-32 pb-24 md:pt-40 md:pb-36 flex items-center bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: `url(${heroBg})` }}
+      >
+        {/* Soft overlay to ensure text readability */}
+        <div className="absolute inset-0 bg-white/85 z-10" />
+
         {/* Content Container */}
         <div className="container mx-auto px-4 relative z-20 max-w-4xl w-full text-center">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 tracking-tight leading-[1.15] text-[#3c64c1] mx-auto">
