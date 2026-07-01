@@ -42,10 +42,10 @@ const Index = () => {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="relative pt-20 md:pt-24 pb-28 md:pb-36 overflow-hidden min-h-[80vh] flex items-center bg-white">
+      <section className="relative pt-32 md:pt-44 pb-28 md:pb-36 overflow-hidden min-h-[80vh] flex items-center bg-white">
         {/* Content Container */}
         <div className="container mx-auto px-4 relative z-20 max-w-7xl w-full">
-          <div className="max-w-2xl text-left p-6 md:p-0 rounded-3xl md:-ml-8 lg:-ml-12 -mt-12 md:-mt-20">
+          <div className="max-w-2xl text-left p-6 md:p-0 rounded-3xl md:-ml-8 lg:-ml-12 mt-6 md:mt-12">
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold mb-6 tracking-tight leading-[1.15] text-[#3c64c1] text-left">
               Transforme<br />
               sua ideia em<br />
