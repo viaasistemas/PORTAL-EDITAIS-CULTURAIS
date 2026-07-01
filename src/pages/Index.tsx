@@ -11,6 +11,20 @@ import { useIsMobile } from '@/hooks/use-mobile';
 
 // Imagens de fundo e ilustrações
 import waveLeft from '@/assets/wave-left.png';
+import waveRight from '@/assets/wave-<dyad-write path="src/pages/Index.tsx" description="Removendo a sobreposição do Hero e alinhando o conteúdo à esquerda.">
+"use client";
+
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { ArrowRight, Search } from 'lucide-react';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
+import CategoryCard from '@/components/CategoryCard';
+import { Button } from '@/components/ui/button';
+import { useIsMobile } from '@/hooks/use-mobile';
+
+// Imagens de fundo e ilustrações
+import waveLeft from '@/assets/wave-left.png';
 import waveRight from '@/assets/wave-right.png';
 import heroBg from '../../.dyad/media/e842e2832067ac91aa7af724c537d9777a3066abfb5a8c63e98676da60106d92.png';
 
@@ -44,30 +58,29 @@ const Index = () => {
 
       {/* Hero Section */}
       <section 
-        className="relative pt-32 pb-24 md:pt-40 md:pb-36 flex items-center bg-cover bg-center bg-no-repeat"
+        className="relative pt-32 pb-24 md:pt-40 md:pb-36 flex items-center bg-cover bg-center bg-no-repeat min-h-[600px]"
         style={{ backgroundImage: `url(${heroBg})` }}
       >
-        {/* Soft overlay to ensure text readability */}
-        <div className="absolute inset-0 bg-white/85 z-10" />
-
-        {/* Content Container */}
-        <div className="container mx-auto px-4 relative z-20 max-w-4xl w-full text-center">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 tracking-tight leading-[1.15] text-[#3c64c1] mx-auto">
-            Transforme<br />
-            sua ideia em<br />
-            <span className="text-5xl md:text-6xl lg:text-7xl text-[#f9b233] italic block mt-2">Realidade</span>
-          </h1>
-          <p className="text-slate-700 mb-8 text-base md:text-lg font-semibold leading-relaxed max-w-xl mx-auto">
-            Oportunidade, fomento e fortalecimento<br />
-            da cultura em Extremoz-RN para criar,<br />
-            inspirar e transformar nossa comunidade.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link to="/editais" className="w-full sm:w-auto">
-              <Button className="bg-[#2b59c3] hover:bg-[#1e44a3] text-white font-bold px-10 py-7 text-base rounded-2xl shadow-lg shadow-blue-900/10 transition-all active:scale-95 w-full sm:w-auto">
-                Inscreva-se em nossos editais
-              </Button>
-            </Link>
+        {/* Content Container - Left Aligned, No Overlay */}
+        <div className="container mx-auto px-4 relative z-20 max-w-7xl w-full text-left">
+          <div className="max-w-2xl">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 tracking-tight leading-[1.15] text-[#3c64c1]">
+              Transforme<br />
+              sua ideia em<br />
+              <span className="text-5xl md:text-6xl lg:text-7xl text-[#f9b233] italic block mt-2">Realidade</span>
+            </h1>
+            <p className="text-slate-700 mb-8 text-base md:text-lg font-semibold leading-relaxed">
+              Oportunidade, fomento e fortalecimento<br />
+              da cultura em Extremoz-RN para criar,<br />
+              inspirar e transformar nossa comunidade.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-start">
+              <Link to="/editais" className="w-full sm:w-auto">
+                <Button className="bg-[#2b59c3] hover:bg-[#1e44a3] text-white font-bold px-10 py-7 text-base rounded-2xl shadow-lg shadow-blue-900/10 transition-all active:scale-95 w-full sm:w-auto">
+                  Inscreva-se em nossos editais
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </section>
