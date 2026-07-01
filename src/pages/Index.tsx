@@ -12,6 +12,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 // Imagens de fundo e ilustrações
 import waveLeft from '@/assets/wave-left.png';
 import waveRight from '@/assets/wave-right.png';
+import heroIllustration from '@/assets/hero-illustration.png';
 
 // Ícones atualizados via mídias do projeto
 import iconMusica from '../../.dyad/media/89788568739c2801b420fc906edcac85b18bc344486da53b8290c2a0c1a7167b.png';
@@ -43,9 +44,18 @@ const Index = () => {
 
       {/* Hero Section */}
       <section className="relative pt-24 md:pt-32 pb-20 md:pb-28 overflow-hidden min-h-[75vh] flex items-center bg-white">
+        {/* Background Image */}
+        <div className="absolute inset-0 z-0 flex justify-end">
+          <img 
+            src={heroIllustration} 
+            alt="Ilustração Cultural de Extremoz" 
+            className="h-full w-auto object-cover object-right opacity-90 md:opacity-100"
+          />
+        </div>
+
         {/* Content Container */}
         <div className="container mx-auto px-4 relative z-20 max-w-7xl w-full">
-          <div className="max-w-2xl text-left p-6 md:p-0 rounded-3xl md:-ml-8 lg:-ml-12 -mt-4 md:-mt-8">
+          <div className="max-w-2xl text-left p-6 md:p-0 rounded-3xl md:-ml-8 lg:-ml-12 -mt-4 md:-mt-8 bg-white/80 md:bg-transparent backdrop-blur-sm md:backdrop-blur-none">
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold mb-6 tracking-tight leading-[1.15] text-[#3c64c1] text-left">
               Transforme<br />
               sua ideia em<br />
