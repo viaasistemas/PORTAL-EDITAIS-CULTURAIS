@@ -55,7 +55,7 @@ const Index = () => {
 
         {/* Content Container */}
         <div className="container mx-auto px-4 relative z-20 max-w-7xl w-full">
-          <div className="max-w-2xl text-left bg-white/80 md:bg-transparent p-6 md:p-0 rounded-3xl backdrop-blur-sm md:backdrop-blur-none md:-ml-10">
+          <div className="max-w-2xl text-left bg-white/80 md:bg-transparent p-6 md:p-0 rounded-3xl backdrop-blur-sm md:backdrop-blur-none md:-ml-20 lg:-ml-28">
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold mb-6 tracking-tight leading-[1.15] text-[#3c64c1] text-left">
               Transforme<br />
               sua ideia em<br />
