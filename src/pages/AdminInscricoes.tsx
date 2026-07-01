@@ -140,87 +140,177 @@ const AdminInscricoes = () => {
         <AdminHeader title="Gestão de Editais" />
 
         <div className="p-4 md:px-8 lg:px-12 w-full space-y-8 py-8">
-          <div className="flex flex-col md:flex-row justify-between items-center md:items-center text-center md:text-left gap-6">
-            <div className="flex flex-col items-center md:items-start">
-              <h1 className="text-3xl font-bold text-slate-900">Gestão de Inscrições</h1>
-              <p className="text-slate-500 text-lg mt-1">Visualizar e gerenciar as inscrições recebidas por edital</p>
+          
+          {/* MOBILE LAYOUT (Exclusivo para telas menores que md) */}
+          <div className="flex flex-col gap-6 md:hidden w-full">
+            {/* 1. Título e Subtítulo */}
+            <div className="text-center">
+              <h1 className="text-2xl font-bold text-slate-900">Gestão de Inscrições</h1>
+              <p className="text-slate-500 text-sm mt-1">Visualizar e gerenciar as inscrições recebidas por edital</p>
             </div>
-            
-            <div className="flex flex-col items-center md:items-end gap-3 w-full md:w-auto">
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 w-full md:w-auto">
-                <div className="relative w-full sm:w-64">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-                  <Input 
-                    placeholder="Buscar edital (ex: #012026)..." 
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10 h-11 rounded-xl border-slate-200 bg-white text-center sm:text-left"
-                  />
-                </div>
-                
-                {activeTab !== 'Todos' && dynamicCategories.length > 0 && (
-                  <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-                    <SelectTrigger className="w-full sm:w-[180px] bg-white border-slate-200 rounded-xl h-11">
-                      <SelectValue placeholder="Categoria" />
-                    </SelectTrigger>
-                    <SelectContent className="rounded-xl">
-                      <SelectItem value="todas">Todas Categorias</SelectItem>
-                      {dynamicCategories.map((cat) => (
-                        <SelectItem key={cat} value={cat}>{cat}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                )}
 
-                <Select value={statusFilter} onValueChange={setStatusFilter}>
-                  <SelectTrigger className="w-full sm:w-[180px] bg-white border-slate-200 rounded-xl h-11">
-                    <SelectValue placeholder="Status" />
+            {/* 2. Filtro de Status */}
+            <div className="w-full space-y-3">
+              {activeTab !== 'Todos' && dynamicCategories.length > 0 && (
+                <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                  <SelectTrigger className="w-full bg-white border-slate-200 rounded-xl h-11">
+                    <SelectValue placeholder="Categoria" />
                   </SelectTrigger>
                   <SelectContent className="rounded-xl">
-                    <SelectItem value="todos">Todos os Status</SelectItem>
-                    <SelectItem value="aberto">Aberto</SelectItem>
-                    <SelectItem value="encerrado">Encerrado</SelectItem>
-                    <SelectItem value="finalizado">Finalizados</SelectItem>
+                    <SelectItem value="todas">Todas Categorias</SelectItem>
+                    {dynamicCategories.map((cat) => (
+                      <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
-              </div>
-              
-              <div className="flex gap-2 justify-center w-full sm:w-auto">
-                <Button 
-                  onClick={() => setIsCategoriasOpen(true)}
-                  className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl h-10 font-bold px-6 flex gap-2 shadow-lg shadow-blue-100"
+              )}
+
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
+                <SelectTrigger className="w-full bg-white border-slate-200 rounded-xl h-11">
+                  <SelectValue placeholder="Status" />
+                </SelectTrigger>
+                <SelectContent className="rounded-xl">
+                  <SelectItem value="todos">Todos os Status</SelectItem>
+                  <SelectItem value="aberto">Aberto</SelectItem>
+                  <SelectItem value="encerrado">Encerrado</SelectItem>
+                  <SelectItem value="finalizado">Finalizados</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* 3. Abas de Fomento */}
+            <div className="flex gap-2 overflow-x-auto pb-2 border-b border-slate-100 justify-center">
+              {tabs.map((tab) => (
+                <Button
+                  key={tab}
+                  onClick={() => {
+                    setTab(tab);
+                    setCategoryFilter('todas');
+                  }}
+                  className={`rounded-xl px-5 h-10 font-bold text-xs transition-all shrink-0 ${
+                    activeTab === tab 
+                      ? 'bg-blue-600 text-white shadow-lg shadow-blue-100' 
+                      : 'bg-white text-slate-600 border border-slate-100 hover:bg-slate-50'
+                  }`}
                 >
-                  <Plus size={18} /> Categorias
+                  {tab}
                 </Button>
-                <Button 
-                  onClick={() => setIsEditaisOpen(true)}
-                  className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl h-10 font-bold px-6 flex gap-2 shadow-lg shadow-blue-100"
-                >
-                  <Plus size={18} /> Editais
-                </Button>
-              </div>
+              ))}
+            </div>
+
+            {/* 4. Botões de Ação */}
+            <div className="flex gap-2 w-full">
+              <Button 
+                onClick={() => setIsCategoriasOpen(true)}
+                className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl h-11 font-bold flex-1 flex gap-2 shadow-lg shadow-blue-100 justify-center"
+              >
+                <Plus size={18} /> Categorias
+              </Button>
+              <Button 
+                onClick={() => setIsEditaisOpen(true)}
+                className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl h-11 font-bold flex-1 flex gap-2 shadow-lg shadow-blue-100 justify-center"
+              >
+                <Plus size={18} /> Editais
+              </Button>
+            </div>
+
+            {/* 5. Campo de Busca */}
+            <div className="relative w-full">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+              <Input 
+                placeholder="Buscar edital (ex: #012026)..." 
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10 h-11 rounded-xl border-slate-200 bg-white text-center"
+              />
             </div>
           </div>
 
-          <div className="flex gap-2 overflow-x-auto pb-2 border-b border-slate-100 justify-center md:justify-start">
-            {tabs.map((tab) => (
-              <Button
-                key={tab}
-                onClick={() => {
-                  setTab(tab);
-                  setCategoryFilter('todas');
-                }}
-                className={`rounded-xl px-6 h-11 font-bold text-sm transition-all shrink-0 ${
-                  activeTab === tab 
-                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-100' 
-                    : 'bg-white text-slate-600 border border-slate-100 hover:bg-slate-50'
-                }`}
-              >
-                {tab}
-              </Button>
-            ))}
+          {/* DESKTOP LAYOUT (Exclusivo para telas md ou maiores) */}
+          <div className="hidden md:flex flex-col gap-8">
+            <div className="flex flex-row justify-between items-center gap-6">
+              <div className="flex flex-col">
+                <h1 className="text-3xl font-bold text-slate-900">Gestão de Inscrições</h1>
+                <p className="text-slate-500 text-lg mt-1">Visualizar e gerenciar as inscrições recebidas por edital</p>
+              </div>
+              
+              <div className="flex flex-col items-end gap-3 w-auto">
+                <div className="flex flex-row items-center gap-3 w-auto">
+                  <div className="relative w-64">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                    <Input 
+                      placeholder="Buscar edital (ex: #012026)..." 
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="pl-10 h-11 rounded-xl border-slate-200 bg-white"
+                    />
+                  </div>
+                  
+                  {activeTab !== 'Todos' && dynamicCategories.length > 0 && (
+                    <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                      <SelectTrigger className="w-[180px] bg-white border-slate-200 rounded-xl h-11">
+                        <SelectValue placeholder="Categoria" />
+                      </SelectTrigger>
+                      <SelectContent className="rounded-xl">
+                        <SelectItem value="todas">Todas Categorias</SelectItem>
+                        {dynamicCategories.map((cat) => (
+                          <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+
+                  <Select value={statusFilter} onValueChange={setStatusFilter}>
+                    <SelectTrigger className="w-[180px] bg-white border-slate-200 rounded-xl h-11">
+                      <SelectValue placeholder="Status" />
+                    </SelectTrigger>
+                    <SelectContent className="rounded-xl">
+                      <SelectItem value="todos">Todos os Status</SelectItem>
+                      <SelectItem value="aberto">Aberto</SelectItem>
+                      <SelectItem value="encerrado">Encerrado</SelectItem>
+                      <SelectItem value="finalizado">Finalizados</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                
+                <div className="flex gap-2 w-auto">
+                  <Button 
+                    onClick={() => setIsCategoriasOpen(true)}
+                    className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl h-10 font-bold px-6 flex gap-2 shadow-lg shadow-blue-100"
+                  >
+                    <Plus size={18} /> Categorias
+                  </Button>
+                  <Button 
+                    onClick={() => setIsEditaisOpen(true)}
+                    className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl h-10 font-bold px-6 flex gap-2 shadow-lg shadow-blue-100"
+                  >
+                    <Plus size={18} /> Editais
+                  </Button>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex gap-2 overflow-x-auto pb-2 border-b border-slate-100 justify-start">
+              {tabs.map((tab) => (
+                <Button
+                  key={tab}
+                  onClick={() => {
+                    setTab(tab);
+                    setCategoryFilter('todas');
+                  }}
+                  className={`rounded-xl px-6 h-11 font-bold text-sm transition-all shrink-0 ${
+                    activeTab === tab 
+                      ? 'bg-blue-600 text-white shadow-lg shadow-blue-100' 
+                      : 'bg-white text-slate-600 border border-slate-100 hover:bg-slate-50'
+                  }`}
+                >
+                  {tab}
+                </Button>
+              ))}
+            </div>
           </div>
 
+          {/* Grid de Editais */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {sortedEditais.length > 0 ? (
               sortedEditais.map((edital) => (

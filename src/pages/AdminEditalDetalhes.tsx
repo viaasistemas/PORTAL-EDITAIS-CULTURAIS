@@ -147,7 +147,6 @@ const AdminEditalDetalhes = () => {
             created_at: '2026-04-24T11:30:00.000Z',
             status: 'CONFIRMADA'
           },
-          // 4 novas inscrições de teste adicionadas conforme solicitado
           {
             id: 'test-id-6',
             full_name: 'Fernanda Ribeiro',
@@ -299,7 +298,7 @@ const AdminEditalDetalhes = () => {
       }
       return item;
     }));
-    toast.success("Status updated com sucesso!");
+    toast.success("Status atualizado com sucesso!");
     window.dispatchEvent(new Event('storage'));
   };
 
@@ -330,7 +329,6 @@ const AdminEditalDetalhes = () => {
   const isCNPJ = (val: string) => val.replace(/\D/g, '').length > 11;
 
   const handleViewFiles = (item: any) => {
-    // Se o item tiver arquivos locais salvos, exibe-os. Caso contrário, exibe os mockados padrão.
     const mockFiles = item.files && item.files.length > 0 ? item.files : [
       { name: 'Documento_Identificacao.pdf', size: '1.2 MB' },
       { name: 'Projeto_Cultural.pdf', size: '3.5 MB' },
@@ -358,80 +356,86 @@ const AdminEditalDetalhes = () => {
         <AdminHeader title={`Edital #${id?.substring(0, 8)}`} />
 
         <div className="p-4 md:p-8 max-w-7xl mx-auto w-full space-y-8">
-          <div className="flex items-center gap-4 mb-4">
-            <Button variant="ghost" size="icon" onClick={() => navigate('/admin/inscricoes')} className="rounded-xl">
+          
+          {/* Cabeçalho Responsivo */}
+          <div className="flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left">
+            <Button variant="ghost" size="icon" onClick={() => navigate('/admin/inscricoes')} className="rounded-xl shrink-0">
               <ArrowLeft size={20} />
             </Button>
             <div>
-              <h1 className="text-xl font-bold text-slate-900">Gestão de Propostas</h1>
-              <p className="text-xs text-slate-400">Acompanhamento detalhado do edital</p>
+              <h1 className="text-2xl font-bold text-slate-900">Gestão de Propostas</h1>
+              <p className="text-sm text-slate-400">Acompanhamento detalhado do edital</p>
             </div>
           </div>
 
-          <div className="bg-white p-6 md:p-10 rounded-xl border border-slate-100 shadow-sm">
-            <h2 className="text-2xl font-bold text-slate-900 mb-8">Ações de Gestão</h2>
+          {/* Ações de Gestão */}
+          <div className="bg-white p-6 md:p-10 rounded-2xl border border-slate-100 shadow-sm">
+            <h2 className="text-xl font-bold text-slate-900 mb-6 text-center sm:text-left">Ações de Gestão</h2>
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <Button 
                 onClick={() => setActiveView('inscricoes')}
-                className={`h-24 rounded-xl flex flex-col gap-2 font-bold transition-all ${
+                className={`h-20 sm:h-24 rounded-xl flex flex-col gap-2 font-bold transition-all ${
                   activeView === 'inscricoes' 
                     ? 'bg-blue-600 text-white shadow-xl' 
                     : 'bg-white border border-slate-100 text-slate-600 hover:bg-slate-50'
                 }`}
               >
-                <FileText size={24} />
+                <FileText size={22} />
                 Inscrições
               </Button>
               
               <Button 
                 onClick={() => setActiveView('recursos')}
-                className={`h-24 rounded-xl flex flex-col gap-2 font-bold transition-all ${
+                className={`h-20 sm:h-24 rounded-xl flex flex-col gap-2 font-bold transition-all ${
                   activeView === 'recursos' 
                     ? 'bg-red-600 text-white shadow-xl' 
                     : 'bg-white border border-rose-100 text-rose-600 hover:bg-rose-50'
                 }`}
               >
-                <AlertTriangle size={24} />
+                <AlertTriangle size={22} />
                 Recursos
               </Button>
               
               <Button 
                 onClick={() => setActiveView('documentacao')}
-                className={`h-24 rounded-xl flex flex-col gap-2 font-bold transition-all ${
+                className={`h-20 sm:h-24 rounded-xl flex flex-col gap-2 font-bold transition-all ${
                   activeView === 'documentacao' 
                     ? 'bg-emerald-600 text-white shadow-xl' 
                     : 'bg-white border border-emerald-100 text-emerald-600 hover:bg-emerald-50'
                 }`}
               >
-                <Folder size={24} />
+                <Folder size={22} />
                 Documentação
               </Button>
             </div>
           </div>
 
+          {/* Lista de Registros */}
           {activeView !== 'overview' && (
-            <div className="bg-white rounded-xl border border-slate-100 shadow-sm overflow-hidden">
-              <div className="p-6 md:p-8 border-b border-slate-50 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                <h3 className="text-xl font-bold text-slate-900">
+            <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+              
+              {/* Filtros e Busca Responsivos */}
+              <div className="p-6 border-b border-slate-50 flex flex-col lg:flex-row justify-between items-center gap-4">
+                <h3 className="text-lg font-bold text-slate-900 text-center lg:text-left">
                   {activeView === 'inscricoes' ? 'Lista de Inscrições' : 
                    activeView === 'recursos' ? 'Lista de Recursos' : 'Lista de Documentações'}
                 </h3>
                 
-                <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
-                  <div className="relative flex-grow md:w-64">
+                <div className="flex flex-col sm:flex-row items-center gap-3 w-full lg:w-auto">
+                  <div className="relative w-full sm:w-64">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
                     <Input 
-                      placeholder="Pesquisar por nome, projeto, CPF ou CNPJ..." 
+                      placeholder="Pesquisar..." 
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-10 h-11 rounded-xl border-slate-200"
+                      className="pl-10 h-11 rounded-xl border-slate-200 text-center sm:text-left"
                     />
                   </div>
 
                   <Popover>
                     <PopoverTrigger asChild>
-                      <Button variant="outline" className="h-11 rounded-xl border-slate-200 flex gap-2 text-slate-600 font-medium">
+                      <Button variant="outline" className="h-11 rounded-xl border-slate-200 flex gap-2 text-slate-600 font-medium w-full sm:w-auto justify-center">
                         <CalendarIcon size={18} />
                         {dateRange.from ? (
                           dateRange.to ? (
@@ -452,7 +456,7 @@ const AdminEditalDetalhes = () => {
                         mode="range"
                         selected={{ from: dateRange.from, to: dateRange.to }}
                         onSelect={(range: any) => setDateRange({ from: range?.from, to: range?.to })}
-                        numberOfMonths={2}
+                        numberOfMonths={1}
                         locale={ptBR}
                       />
                     </PopoverContent>
@@ -460,7 +464,8 @@ const AdminEditalDetalhes = () => {
                 </div>
               </div>
               
-              <div className="overflow-x-auto">
+              {/* VERSÃO DESKTOP: Tabela Tradicional */}
+              <div className="hidden md:block overflow-x-auto">
                 <Table>
                   <TableHeader className="bg-slate-50">
                     <TableRow>
@@ -542,16 +547,78 @@ const AdminEditalDetalhes = () => {
                   </TableBody>
                 </Table>
               </div>
-            </div>
-          )}
 
-          {activeView === 'overview' && (
-            <div className="bg-slate-50 border-2 border-dashed border-slate-200 rounded-xl p-20 text-center">
-              <p className="text-slate-400 font-medium">Selecione uma ação acima para visualizar os dados.</p>
+              {/* VERSÃO MOBILE: Lista de Cartões Interativos */}
+              <div className="block md:hidden divide-y divide-slate-100">
+                {filteredData.length === 0 ? (
+                  <div className="text-center py-16 text-slate-400 font-medium">
+                    {getEmptyMessage()}
+                  </div>
+                ) : (
+                  filteredData.map((item) => (
+                    <div key={item.id} className="p-5 space-y-4">
+                      <div className="flex justify-between items-start gap-2">
+                        <div>
+                          <h4 className="font-bold text-slate-900 text-base leading-tight">{item.projectName || 'Sem Projeto'}</h4>
+                          <p className="text-xs text-slate-500 mt-1">{item.full_name}</p>
+                        </div>
+                        <span className="text-xs font-mono text-blue-600 bg-blue-50 px-2.5 py-1 rounded-lg shrink-0">
+                          {item.protocol}
+                        </span>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-4 text-xs bg-slate-50 p-3 rounded-xl border border-slate-100">
+                        <div>
+                          <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">CPF/CNPJ</span>
+                          <span className="font-semibold text-slate-700">{item.cpf}</span>
+                        </div>
+                        <div>
+                          <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">Data de Envio</span>
+                          <span className="font-semibold text-slate-700">
+                            {new Date(item.created_at).toLocaleDateString('pt-BR')} às {new Date(item.created_at).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
+                          </span>
+                        </div>
+                      </div>
+
+                      {(activeView === 'inscricoes' || activeView === 'documentacao') && (
+                        <div className="flex items-center justify-between gap-4 pt-1">
+                          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Status</span>
+                          <Select 
+                            value={getStatusValue(item)} 
+                            onValueChange={(val) => handleStatusChange(item.protocol, val, item.id, item.cpf)}
+                          >
+                            <SelectTrigger className="w-[160px] h-10 rounded-xl border-slate-200 font-bold text-xs">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent className="rounded-xl">
+                              <SelectItem value="CONFIRMADA" className="text-emerald-600 font-bold">CONFIRMADA</SelectItem>
+                              <SelectItem value="DOCUMENTAÇÃO" className="text-amber-600 font-bold">DOCUMENTAÇÃO</SelectItem>
+                              <SelectItem value="APROVADO" className="text-emerald-600 font-bold">APROVADO</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      )}
+
+                      <div className="flex justify-end pt-2">
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          onClick={() => handleViewFiles(item)}
+                          className="rounded-xl flex gap-2 text-xs font-bold border-slate-200 text-slate-600 h-10 px-4"
+                        >
+                          <Eye size={16} /> Ver Arquivos
+                        </Button>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+
             </div>
           )}
         </div>
 
+        {/* Diálogo de Arquivos */}
         <Dialog open={!!selectedFiles} onOpenChange={(open) => !open && setSelectedFiles(null)}>
           <DialogContent className="max-w-md rounded-[2.5rem] p-8">
             <DialogHeader className="mb-6">
